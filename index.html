@@ -1,3076 +1,10 @@
+<!DOCTYPE html>
 <html lang="it">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Generators</title>
-  <style>
-    * { box-sizing: border-box; }
-
-    html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      font-family: Arial, sans-serif;
-      background: #0b1020;
-      color: white;
-    }
-
-    .topbar {
-      position: sticky;
-      top: 0;
-      z-index: 1000;
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      padding: 16px;
-      background: #0b1020;
-      border-bottom: 1px solid rgba(255,255,255,0.15);
-    }
-
-    .tab-btn {
-      padding: 10px 16px;
-      border-radius: 999px;
-      border: 1px solid rgba(255,255,255,0.2);
-      background: rgba(255,255,255,0.08);
-      color: white;
-      cursor: pointer;
-      font-weight: bold;
-    }
-
-    .tab-btn.active {
-      background: #7c9cff;
-      border-color: transparent;
-    }
-
-    .panel {
-      display: none;
-      width: 100%;
-      height: calc(100vh - 73px);
-    }
-
-    .panel.active {
-      display: block;
-    }
-
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: 0;
-      background: white;
-    }
-  </style>
-</head>
-<body>
-
-  <div class="topbar">
-    <button class="tab-btn active" data-target="calc1">Calculus I</button>
-    <button class="tab-btn" data-target="calc2">Calculus II</button>
-    <button class="tab-btn" data-target="linalg">Linear algebra and Geometry</button>
-  </div>
-
-  <section id="calc1" class="panel active">
-    <iframe id="frame-calc1" title="Calculus I"></iframe>
-  </section>
-
-  <section id="calc2" class="panel">
-    <iframe id="frame-calc2" title="Calculus II"></iframe>
-  </section>
-
-  <section id="linalg" class="panel">
-    <iframe id="frame-linalg" title="Linear algebra and Geometry"></iframe>
-  </section>
-
-  <!-- ========================================= -->
-  <!-- INCOLLA QUI IL FILE COMPLETO DI CALCULUS I -->
-  <!-- Da <!DOCTYPE html> fino a </html>          -->
-  <!-- ========================================= -->
-  <textarea id="src-calc1" hidden>
-<!DOCTYPE html>
-<html lang="en">
-<head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculus Worksheet Generator</title>
-  <meta
-    name="description"
-    content="Free calculus worksheet generator for integrals, derivatives, limits, series, and exam-style mixed practice."
-  />
-
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(', '\\)']],
-        displayMath: [['\\[', '\\]']]
-      },
-      svg: {
-        fontCache: 'global'
-      }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-
-  <style>
-    :root {
-      --bg-1: #0b1020;
-      --bg-2: #131a34;
-      --panel: rgba(255, 255, 255, 0.07);
-      --panel-strong: rgba(255, 255, 255, 0.11);
-      --text: #eef2ff;
-      --muted: #b9c3e6;
-      --accent: #7c9cff;
-      --accent-2: #9c7cff;
-      --accent-3: #59e1c1;
-      --border: rgba(255, 255, 255, 0.14);
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
-      --tag-bg: rgba(89, 225, 193, 0.12);
-      --tag-border: rgba(89, 225, 193, 0.28);
-      --tag-text: #d9fff7;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(124, 156, 255, 0.18), transparent 28%),
-        radial-gradient(circle at top right, rgba(156, 124, 255, 0.14), transparent 30%),
-        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
-      min-height: 100vh;
-    }
-
-    .wrap {
-      max-width: 1240px;
-      margin: 0 auto;
-      padding: 28px;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 88px 1fr;
-      gap: 18px;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-
-    .hero-badge {
-      width: 88px;
-      height: 88px;
-      border-radius: 26px;
-      display: grid;
-      place-items: center;
-      font-size: 40px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 18px 44px rgba(124, 156, 255, 0.28);
-    }
-
-    .hero h1 {
-      margin: 0 0 10px;
-      font-size: clamp(2rem, 4.5vw, 3.4rem);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-    }
-
-    .hero p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.7;
-      max-width: 920px;
-      font-size: 1.03rem;
-    }
-
-    .topic-nav {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 20px 0 28px;
-    }
-
-    .topic-nav button {
-      width: auto;
-      padding: 11px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--muted);
-      cursor: pointer;
-      font-weight: 700;
-      transition: 0.2s ease;
-    }
-
-    .topic-nav button:hover {
-      transform: translateY(-1px);
-      color: var(--text);
-    }
-
-    .topic-nav button.active {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white;
-      border: none;
-      box-shadow: 0 14px 30px rgba(124, 156, 255, 0.22);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 22px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
-
-    .settings-card {
-      position: sticky;
-      top: 18px;
-    }
-
-    .stack > * + * {
-      margin-top: 16px;
-    }
-
-    .card h2 {
-      margin: 0 0 6px;
-      font-size: 1.2rem;
-    }
-
-    .subtle {
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-
-    .status {
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.5;
-      padding: 2px 2px 0;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 13px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: #121933;
-      color: var(--text);
-      font-size: 1rem;
-      outline: none;
-    }
-
-    input:focus,
-    select:focus {
-      border-color: rgba(124, 156, 255, 0.65);
-      box-shadow: 0 0 0 4px rgba(124, 156, 255, 0.12);
-    }
-
-    button {
-      cursor: pointer;
-      font-weight: 800;
-      transition: 0.2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    .primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      border: none;
-      box-shadow: 0 14px 28px rgba(124, 156, 255, 0.25);
-    }
-
-    .secondary {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .preview-title-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .level-pill {
-      display: inline-block;
-      padding: 7px 11px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--panel-strong);
-      color: #dce5ff;
-      font-size: 0.8rem;
-      letter-spacing: 0.04em;
-      font-weight: 700;
-    }
-
-    .exercise {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      margin-top: 14px;
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .exercise-head {
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
-
-    .tag {
-      display: inline-block;
-      font-size: 0.78rem;
-      color: var(--tag-text);
-      background: var(--tag-bg);
-      border: 1px solid var(--tag-border);
-      padding: 5px 9px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-
-    .exercise-number {
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .math {
-      font-size: 1.08rem;
-      line-height: 1.7;
-      overflow-wrap: anywhere;
-    }
-
-    .solutions-card.hidden {
-      display: none;
-    }
-
-    .footer-copy {
-      margin-top: 28px;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 0.95rem;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    #pdfArea {
-      position: absolute;
-      left: -99999px;
-      top: 0;
-      width: 794px;
-      background: white;
-      color: black;
-      padding: 40px;
-    }
-
-    .pdf-page {
-      width: 100%;
-      min-height: 1040px;
-      padding: 10px 0 30px;
-      background: white;
-      color: black;
-      page-break-after: always;
-    }
-
-    .pdf-page:last-child {
-      page-break-after: auto;
-    }
-
-    .pdf-title {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: black;
-    }
-
-    .pdf-meta {
-      font-size: 14px;
-      color: #333;
-      margin-bottom: 22px;
-    }
-
-    .pdf-section-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 10px 0 18px;
-      color: black;
-    }
-
-    .pdf-exercise {
-      border: 1px solid #d6d6d6;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 12px;
-      background: #fff;
-      break-inside: avoid;
-    }
-
-    .pdf-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-
-    .pdf-tag {
-      display: inline-block;
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #eef7f4;
-      border: 1px solid #cbe9df;
-      color: #165c4f;
-      font-weight: 700;
-    }
-
-    .pdf-num {
-      color: #444;
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .pdf-math {
-      color: black;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 980px) {
-      .hero {
-        grid-template-columns: 1fr;
-      }
-
-      .hero-badge {
-        width: 72px;
-        height: 72px;
-        font-size: 32px;
-      }
-
-      .grid {
-        grid-template-columns: 1fr;
-      }
-
-      .settings-card {
-        position: static;
-      }
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <section class="hero">
-      <div class="hero-badge">∫</div>
-      <div>
-        <h1>Calculus Worksheet Generator</h1>
-        <p>
-          Generate beautiful practice sheets for integrals, derivatives, limits,
-          numerical series, and mixed exam-style exercises. Every mathematical expression
-          is rendered in LaTeX both on the page and inside the downloaded PDF.
-        </p>
-      </div>
-    </section>
-
-    <div class="topic-nav" id="topicNav">
-      <button data-topic="integrals" class="active">Integrals</button>
-      <button data-topic="derivatives">Derivatives</button>
-      <button data-topic="limits">Limits</button>
-      <button data-topic="series">Series</button>
-      <button data-topic="exam">Exam Mode</button>
-    </div>
-
-    <div class="grid">
-      <div class="card settings-card stack" id="settingsCard">
-        <div>
-          <h2>Settings</h2>
-          <div class="subtle">Customize the worksheet and generate a fresh set of exercises instantly.</div>
-        </div>
-
-        <div>
-          <label for="title">Worksheet title</label>
-          <input id="title" value="Integral Worksheet" />
-        </div>
-
-        <div id="countWrap">
-          <label for="count">Number of exercises</label>
-          <input id="count" type="number" min="1" max="50" value="12" />
-        </div>
-
-        <div>
-          <label for="level">Difficulty</label>
-          <select id="level">
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </div>
-
-        <button class="primary" id="generateBtn">Generate worksheet</button>
-        <button class="secondary" id="toggleSolutionsBtn">Show solutions</button>
-        <button class="secondary" id="downloadBtn">Download PDF</button>
-
-        <div class="status" id="status">Ready.</div>
-      </div>
-
-      <div>
-        <div class="card">
-          <div class="preview-title-row">
-            <h2 id="previewTitle" style="margin: 0;">Integral Worksheet</h2>
-            <div class="level-pill" id="levelPill">MEDIUM</div>
-          </div>
-          <div id="exerciseList"></div>
-        </div>
-
-        <div class="card solutions-card" id="solutionsCard" style="margin-top: 24px;">
-          <div class="preview-title-row">
-            <h2 style="margin: 0;">Solutions</h2>
-            <div class="level-pill" id="solutionsPill">HIDDEN</div>
-          </div>
-          <div id="solutionList"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-copy">
-      In Exam Mode, the generator creates one exercise for each topic:
-      integrals, derivatives, limits, and series.
-    </div>
-  </div>
-
-  <div id="pdfArea"></div>
-
-  <script>
-    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-    const choice = (arr) => {
-      if (!Array.isArray(arr) || arr.length === 0) {
-        throw new Error("Cannot choose from an empty array.");
-      }
-      return arr[Math.floor(Math.random() * arr.length)];
-    };
-
-    function gcd(a, b) {
-      a = Math.abs(a);
-      b = Math.abs(b);
-      while (b !== 0) {
-        const t = b;
-        b = a % b;
-        a = t;
-      }
-      return a;
-    }
-
-    function frac(n, d) {
-      if (d === 0) throw new Error("Denominator cannot be zero.");
-      const sign = d < 0 ? -1 : 1;
-      n *= sign;
-      d *= sign;
-      const g = gcd(n, d);
-      return `\\frac{${n / g}}{${d / g}}`;
-    }
-
-    function formatCoeff(value) {
-      if (Number.isInteger(value)) return String(value);
-      const rounded = Number(value.toFixed(2));
-      if (Number.isInteger(rounded)) return String(rounded);
-      const denom = 100;
-      const num = Math.round(rounded * denom);
-      return frac(num, denom);
-    }
-
-    function withDisplayMath(latex) {
-      return `\\[${latex}\\]`;
-    }
-
-    function latexText(text) {
-      return String(text)
-        .replace(/\\/g, "\\\\")
-        .replace(/%/g, "\\%")
-        .replace(/_/g, "\\_")
-        .replace(/&/g, "\\&")
-        .replace(/#/g, "\\#");
-    }
-
-    function shuffle(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
-    function sampleExercises(pool, count) {
-      if (!Array.isArray(pool) || pool.length === 0) return [];
-      const out = [];
-      while (out.length < count) {
-        const round = shuffle(pool);
-        for (const ex of round) {
-          out.push(ex);
-          if (out.length >= count) break;
-        }
-      }
-      return out.slice(0, count).map((ex, index) => ({
-        index: index + 1,
-        q: ex.q,
-        s: ex.s,
-        tag: ex.tag,
-        examTopic: ex.examTopic
-      }));
-    }
-
-    function buildPool(factory, size = 100) {
-      const seen = new Set();
-      const out = [];
-      let attempts = 0;
-
-      while (out.length < size && attempts < size * 40) {
-        attempts += 1;
-        const ex = factory();
-        const key = `${ex.q}=>${ex.s}`;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        out.push(ex);
-      }
-      return shuffle(out);
-    }
-
-    function duplicateWithIndex(base, total) {
-      return sampleExercises(base, total);
-    }
-
-    function integralTemplates(level = "medium") {
-      if (level === "easy") {
-        return buildPool(() => {
-          const a = randInt(1, 8);
-          const b = randInt(1, 10);
-          const c = randInt(1, 5);
-          const d = randInt(1, 8);
-          const k = randInt(1, 8);
-          const m = randInt(1, 5);
-          const p = randInt(2, 7);
-          const q = randInt(2, 6);
-          const type = randInt(1, 8);
-
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\int (${a}x + ${b})\\,dx`),
-                s: withDisplayMath(`${formatCoeff(a / 2)}x^2 + ${b}x + C`),
-                tag: "Linear"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\int (${c}x^2 + ${d}x)\\,dx`),
-                s: withDisplayMath(`${formatCoeff(c / 3)}x^3 + ${formatCoeff(d / 2)}x^2 + C`),
-                tag: "Polynomial"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\int ${k}\\sin(x)\\,dx`),
-                s: withDisplayMath(`${k === 1 ? "-" : "-" + k}\\cos(x) + C`),
-                tag: "Trigonometric"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\int ${k}\\cos(x)\\,dx`),
-                s: withDisplayMath(`${k}\\sin(x) + C`),
-                tag: "Trigonometric"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\int ${m}e^x\\,dx`),
-                s: withDisplayMath(`${m}e^x + C`),
-                tag: "Exponential"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\int x^{${p}}\\,dx`),
-                s: withDisplayMath(`\\frac{x^{${p + 1}}}{${p + 1}} + C`),
-                tag: "Power rule"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`\\int \\frac{1}{x^{${q}}}\\,dx`),
-                s: withDisplayMath(`\\frac{x^{${1 - q}}}{${1 - q}} + C`),
-                tag: "Negative powers"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\int \\left(${a} + \\frac{${b}}{x}\\right)dx`),
-                s: withDisplayMath(`${a}x + ${b}\\ln|x| + C`),
-                tag: "Logarithmic"
-              };
-          }
-        }, 140);
-      }
-
-      if (level === "hard") {
-        return buildPool(() => {
-          const a = randInt(2, 6);
-          const b = randInt(2, 6);
-          const c = randInt(1, 5);
-          const d = randInt(c + 1, c + 6);
-          const type = randInt(1, 14);
-
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\int xe^{${b}x}\\,dx`),
-                s: withDisplayMath(`e^{${b}x}\\left(\\frac{x}{${b}} - \\frac{1}{${b * b}}\\right) + C`),
-                tag: "By parts"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\int x^2\\sin(x)\\,dx`),
-                s: withDisplayMath(`-x^2\\cos(x) + 2x\\sin(x) + 2\\cos(x) + C`),
-                tag: "By parts"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\int x^2e^x\\,dx`),
-                s: withDisplayMath(`e^x(x^2 - 2x + 2) + C`),
-                tag: "By parts"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\int \\ln(x)\\,dx`),
-                s: withDisplayMath(`x\\ln(x) - x + C`),
-                tag: "Logarithmic"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\int \\frac{1}{1+x^2}\\,dx`),
-                s: withDisplayMath(`\\arctan(x) + C`),
-                tag: "Inverse trig"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\int e^x\\sin(x)\\,dx`),
-                s: withDisplayMath(`\\frac{e^x(\\sin(x)-\\cos(x))}{2} + C`),
-                tag: "Repeated parts"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`\\int \\frac{${a}x}{1+x^2}\\,dx`),
-                s: withDisplayMath(`${frac(a, 2)}\\ln(1+x^2) + C`),
-                tag: "Substitution"
-              };
-            case 8:
-              return {
-                q: withDisplayMath(`\\int \\frac{1}{x\\ln(x)}\\,dx`),
-                s: withDisplayMath(`\\ln|\\ln(x)| + C`),
-                tag: "Log substitution"
-              };
-            case 9:
-              return {
-                q: withDisplayMath(`\\int \\frac{1}{(x+${c})(x+${d})}\\,dx`),
-                s: withDisplayMath(`\\frac{1}{${d - c}}\\ln\\left|\\frac{x+${c}}{x+${d}}\\right| + C`),
-                tag: "Partial fractions"
-              };
-            case 10:
-              return {
-                q: withDisplayMath(`\\int \\frac{dx}{\\sqrt{${a * a}-x^2}}`),
-                s: withDisplayMath(`\\arcsin\\left(\\frac{x}{${a}}\\right) + C`),
-                tag: "Inverse trig"
-              };
-            case 11:
-              return {
-                q: withDisplayMath(`\\int \\frac{x^2+${c}x+${d}}{x+1}\\,dx`),
-                s: withDisplayMath(`\\frac{x^2}{2} + (${c - 1})x + (${d - c + 1})\\ln|x+1| + C`),
-                tag: "Division + log"
-              };
-            case 12:
-              return {
-                q: withDisplayMath(`\\int \\tan(x)\\,dx`),
-                s: withDisplayMath(`-\\ln|\\cos(x)| + C`),
-                tag: "Trigonometric"
-              };
-            case 13:
-              return {
-                q: withDisplayMath(`\\int \\sec^2(${a}x)\\,dx`),
-                s: withDisplayMath(`\\frac{1}{${a}}\\tan(${a}x) + C`),
-                tag: "Trigonometric"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\int \\frac{1}{x^2-${a * a}}\\,dx`),
-                s: withDisplayMath(`\\frac{1}{${2 * a}}\\ln\\left|\\frac{x-${a}}{x+${a}}\\right| + C`),
-                tag: "Partial fractions"
-              };
-          }
-        }, 140);
-      }
-
-      return buildPool(() => {
-        const a = randInt(1, 5);
-        const b = randInt(1, 6);
-        const c = randInt(1, 4);
-        const d = randInt(1, 6);
-        const p = randInt(2, 5);
-        const type = randInt(1, 12);
-
-        switch (type) {
-          case 1:
-            return {
-              q: withDisplayMath(`\\int (${a}x + ${b})^2\\,dx`),
-              s: withDisplayMath(`\\frac{(${a}x + ${b})^3}{${3 * a}} + C`),
-              tag: "Substitution"
-            };
-          case 2:
-            return {
-              q: withDisplayMath(`\\int xe^x\\,dx`),
-              s: withDisplayMath(`e^x(x - 1) + C`),
-              tag: "By parts"
-            };
-          case 3:
-            return {
-              q: withDisplayMath(`\\int x\\sin(x)\\,dx`),
-              s: withDisplayMath(`-x\\cos(x) + \\sin(x) + C`),
-              tag: "By parts"
-            };
-          case 4:
-            return {
-              q: withDisplayMath(`\\int x\\cos(x)\\,dx`),
-              s: withDisplayMath(`x\\sin(x) + \\cos(x) + C`),
-              tag: "By parts"
-            };
-          case 5:
-            return {
-              q: withDisplayMath(`\\int \\frac{1}{${c}x + ${d}}\\,dx`),
-              s: withDisplayMath(`\\frac{1}{${c}}\\ln|${c}x + ${d}| + C`),
-              tag: "Logarithmic"
-            };
-          case 6:
-            return {
-              q: withDisplayMath(`\\int (\\sin(x) + x^2)\\,dx`),
-              s: withDisplayMath(`-\\cos(x) + \\frac{x^3}{3} + C`),
-              tag: "Mixed"
-            };
-          case 7:
-            return {
-              q: withDisplayMath(`\\int x(${a}x+${b})^${p}\\,dx`),
-              s: withDisplayMath(`\\text{Use }u=${a}x+${b}`),
-              tag: "Substitution"
-            };
-          case 8:
-            return {
-              q: withDisplayMath(`\\int \\sec^2(${a}x)\\,dx`),
-              s: withDisplayMath(`\\frac{1}{${a}}\\tan(${a}x) + C`),
-              tag: "Trigonometric"
-            };
-          case 9:
-            return {
-              q: withDisplayMath(`\\int \\frac{x}{x^2+${d}}\\,dx`),
-              s: withDisplayMath(`\\frac{1}{2}\\ln(x^2+${d}) + C`),
-              tag: "Substitution"
-            };
-          case 10:
-            return {
-              q: withDisplayMath(`\\int e^{${a}x}\\,dx`),
-              s: withDisplayMath(`\\frac{1}{${a}}e^{${a}x} + C`),
-              tag: "Exponential"
-            };
-          case 11:
-            return {
-              q: withDisplayMath(`\\int \\frac{1}{\\sqrt{x}}\\,dx`),
-              s: withDisplayMath(`2\\sqrt{x} + C`),
-              tag: "Power rule"
-            };
-          default:
-            return {
-              q: withDisplayMath(`\\int \\frac{1}{x^2+${a * a}}\\,dx`),
-              s: withDisplayMath(`\\frac{1}{${a}}\\arctan\\left(\\frac{x}{${a}}\\right) + C`),
-              tag: "Inverse trig"
-            };
-        }
-      }, 140);
-    }
-
-    function derivativeTemplates(level = "medium") {
-      if (level === "easy") {
-        return buildPool(() => {
-          const a = randInt(1, 8);
-          const b = randInt(1, 6);
-          const p = randInt(2, 6);
-          const type = randInt(1, 9);
-
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(${a}x^2)`),
-                s: withDisplayMath(`${2 * a}x`),
-                tag: "Polynomial"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(${b}x^${p})`),
-                s: withDisplayMath(`${b * p}x^${p - 1}`),
-                tag: "Power rule"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(\\sin(x))`),
-                s: withDisplayMath(`\\cos(x)`),
-                tag: "Trigonometric"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(\\cos(x))`),
-                s: withDisplayMath(`-\\sin(x)`),
-                tag: "Trigonometric"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(e^x)`),
-                s: withDisplayMath(`e^x`),
-                tag: "Exponential"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(\\ln(x))`),
-                s: withDisplayMath(`\\frac{1}{x}`),
-                tag: "Logarithmic"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(\\sqrt{x})`),
-                s: withDisplayMath(`\\frac{1}{2\\sqrt{x}}`),
-                tag: "Roots"
-              };
-            case 8:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}\\left(\\frac{1}{x}\\right)`),
-                s: withDisplayMath(`-\\frac{1}{x^2}`),
-                tag: "Negative powers"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(${a}x + ${b})`),
-                s: withDisplayMath(`${a}`),
-                tag: "Linear"
-              };
-          }
-        }, 120);
-      }
-
-      if (level === "hard") {
-        return buildPool(() => {
-          const a = randInt(2, 6);
-          const b = randInt(2, 5);
-          const type = randInt(1, 12);
-
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(e^{x^2})`),
-                s: withDisplayMath(`2xe^{x^2}`),
-                tag: "Chain rule"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(\\ln(x^2+1))`),
-                s: withDisplayMath(`\\frac{2x}{x^2+1}`),
-                tag: "Chain rule"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(\\sin(x^2))`),
-                s: withDisplayMath(`2x\\cos(x^2)`),
-                tag: "Chain rule"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}\\left(\\frac{x^2+1}{x-1}\\right)`),
-                s: withDisplayMath(`\\frac{x^2-2x-1}{(x-1)^2}`),
-                tag: "Quotient rule"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(x^x)`),
-                s: withDisplayMath(`x^x(\\ln(x)+1)`),
-                tag: "Log differentiation"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}\\left((${a}x+${b})^${b}\\right)`),
-                s: withDisplayMath(`${a * b}(${a}x+${b})^${b - 1}`),
-                tag: "Chain rule"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(\\tan(${a}x))`),
-                s: withDisplayMath(`${a}\\sec^2(${a}x)`),
-                tag: "Trigonometric"
-              };
-            case 8:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(x^2e^x)`),
-                s: withDisplayMath(`e^x(x^2+2x)`),
-                tag: "Product rule"
-              };
-            case 9:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}\\left(\\frac{\\ln(x)}{x}\\right)`),
-                s: withDisplayMath(`\\frac{1-\\ln(x)}{x^2}`),
-                tag: "Quotient rule"
-              };
-            case 10:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(\\arctan(x))`),
-                s: withDisplayMath(`\\frac{1}{1+x^2}`),
-                tag: "Inverse trig"
-              };
-            case 11:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(\\sqrt{1+x^2})`),
-                s: withDisplayMath(`\\frac{x}{\\sqrt{1+x^2}}`),
-                tag: "Chain rule"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\frac{d}{dx}(e^x\\sin(x))`),
-                s: withDisplayMath(`e^x(\\sin(x)+\\cos(x))`),
-                tag: "Product rule"
-              };
-          }
-        }, 120);
-      }
-
-      return buildPool(() => {
-        const a = randInt(2, 6);
-        const type = randInt(1, 12);
-
-        switch (type) {
-          case 1:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}\\left((x^2+1)e^x\\right)`),
-              s: withDisplayMath(`e^x(x^2+2x+1)`),
-              tag: "Product rule"
-            };
-          case 2:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}((3x+1)^4)`),
-              s: withDisplayMath(`12(3x+1)^3`),
-              tag: "Chain rule"
-            };
-          case 3:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}(x\\sin(x))`),
-              s: withDisplayMath(`\\sin(x)+x\\cos(x)`),
-              tag: "Product rule"
-            };
-          case 4:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}\\left(\\frac{1}{x^2+1}\\right)`),
-              s: withDisplayMath(`\\frac{-2x}{(x^2+1)^2}`),
-              tag: "Quotient rule"
-            };
-          case 5:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}(\\ln(x))`),
-              s: withDisplayMath(`\\frac{1}{x}`),
-              tag: "Logarithmic"
-            };
-          case 6:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}(\\arctan(x))`),
-              s: withDisplayMath(`\\frac{1}{1+x^2}`),
-              tag: "Inverse trig"
-            };
-          case 7:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}(e^{${a}x})`),
-              s: withDisplayMath(`${a}e^{${a}x}`),
-              tag: "Exponential"
-            };
-          case 8:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}(\\sqrt{1+x^2})`),
-              s: withDisplayMath(`\\frac{x}{\\sqrt{1+x^2}}`),
-              tag: "Chain rule"
-            };
-          case 9:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}(x\\cos(x))`),
-              s: withDisplayMath(`\\cos(x)-x\\sin(x)`),
-              tag: "Product rule"
-            };
-          case 10:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}(\\tan(x))`),
-              s: withDisplayMath(`\\sec^2(x)`),
-              tag: "Trigonometric"
-            };
-          case 11:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}(x^2\\ln(x))`),
-              s: withDisplayMath(`2x\\ln(x)+x`),
-              tag: "Product rule"
-            };
-          default:
-            return {
-              q: withDisplayMath(`\\frac{d}{dx}\\left(\\frac{x}{x^2+1}\\right)`),
-              s: withDisplayMath(`\\frac{1-x^2}{(x^2+1)^2}`),
-              tag: "Quotient rule"
-            };
-        }
-      }, 120);
-    }
-
-    function limitTemplates(level = "medium") {
-      if (level === "easy") {
-        return duplicateWithIndex([
-          { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{\\sin(x)}{x}`), s: withDisplayMath(`1`), tag: "Notable limit" },
-          { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{1-\\cos(x)}{x^2}`), s: withDisplayMath(`\\frac{1}{2}`), tag: "Notable limit" },
-          { q: withDisplayMath(`\\lim_{x\\to \\infty}\\frac{1}{x}`), s: withDisplayMath(`0`), tag: "Basic" },
-          { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{e^x-1}{x}`), s: withDisplayMath(`1`), tag: "Notable limit" },
-          { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{\\ln(1+x)}{x}`), s: withDisplayMath(`1`), tag: "Notable limit" }
-        ], 60);
-      }
-
-      if (level === "hard") {
-        return duplicateWithIndex([
-          { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{\\sin(3x)}{x}`), s: withDisplayMath(`3`), tag: "Notable limit" },
-          { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{e^{2x}-1}{x}`), s: withDisplayMath(`2`), tag: "Notable limit" },
-          { q: withDisplayMath(`\\lim_{x\\to \\infty}(\\sqrt{x^2+1}-x)`), s: withDisplayMath(`0`), tag: "Rationalization" },
-          { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{(1+x)^5-1}{x}`), s: withDisplayMath(`5`), tag: "Expansion" },
-          { q: withDisplayMath(`\\lim_{x\\to \\infty}\\frac{x^2+3x}{2x^2-1}`), s: withDisplayMath(`\\frac{1}{2}`), tag: "Rational" }
-        ], 60);
-      }
-
-      return duplicateWithIndex([
-        { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{\\tan(x)}{x}`), s: withDisplayMath(`1`), tag: "Notable limit" },
-        { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{\\ln(1+x)}{x}`), s: withDisplayMath(`1`), tag: "Notable limit" },
-        { q: withDisplayMath(`\\lim_{x\\to \\infty}\\frac{2x^2+1}{x^2-3}`), s: withDisplayMath(`2`), tag: "Rational" },
-        { q: withDisplayMath(`\\lim_{x\\to 0}\\frac{\\sqrt{1+x}-1}{x}`), s: withDisplayMath(`\\frac{1}{2}`), tag: "Algebraic" },
-        { q: withDisplayMath(`\\lim_{x\\to \\infty}\\frac{3x+1}{x^2+2}`), s: withDisplayMath(`0`), tag: "Rational" }
-      ], 60);
-    }
-
-    function seriesTemplates(level = "medium") {
-      if (level === "easy") {
-        return duplicateWithIndex([
-          { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{1}{n^2} \\text{ converges}`), s: withDisplayMath(`\\text{Convergent}`), tag: "p-series" },
-          { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{1}{n} \\text{ converges}`), s: withDisplayMath(`\\text{Divergent}`), tag: "Harmonic" },
-          { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{1}{2^n} \\text{ converges}`), s: withDisplayMath(`\\text{Convergent}`), tag: "Geometric" },
-          { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{3^n}{4^n} \\text{ converges}`), s: withDisplayMath(`\\text{Convergent}`), tag: "Geometric" }
-        ], 60);
-      }
-
-      if (level === "hard") {
-        return duplicateWithIndex([
-          { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{n!}{n^n} \\text{ converges}`), s: withDisplayMath(`\\text{Convergent}`), tag: "Ratio/root style" },
-          { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{n^2+1}{n^3+2} \\text{ converges}`), s: withDisplayMath(`\\text{Divergent}`), tag: "Comparison" },
-          { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{(-1)^n}{n^2} \\text{ converges}`), s: withDisplayMath(`\\text{Absolutely convergent}`), tag: "Absolute convergence" },
-          { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{2^n}{n!} \\text{ converges}`), s: withDisplayMath(`\\text{Convergent}`), tag: "Ratio test" },
-          { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{\\ln(n)}{n} \\text{ converges}`), s: withDisplayMath(`\\text{Divergent}`), tag: "Comparison/integral" }
-        ], 60);
-      }
-
-      return duplicateWithIndex([
-        { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{1}{n^{3/2}} \\text{ converges}`), s: withDisplayMath(`\\text{Convergent}`), tag: "p-series" },
-        { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{n}{n^2+1} \\text{ converges}`), s: withDisplayMath(`\\text{Divergent}`), tag: "Comparison" },
-        { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{1}{n(n+1)} \\text{ converges}`), s: withDisplayMath(`\\text{Convergent}`), tag: "Telescoping" },
-        { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{(-1)^n}{n} \\text{ converges}`), s: withDisplayMath(`\\text{Conditionally convergent}`), tag: "Alternating" },
-        { q: withDisplayMath(`\\text{Determine whether } \\sum \\frac{1}{n\\ln n} \\text{ converges}`), s: withDisplayMath(`\\text{Divergent}`), tag: "Integral test" }
-      ], 60);
-    }
-
-    function generatorForTopic(topic, level) {
-      switch (topic) {
-        case "integrals": return integralTemplates(level);
-        case "derivatives": return derivativeTemplates(level);
-        case "limits": return limitTemplates(level);
-        case "series": return seriesTemplates(level);
-        default: return [];
-      }
-    }
-
-    function buildExercises(topic, count, level) {
-      const pool = generatorForTopic(topic, level);
-      return sampleExercises(pool, count);
-    }
-
-    function buildExamSheet(level) {
-      const topics = ["integrals", "derivatives", "limits", "series"];
-      const chosen = topics.map((topic, i) => {
-        const pool = generatorForTopic(topic, level);
-        const ex = choice(pool);
-        return { index: i + 1, ...ex, examTopic: topic };
-      });
-      return shuffle(chosen).map((ex, index) => ({ ...ex, index: index + 1 }));
-    }
-
-    let currentTopic = "integrals";
-    let solutionsVisible = false;
-    let currentExercises = [];
-
-    function defaultTitleForTopic(topic) {
-      switch (topic) {
-        case "integrals": return "Integral Worksheet";
-        case "derivatives": return "Derivative Worksheet";
-        case "limits": return "Limits Worksheet";
-        case "series": return "Series Worksheet";
-        case "exam": return "Calculus Exam Practice";
-        default: return "Worksheet";
-      }
-    }
-
-    function updateTopicButtons() {
-      document.querySelectorAll("#topicNav button").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.topic === currentTopic);
-      });
-    }
-
-    function updatePills() {
-      const level = document.getElementById("level").value;
-      document.getElementById("levelPill").textContent = level.toUpperCase();
-      document.getElementById("solutionsPill").textContent = solutionsVisible ? "VISIBLE" : "HIDDEN";
-    }
-
-    async function typesetMath(elements) {
-      if (window.MathJax && window.MathJax.typesetPromise) {
-        await window.MathJax.typesetPromise(elements);
-      }
-    }
-
-    async function renderLists() {
-      const exerciseList = document.getElementById("exerciseList");
-      const solutionList = document.getElementById("solutionList");
-      const solutionsCard = document.getElementById("solutionsCard");
-
-      exerciseList.innerHTML = "";
-      solutionList.innerHTML = "";
-
-      currentExercises.forEach((ex) => {
-        const tag = ex.examTopic ? ex.examTopic.toUpperCase() : ex.tag;
-
-        const exEl = document.createElement("div");
-        exEl.className = "exercise";
-        exEl.innerHTML = `
-          <div class="exercise-head">
-            <div class="exercise-number">Exercise ${ex.index}</div>
-            <div class="tag">${tag}</div>
-          </div>
-          <div class="math">${ex.q}</div>
-        `;
-        exerciseList.appendChild(exEl);
-
-        const solEl = document.createElement("div");
-        solEl.className = "exercise";
-        solEl.innerHTML = `
-          <div class="exercise-head">
-            <div class="exercise-number">Solution ${ex.index}</div>
-            <div class="tag">${tag}</div>
-          </div>
-          <div class="math">${ex.s}</div>
-        `;
-        solutionList.appendChild(solEl);
-      });
-
-      solutionsCard.classList.toggle("hidden", !solutionsVisible);
-      updatePills();
-      await typesetMath([exerciseList, solutionList]);
-    }
-
-    async function generateWorksheet() {
-      const titleInput = document.getElementById("title");
-      const countInput = document.getElementById("count");
-      const levelSelect = document.getElementById("level");
-      const previewTitle = document.getElementById("previewTitle");
-      const status = document.getElementById("status");
-
-      const count = Math.max(1, Math.min(50, Number(countInput.value) || 10));
-      countInput.value = count;
-
-      const level = levelSelect.value;
-      const title = titleInput.value.trim() || defaultTitleForTopic(currentTopic);
-
-      previewTitle.textContent = title;
-
-      currentExercises =
-        currentTopic === "exam"
-          ? buildExamSheet(level)
-          : buildExercises(currentTopic, count, level);
-
-      await renderLists();
-
-      status.textContent =
-        currentTopic === "exam"
-          ? `Generated ${currentExercises.length} exam exercises.`
-          : `Generated ${currentExercises.length} exercises.`;
-    }
-
-    async function setTopic(topic) {
-      currentTopic = topic;
-
-      const titleInput = document.getElementById("title");
-      const countWrap = document.getElementById("countWrap");
-      const status = document.getElementById("status");
-
-      titleInput.value = defaultTitleForTopic(topic);
-      countWrap.classList.toggle("hidden", topic === "exam");
-
-      updateTopicButtons();
-      solutionsVisible = false;
-      document.getElementById("toggleSolutionsBtn").textContent = "Show solutions";
-      status.textContent = "Ready.";
-
-      await generateWorksheet();
-    }
-
-    function buildPdfMarkup() {
-      const title = document.getElementById("previewTitle").textContent || "Worksheet";
-      const level = document.getElementById("level").value.toUpperCase();
-      const pdfLevel = withDisplayMath(`\\text{Difficulty: } ${latexText(level)}`);
-      const pdfSolutions = withDisplayMath(`\\text{Solutions}`);
-      const pdfExercises = withDisplayMath(`\\text{Exercises}`);
-
-      const exerciseHtml = currentExercises.map((ex) => {
-        const tag = ex.examTopic ? ex.examTopic.toUpperCase() : ex.tag;
-        return `
-          <div class="pdf-exercise">
-            <div class="pdf-head">
-              <div class="pdf-num">Exercise ${ex.index}</div>
-              <div class="pdf-tag">${tag}</div>
-            </div>
-            <div class="pdf-math">${ex.q}</div>
-          </div>
-        `;
-      }).join("");
-
-      const solutionHtml = currentExercises.map((ex) => {
-        const tag = ex.examTopic ? ex.examTopic.toUpperCase() : ex.tag;
-        return `
-          <div class="pdf-exercise">
-            <div class="pdf-head">
-              <div class="pdf-num">Solution ${ex.index}</div>
-              <div class="pdf-tag">${tag}</div>
-            </div>
-            <div class="pdf-math">${ex.s}</div>
-          </div>
-        `;
-      }).join("");
-
-      return `
-        <div class="pdf-page">
-          <div class="pdf-title">${title}</div>
-          <div class="pdf-meta">${pdfLevel}</div>
-          <div class="pdf-section-title">${pdfExercises}</div>
-          ${exerciseHtml}
-        </div>
-        ${solutionsVisible ? `
-        <div class="pdf-page">
-          <div class="pdf-title">${title}</div>
-          <div class="pdf-meta">${pdfSolutions}</div>
-          <div class="pdf-section-title">${pdfSolutions}</div>
-          ${solutionHtml}
-        </div>` : ""}
-      `;
-    }
-
-    async function downloadPdf() {
-      const status = document.getElementById("status");
-      const pdfArea = document.getElementById("pdfArea");
-      const title = document.getElementById("previewTitle").textContent || "worksheet";
-
-      try {
-        status.textContent = "Preparing PDF...";
-        pdfArea.innerHTML = buildPdfMarkup();
-        await typesetMath([pdfArea]);
-
-        const pages = Array.from(pdfArea.querySelectorAll(".pdf-page"));
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-
-        for (let i = 0; i < pages.length; i++) {
-          const canvas = await html2canvas(pages[i], {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: "#ffffff"
-          });
-
-          const imgData = canvas.toDataURL("image/png");
-          const imgWidth = pageWidth;
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-          if (i > 0) pdf.addPage();
-          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, Math.min(imgHeight, pageHeight));
-        }
-
-        const safeName = title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "") || "worksheet";
-
-        pdf.save(`${safeName}.pdf`);
-        status.textContent = "PDF downloaded successfully.";
-      } catch (err) {
-        status.textContent = "PDF generation failed.";
-        console.error(err);
-      }
-    }
-
-    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
-
-    document.getElementById("toggleSolutionsBtn").addEventListener("click", async () => {
-      solutionsVisible = !solutionsVisible;
-      document.getElementById("toggleSolutionsBtn").textContent =
-        solutionsVisible ? "Hide solutions" : "Show solutions";
-      await renderLists();
-    });
-
-    document.getElementById("downloadBtn").addEventListener("click", downloadPdf);
-    document.getElementById("level").addEventListener("change", async () => {
-      updatePills();
-      await generateWorksheet();
-    });
-
-    document.querySelectorAll("#topicNav button").forEach((btn) => {
-      btn.addEventListener("click", () => setTopic(btn.dataset.topic));
-    });
-
-    setTopic("integrals");
-  </script>
-</body>
-</html>
-  </textarea>
-
-  <textarea id="src-calc2" hidden>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Calculus II Generator</title>
-  <meta
-    name="description"
-    content="Calculus II worksheet generator for multivariable limits, multiple integrals, directional derivatives, differentiability, and exam-mode practice."
-  />
-
-  <script>
-    window.MathJax = {
-      tex: {
-        inlineMath: [['\\(', '\\)']],
-        displayMath: [['\\[', '\\]']]
-      },
-      svg: {
-        fontCache: 'global'
-      }
-    };
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
-
-  <style>
-    :root {
-      --bg-1: #09111f;
-      --bg-2: #16213d;
-      --panel: rgba(255, 255, 255, 0.07);
-      --panel-strong: rgba(255, 255, 255, 0.11);
-      --text: #eef2ff;
-      --muted: #bac5e9;
-      --accent: #79a8ff;
-      --accent-2: #8e78ff;
-      --accent-3: #59e1c1;
-      --border: rgba(255, 255, 255, 0.14);
-      --shadow: 0 20px 60px rgba(0, 0, 0, 0.28);
-      --tag-bg: rgba(89, 225, 193, 0.12);
-      --tag-border: rgba(89, 225, 193, 0.30);
-      --tag-text: #d9fff7;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Inter, Arial, sans-serif;
-      color: var(--text);
-      background:
-        radial-gradient(circle at top left, rgba(121, 168, 255, 0.20), transparent 28%),
-        radial-gradient(circle at top right, rgba(142, 120, 255, 0.16), transparent 30%),
-        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
-      min-height: 100vh;
-    }
-
-    .wrap {
-      max-width: 1260px;
-      margin: 0 auto;
-      padding: 28px;
-    }
-
-    .hero {
-      display: grid;
-      grid-template-columns: 88px 1fr;
-      gap: 18px;
-      align-items: center;
-      margin-bottom: 24px;
-    }
-
-    .hero-badge {
-      width: 88px;
-      height: 88px;
-      border-radius: 26px;
-      display: grid;
-      place-items: center;
-      font-size: 30px;
-      font-weight: 800;
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 18px 44px rgba(121, 168, 255, 0.28);
-    }
-
-    .hero h1 {
-      margin: 0 0 10px;
-      font-size: clamp(2rem, 4.5vw, 3.5rem);
-      line-height: 1.02;
-      letter-spacing: -0.03em;
-    }
-
-    .hero p {
-      margin: 0;
-      color: var(--muted);
-      line-height: 1.75;
-      max-width: 980px;
-      font-size: 1.03rem;
-    }
-
-    .topic-nav {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      margin: 20px 0 28px;
-    }
-
-    .topic-nav button {
-      width: auto;
-      padding: 11px 16px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: rgba(255, 255, 255, 0.04);
-      color: var(--muted);
-      cursor: pointer;
-      font-weight: 700;
-      transition: 0.2s ease;
-    }
-
-    .topic-nav button:hover {
-      transform: translateY(-1px);
-      color: var(--text);
-    }
-
-    .topic-nav button.active {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      color: white;
-      border: none;
-      box-shadow: 0 14px 30px rgba(121, 168, 255, 0.22);
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: 360px 1fr;
-      gap: 24px;
-      align-items: start;
-    }
-
-    .card {
-      background: var(--panel);
-      border: 1px solid var(--border);
-      border-radius: 28px;
-      padding: 22px;
-      box-shadow: var(--shadow);
-      backdrop-filter: blur(14px);
-    }
-
-    .settings-card {
-      position: sticky;
-      top: 18px;
-    }
-
-    .stack > * + * {
-      margin-top: 16px;
-    }
-
-    .card h2 {
-      margin: 0 0 6px;
-      font-size: 1.2rem;
-    }
-
-    .subtle {
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
-
-    .status {
-      color: var(--muted);
-      font-size: 0.94rem;
-      line-height: 1.5;
-      padding: 2px 2px 0;
-    }
-
-    label {
-      display: block;
-      margin-bottom: 8px;
-      color: var(--muted);
-      font-size: 0.95rem;
-      font-weight: 600;
-    }
-
-    input, select, button {
-      width: 100%;
-      padding: 13px 14px;
-      border-radius: 16px;
-      border: 1px solid var(--border);
-      background: #121933;
-      color: var(--text);
-      font-size: 1rem;
-      outline: none;
-    }
-
-    input:focus, select:focus {
-      border-color: rgba(121, 168, 255, 0.65);
-      box-shadow: 0 0 0 4px rgba(121, 168, 255, 0.12);
-    }
-
-    button {
-      cursor: pointer;
-      font-weight: 800;
-      transition: 0.2s ease;
-    }
-
-    button:hover {
-      transform: translateY(-1px);
-    }
-
-    .primary {
-      background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      border: none;
-      box-shadow: 0 14px 28px rgba(121, 168, 255, 0.25);
-    }
-
-    .secondary {
-      background: rgba(255, 255, 255, 0.06);
-    }
-
-    .preview-title-row {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-      flex-wrap: wrap;
-      margin-bottom: 14px;
-    }
-
-    .level-pill {
-      display: inline-block;
-      padding: 7px 11px;
-      border-radius: 999px;
-      border: 1px solid var(--border);
-      background: var(--panel-strong);
-      color: #dce5ff;
-      font-size: 0.8rem;
-      letter-spacing: 0.04em;
-      font-weight: 700;
-    }
-
-    .exercise {
-      border: 1px solid var(--border);
-      border-radius: 18px;
-      padding: 16px;
-      margin-top: 14px;
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .exercise-head {
-      display: flex;
-      gap: 10px;
-      justify-content: space-between;
-      align-items: center;
-      flex-wrap: wrap;
-      margin-bottom: 10px;
-    }
-
-    .tag {
-      display: inline-block;
-      font-size: 0.78rem;
-      color: var(--tag-text);
-      background: var(--tag-bg);
-      border: 1px solid var(--tag-border);
-      padding: 5px 9px;
-      border-radius: 999px;
-      font-weight: 700;
-    }
-
-    .exercise-number {
-      color: var(--muted);
-      font-weight: 700;
-      font-size: 0.95rem;
-    }
-
-    .math {
-      font-size: 1.08rem;
-      line-height: 1.75;
-      overflow-wrap: anywhere;
-    }
-
-    .solutions-card.hidden {
-      display: none;
-    }
-
-    .footer-copy {
-      margin-top: 28px;
-      color: var(--muted);
-      line-height: 1.7;
-      font-size: 0.95rem;
-    }
-
-    .hidden {
-      display: none !important;
-    }
-
-    #pdfArea {
-      position: absolute;
-      left: -99999px;
-      top: 0;
-      width: 794px;
-      background: white;
-      color: black;
-      padding: 40px;
-    }
-
-    .pdf-page {
-      width: 100%;
-      min-height: 1040px;
-      padding: 10px 0 30px;
-      background: white;
-      color: black;
-      page-break-after: always;
-    }
-
-    .pdf-page:last-child {
-      page-break-after: auto;
-    }
-
-    .pdf-title {
-      font-size: 28px;
-      font-weight: 700;
-      margin-bottom: 6px;
-      color: black;
-    }
-
-    .pdf-meta {
-      font-size: 14px;
-      color: #333;
-      margin-bottom: 22px;
-    }
-
-    .pdf-section-title {
-      font-size: 20px;
-      font-weight: 700;
-      margin: 10px 0 18px;
-      color: black;
-    }
-
-    .pdf-exercise {
-      border: 1px solid #d6d6d6;
-      border-radius: 12px;
-      padding: 12px 14px;
-      margin-bottom: 12px;
-      background: #fff;
-      break-inside: avoid;
-    }
-
-    .pdf-head {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      gap: 10px;
-      margin-bottom: 8px;
-      flex-wrap: wrap;
-    }
-
-    .pdf-tag {
-      display: inline-block;
-      font-size: 11px;
-      padding: 4px 8px;
-      border-radius: 999px;
-      background: #eef7f4;
-      border: 1px solid #cbe9df;
-      color: #165c4f;
-      font-weight: 700;
-    }
-
-    .pdf-num {
-      color: #444;
-      font-weight: 700;
-      font-size: 13px;
-    }
-
-    .pdf-math {
-      color: black;
-      font-size: 16px;
-      line-height: 1.6;
-    }
-
-    @media (max-width: 980px) {
-      .hero { grid-template-columns: 1fr; }
-      .hero-badge { width: 72px; height: 72px; font-size: 28px; }
-      .grid { grid-template-columns: 1fr; }
-      .settings-card { position: static; }
-    }
-  </style>
-</head>
-<body>
-  <div class="wrap">
-    <section class="hero">
-      <div class="hero-badge">∇</div>
-      <div>
-        <h1>Calculus II Generator</h1>
-        <p>
-          Generate university-style practice sheets for multivariable limits, multiple integrals,
-          directional derivatives, differentiability, and mixed exam-mode training. Every mathematical
-          expression is rendered in LaTeX both on the page and inside the downloaded PDF.
-        </p>
-      </div>
-    </section>
-
-    <div class="topic-nav" id="topicNav">
-      <button data-topic="multivariable-limits" class="active">Multivariable Limits</button>
-      <button data-topic="multiple-integrals">Multiple Integrals</button>
-      <button data-topic="directional-derivatives">Directional Derivatives</button>
-      <button data-topic="differentiability">Differentiability</button>
-      <button data-topic="exam">Exam Mode</button>
-    </div>
-
-    <div class="grid">
-      <div class="card settings-card stack">
-        <div>
-          <h2>Settings</h2>
-          <div class="subtle">Choose a topic, difficulty, and generate a fresh university-style worksheet instantly.</div>
-        </div>
-
-        <div>
-          <label for="title">Worksheet title</label>
-          <input id="title" value="Calculus II Worksheet" />
-        </div>
-
-        <div id="countWrap">
-          <label for="count">Number of exercises</label>
-          <input id="count" type="number" min="1" max="50" value="10" />
-        </div>
-
-        <div>
-          <label for="level">Difficulty</label>
-          <select id="level">
-            <option value="easy">Easy</option>
-            <option value="medium" selected>Medium</option>
-            <option value="hard">Hard</option>
-          </select>
-        </div>
-
-        <button class="primary" id="generateBtn">Generate worksheet</button>
-        <button class="secondary" id="toggleSolutionsBtn">Show solutions</button>
-        <button class="secondary" id="downloadBtn">Download PDF</button>
-
-        <div class="status" id="status">Ready.</div>
-      </div>
-
-      <div>
-        <div class="card">
-          <div class="preview-title-row">
-            <h2 id="previewTitle" style="margin: 0;">Calculus II Worksheet</h2>
-            <div class="level-pill" id="levelPill">MEDIUM</div>
-          </div>
-          <div id="exerciseList"></div>
-        </div>
-
-        <div class="card solutions-card hidden" id="solutionsCard" style="margin-top: 24px;">
-          <div class="preview-title-row">
-            <h2 style="margin: 0;">Solutions</h2>
-            <div class="level-pill" id="solutionsPill">HIDDEN</div>
-          </div>
-          <div id="solutionList"></div>
-        </div>
-      </div>
-    </div>
-
-    <div class="footer-copy">
-      In Exam Mode, the generator creates one exercise for each topic: multivariable limits, multiple integrals,
-      directional derivatives, and differentiability.
-    </div>
-  </div>
-
-  <div id="pdfArea"></div>
-
-  <script>
-    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
-
-    const choice = (arr) => {
-      if (!Array.isArray(arr) || arr.length === 0) {
-        throw new Error("Cannot choose from an empty array.");
-      }
-      return arr[Math.floor(Math.random() * arr.length)];
-    };
-
-    function gcd(a, b) {
-      a = Math.abs(a);
-      b = Math.abs(b);
-      while (b !== 0) {
-        const t = b;
-        b = a % b;
-        a = t;
-      }
-      return a;
-    }
-
-    function frac(n, d) {
-      if (d === 0) throw new Error("Denominator cannot be zero.");
-      const sign = d < 0 ? -1 : 1;
-      n *= sign;
-      d *= sign;
-      const g = gcd(n, d);
-      return `\\frac{${n / g}}{${d / g}}`;
-    }
-
-    function withDisplayMath(latex) {
-      return `\\[${latex}\\]`;
-    }
-
-    function latexText(text) {
-      return String(text)
-        .replace(/\\/g, "\\\\")
-        .replace(/%/g, "\\%")
-        .replace(/_/g, "\\_")
-        .replace(/&/g, "\\&")
-        .replace(/#/g, "\\#");
-    }
-
-    function shuffle(array) {
-      const arr = [...array];
-      for (let i = arr.length - 1; i > 0; i--) {
-        const j = Math.floor(Math.random() * (i + 1));
-        [arr[i], arr[j]] = [arr[j], arr[i]];
-      }
-      return arr;
-    }
-
-    function sampleExercises(pool, count) {
-      if (!Array.isArray(pool) || pool.length === 0) return [];
-      const out = [];
-      while (out.length < count) {
-        const round = shuffle(pool);
-        for (const ex of round) {
-          out.push(ex);
-          if (out.length >= count) break;
-        }
-      }
-      return out.slice(0, count).map((ex, index) => ({
-        index: index + 1,
-        q: ex.q,
-        s: ex.s,
-        tag: ex.tag,
-        examTopic: ex.examTopic
-      }));
-    }
-
-    function buildPool(factory, size = 120) {
-      const seen = new Set();
-      const out = [];
-      let attempts = 0;
-
-      while (out.length < size && attempts < size * 45) {
-        attempts += 1;
-        const ex = factory();
-        const key = `${ex.q}=>${ex.s}`;
-        if (seen.has(key)) continue;
-        seen.add(key);
-        out.push(ex);
-      }
-      return shuffle(out);
-    }
-
-    function multivariableLimitTemplates(level = "medium") {
-      if (level === "easy") {
-        return buildPool(() => {
-          const a = randInt(1, 5);
-          const b = randInt(1, 5);
-          const c = randInt(1, 4);
-          const type = randInt(1, 8);
-
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2+y^2}{\\sqrt{x^2+y^2}}`),
-                s: withDisplayMath(`0`),
-                tag: "Polar coordinates"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2y^2}{x^2+y^2}`),
-                s: withDisplayMath(`0`),
-                tag: "Squeeze theorem"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{${a}xy}{x^2+y^2}`),
-                s: withDisplayMath(`\\text{Does not exist}`),
-                tag: "Path dependence"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2y}{x^2+y^2}`),
-                s: withDisplayMath(`0`),
-                tag: "Polar coordinates"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2+y^2}{${b}+x^2+y^2}`),
-                s: withDisplayMath(`0`),
-                tag: "Continuity"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^4+y^4}{x^2+y^2}`),
-                s: withDisplayMath(`0`),
-                tag: "Degree comparison"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{\\sin(x^2+y^2)}{x^2+y^2}`),
-                s: withDisplayMath(`1`),
-                tag: "Notable limit"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2-${c}y^2}{x^2+y^2}`),
-                s: withDisplayMath(`\\text{Does not exist}`),
-                tag: "Path dependence"
-              };
-          }
-        }, 120);
-      }
-
-      if (level === "hard") {
-        return buildPool(() => {
-          const a = randInt(1, 5);
-          const b = randInt(2, 6);
-          const type = randInt(1, 10);
-
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2y^2}{(x^2+y^2)^{3/2}}`),
-                s: withDisplayMath(`0`),
-                tag: "Polar coordinates"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^3-y^3}{x^2+y^2}`),
-                s: withDisplayMath(`0`),
-                tag: "Order estimate"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2y}{x^4+y^2}`),
-                s: withDisplayMath(`\\text{Does not exist}`),
-                tag: "Curved path"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^{${b}}+y^{${b}}}{\\sqrt{x^2+y^2}}`),
-                s: withDisplayMath(`0`),
-                tag: "Degree comparison"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2-y^2}{\\sqrt{x^2+y^2}}`),
-                s: withDisplayMath(`0`),
-                tag: "Polar coordinates"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^4+a y^4}{x^2+y^2}`.replace('a', String(a))),
-                s: withDisplayMath(`0`),
-                tag: "Order estimate"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2y^2}{x^4+y^4}`),
-                s: withDisplayMath(`\\text{Does not exist}`),
-                tag: "Path dependence"
-              };
-            case 8:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{e^{x^2+y^2}-1}{x^2+y^2}`),
-                s: withDisplayMath(`1`),
-                tag: "Expansion"
-              };
-            case 9:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{\\ln(1+x^2+y^2)}{x^2+y^2}`),
-                s: withDisplayMath(`1`),
-                tag: "Expansion"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{xy}{\\sqrt{x^2+y^2}}`),
-                s: withDisplayMath(`0`),
-                tag: "Polar coordinates"
-              };
-          }
-        }, 120);
-      }
-
-      return buildPool(() => {
-        const a = randInt(1, 4);
-        const type = randInt(1, 10);
-
-        switch (type) {
-          case 1:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2y}{x^2+y^2}`),
-              s: withDisplayMath(`0`),
-              tag: "Polar coordinates"
-            };
-          case 2:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{xy}{x^2+y^2}`),
-              s: withDisplayMath(`\\text{Does not exist}`),
-              tag: "Path dependence"
-            };
-          case 3:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^3+y^3}{x^2+y^2}`),
-              s: withDisplayMath(`0`),
-              tag: "Degree comparison"
-            };
-          case 4:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{\\sin(x^2+y^2)}{x^2+y^2}`),
-              s: withDisplayMath(`1`),
-              tag: "Notable limit"
-            };
-          case 5:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2-${a}y^2}{x^2+y^2}`),
-              s: withDisplayMath(`\\text{Does not exist}`),
-              tag: "Path dependence"
-            };
-          case 6:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^2y^2}{x^2+y^2}`),
-              s: withDisplayMath(`0`),
-              tag: "Squeeze theorem"
-            };
-          case 7:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{\\sqrt{1+x^2+y^2}-1}{x^2+y^2}`),
-              s: withDisplayMath(`\\frac{1}{2}`),
-              tag: "Rationalization"
-            };
-          case 8:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{e^{x^2+y^2}-1}{x^2+y^2}`),
-              s: withDisplayMath(`1`),
-              tag: "Expansion"
-            };
-          case 9:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{x^4+y^4}{x^2+y^2}`),
-              s: withDisplayMath(`0`),
-              tag: "Degree comparison"
-            };
-          default:
-            return {
-              q: withDisplayMath(`\\lim_{(x,y)\\to(0,0)} \\frac{|x|y^2}{x^2+y^2}`),
-              s: withDisplayMath(`0`),
-              tag: "Estimate"
-            };
-          }
-      }, 120);
-    }
-
-    function multipleIntegralTemplates(level = "medium") {
-      if (level === "easy") {
-        return buildPool(() => {
-          const a = randInt(1, 4);
-          const b = randInt(1, 4);
-          const type = randInt(1, 8);
-
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\iint_{[0,${a}]\\times[0,${b}]} (x+y)\\,dA`),
-                s: withDisplayMath(`\\frac{${a * a * b}}{2}+\\frac{${a * b * b}}{2}`),
-                tag: "Rectangular region"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\iint_{[0,1]\\times[0,1]} xy\\,dA`),
-                s: withDisplayMath(`\\frac{1}{4}`),
-                tag: "Fubini"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\iint_{D} 1\\,dA,\\quad D=\\{(x,y):x^2+y^2\\le 1\\}`),
-                s: withDisplayMath(`\\pi`),
-                tag: "Area of disk"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\iint_{D} (x^2+y^2)\\,dA,\\quad D=\\{(x,y):x^2+y^2\\le 1\\}`),
-                s: withDisplayMath(`\\frac{\\pi}{2}`),
-                tag: "Polar coordinates"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\int_0^1\\int_0^x (x+y)\\,dy\\,dx`),
-                s: withDisplayMath(`\\frac{1}{2}`),
-                tag: "Triangular region"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\iint_{[0,1]^2} e^{x+y}\\,dA`),
-                s: withDisplayMath(`(e-1)^2`),
-                tag: "Separable integrand"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`\\iint_{[0,2]\\times[0,1]} x^2\\,dA`),
-                s: withDisplayMath(`\\frac{8}{3}`),
-                tag: "Iterated integral"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\iint_{[0,1]^2} (x^2+y^2)\\,dA`),
-                s: withDisplayMath(`\\frac{2}{3}`),
-                tag: "Polynomial"
-              };
-          }
-        }, 120);
-      }
-
-      if (level === "hard") {
-        return buildPool(() => {
-          const a = randInt(1, 3);
-          const type = randInt(1, 10);
-
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\iint_D (x^2+y^2)\\,dA,\\quad D=\\{(x,y):1\\le x^2+y^2\\le 4\\}`),
-                s: withDisplayMath(`\\frac{15\\pi}{2}`),
-                tag: "Polar coordinates"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\iint_D xy\\,dA,\\quad D=\\{(x,y):0\\le y\\le x\\le 1\\}`),
-                s: withDisplayMath(`\\frac{1}{8}`),
-                tag: "Non-rectangular region"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\iint_D (x+y)\\,dA,\\quad D=\\{(x,y):0\\le x\\le 1,\\ x\\le y\\le 1\\}`),
-                s: withDisplayMath(`\\frac{2}{3}`),
-                tag: "Region description"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\iint_D e^{x^2+y^2}\\,dA,\\quad D=\\{(x,y):x^2+y^2\\le 1\\}`),
-                s: withDisplayMath(`\\pi(e-1)`),
-                tag: "Polar substitution"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\iiint_{[0,1]^3} (x+y+z)\\,dV`),
-                s: withDisplayMath(`\\frac{3}{2}`),
-                tag: "Triple integral"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\iiint_{[0,${a}]^3} 1\\,dV`),
-                s: withDisplayMath(`${a ** 3}`),
-                tag: "Volume"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`\\iint_D \\frac{1}{1+x^2+y^2}\\,dA,\\quad D=\\{(x,y):x^2+y^2\\le 1\\}`),
-                s: withDisplayMath(`\\pi\\ln 2`),
-                tag: "Polar coordinates"
-              };
-            case 8:
-              return {
-                q: withDisplayMath(`\\int_0^1 \\int_{x^2}^{x} 1\\,dy\\,dx`),
-                s: withDisplayMath(`\\frac{1}{6}`),
-                tag: "Curved bounds"
-              };
-            case 9:
-              return {
-                q: withDisplayMath(`\\iint_D (x^2-y^2)\\,dA,\\quad D=\\{(x,y):x^2+y^2\\le 1\\}`),
-                s: withDisplayMath(`0`),
-                tag: "Symmetry"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\iiint_{[0,1]^3} xyz\\,dV`),
-                s: withDisplayMath(`\\frac{1}{8}`),
-                tag: "Product integral"
-              };
-          }
-        }, 120);
-      }
-
-      return buildPool(() => {
-        const a = randInt(1, 3);
-        const b = randInt(1, 3);
-        const type = randInt(1, 10);
-
-        switch (type) {
-          case 1:
-            return {
-              q: withDisplayMath(`\\iint_{[0,${a}]\\times[0,${b}]} (x+y)\\,dA`),
-              s: withDisplayMath(`\\frac{${a * a * b}}{2}+\\frac{${a * b * b}}{2}`),
-              tag: "Rectangular region"
-            };
-          case 2:
-            return {
-              q: withDisplayMath(`\\iint_D 1\\,dA,\\quad D=\\{(x,y):x^2+y^2\\le 1\\}`),
-              s: withDisplayMath(`\\pi`),
-              tag: "Area of disk"
-            };
-          case 3:
-            return {
-              q: withDisplayMath(`\\iint_D (x^2+y^2)\\,dA,\\quad D=\\{(x,y):x^2+y^2\\le 1\\}`),
-              s: withDisplayMath(`\\frac{\\pi}{2}`),
-              tag: "Polar coordinates"
-            };
-          case 4:
-            return {
-              q: withDisplayMath(`\\int_0^1\\int_0^x (x+y)\\,dy\\,dx`),
-              s: withDisplayMath(`\\frac{1}{2}`),
-              tag: "Triangular region"
-            };
-          case 5:
-            return {
-              q: withDisplayMath(`\\iint_{[0,1]^2} e^{x+y}\\,dA`),
-              s: withDisplayMath(`(e-1)^2`),
-              tag: "Separable integrand"
-            };
-          case 6:
-            return {
-              q: withDisplayMath(`\\iint_D xy\\,dA,\\quad D=\\{(x,y):0\\le y\\le x\\le 1\\}`),
-              s: withDisplayMath(`\\frac{1}{8}`),
-              tag: "Non-rectangular region"
-            };
-          case 7:
-            return {
-              q: withDisplayMath(`\\iiint_{[0,1]^3} (x+y+z)\\,dV`),
-              s: withDisplayMath(`\\frac{3}{2}`),
-              tag: "Triple integral"
-            };
-          case 8:
-            return {
-              q: withDisplayMath(`\\iiint_{[0,1]^3} xyz\\,dV`),
-              s: withDisplayMath(`\\frac{1}{8}`),
-              tag: "Product integral"
-            };
-          case 9:
-            return {
-              q: withDisplayMath(`\\int_0^1 \\int_{x^2}^{x} 1\\,dy\\,dx`),
-              s: withDisplayMath(`\\frac{1}{6}`),
-              tag: "Curved bounds"
-            };
-          default:
-            return {
-              q: withDisplayMath(`\\iint_D (x^2-y^2)\\,dA,\\quad D=\\{(x,y):x^2+y^2\\le 1\\}`),
-              s: withDisplayMath(`0`),
-              tag: "Symmetry"
-            };
-          }
-      }, 120);
-    }
-
-    function directionalDerivativeTemplates(level = "medium") {
-      if (level === "easy") {
-        return buildPool(() => {
-          const a = randInt(1, 4);
-          const b = randInt(1, 4);
-          const c = randInt(1, 3);
-          const type = randInt(1, 12);
-
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`f(x,y)=x^2+y^2,\\quad D_{\\mathbf{u}}f(1,1),\\quad \\mathbf{u}=\\left(\\frac{1}{\\sqrt{2}},\\frac{1}{\\sqrt{2}}\\right)`),
-                s: withDisplayMath(`\\nabla f(1,1)=(2,2),\\quad D_{\\mathbf{u}}f(1,1)=2\\sqrt{2}`),
-                tag: "Gradient method"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`f(x,y)=x^2y+3y,\\quad D_{\\mathbf{u}}f(1,2),\\quad \\mathbf{u}=\\left(1,0\\right)`),
-                s: withDisplayMath(`\\nabla f(x,y)=(2xy,x^2+3),\\quad \\nabla f(1,2)=(4,4),\\quad D_{\\mathbf{u}}f(1,2)=4`),
-                tag: "Partial derivative direction"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`f(x,y)=e^{x+y},\\quad D_{\\mathbf{u}}f(0,0),\\quad \\mathbf{u}=\\left(\\frac{1}{\\sqrt{2}},-\\frac{1}{\\sqrt{2}}\\right)`),
-                s: withDisplayMath(`\\nabla f(0,0)=(1,1),\\quad D_{\\mathbf{u}}f(0,0)=0`),
-                tag: "Orthogonal direction"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`f(x,y)=x^2+xy+y^2,\\quad D_{\\mathbf{u}}f(1,0),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{5}}(1,2)`),
-                s: withDisplayMath(`\\nabla f(x,y)=(2x+y,x+2y),\\quad \\nabla f(1,0)=(2,1),\\quad D_{\\mathbf{u}}f(1,0)=\\frac{4}{\\sqrt{5}}`),
-                tag: "Normalized vector"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`f(x,y,z)=x^2+y^2+z^2,\\quad D_{\\mathbf{u}}f(1,1,1),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{3}}(1,1,1)`),
-                s: withDisplayMath(`\\nabla f(1,1,1)=(2,2,2),\\quad D_{\\mathbf{u}}f(1,1,1)=2\\sqrt{3}`),
-                tag: "Three variables"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`f(x,y)=\\ln(1+x^2+y^2),\\quad D_{\\mathbf{u}}f(1,0),\\quad \\mathbf{u}=(0,1)`),
-                s: withDisplayMath(`\\nabla f(x,y)=\\left(\\frac{2x}{1+x^2+y^2},\\frac{2y}{1+x^2+y^2}\\right),\\quad D_{\\mathbf{u}}f(1,0)=0`),
-                tag: "Zero directional derivative"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`f(x,y)=x e^y,\\quad D_{\\mathbf{u}}f(1,0),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{2}}(1,1)`),
-                s: withDisplayMath(`\\nabla f(x,y)=(e^y,xe^y),\\quad \\nabla f(1,0)=(1,1),\\quad D_{\\mathbf{u}}f(1,0)=\\sqrt{2}`),
-                tag: "Gradient method"
-              };
-            case 8:
-              return {
-                q: withDisplayMath(`f(x,y)=x^3-y^2,\\quad D_{\\mathbf{u}}f(1,1),\\quad \\mathbf{u}=\\left(0,1\\right)`),
-                s: withDisplayMath(`\\nabla f(x,y)=(3x^2,-2y),\\quad \\nabla f(1,1)=(3,-2),\\quad D_{\\mathbf{u}}f(1,1)=-2`),
-                tag: "Coordinate direction"
-              };
-            case 9:
-              return {
-                q: withDisplayMath(`f(x,y)=x^2+y^2,\\quad \\text{find the direction of maximum increase at }(1,2)`),
-                s: withDisplayMath(`\\nabla f(1,2)=(2,4),\\quad \\mathbf{u}_{\\max}=\\frac{1}{\\sqrt{5}}(1,2)`),
-                tag: "Maximum increase"
-              };
-            case 10:
-              return {
-                q: withDisplayMath(`f(x,y)=x^2-xy,\\quad D_{\\mathbf{u}}f(1,1),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{2}}(1,-1)`),
-                s: withDisplayMath(`\\nabla f(x,y)=(2x-y,-x),\\quad \\nabla f(1,1)=(1,-1),\\quad D_{\\mathbf{u}}f(1,1)=\\sqrt{2}`),
-                tag: "Gradient method"
-              };
-            case 11:
-              return {
-                q: withDisplayMath(`f(x,y)=\\sqrt{1+x^2+y^2},\\quad D_{\\mathbf{u}}f(0,1),\\quad \\mathbf{u}=(1,0)`),
-                s: withDisplayMath(`\\nabla f(x,y)=\\left(\\frac{x}{\\sqrt{1+x^2+y^2}},\\frac{y}{\\sqrt{1+x^2+y^2}}\\right),\\quad D_{\\mathbf{u}}f(0,1)=0`),
-                tag: "Gradient method"
-              };
-            default:
-              return {
-                q: withDisplayMath(`f(x,y)=x^2+${a}xy+${b}y^2,\\quad D_{\\mathbf{u}}f(1,1),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{2}}(1,1)`),
-                s: withDisplayMath(`\\nabla f(x,y)=(2x+${a}y,${a}x+${2*b}y),\\quad \\nabla f(1,1)=(${2+a},${a+2*b}),\\quad D_{\\mathbf{u}}f(1,1)=\\frac{${2+a}+${a+2*b}}{\\sqrt{2}}`),
-                tag: "Parameterized"
-              };
-          }
-        }, 120);
-      }
-
-      const commonPool = buildPool(() => {
-        const a = randInt(1, 4);
-        const b = randInt(1, 4);
-        const c = randInt(1, 3);
-        const type = randInt(1, 12);
-
-        switch (type) {
-          case 1:
-            return {
-              q: withDisplayMath(`f(x,y)=x^2+y^2,\\quad D_{\\mathbf{u}}f(1,1),\\quad \\mathbf{u}=\\left(\\frac{1}{\\sqrt{2}},\\frac{1}{\\sqrt{2}}\\right)`),
-              s: withDisplayMath(`\\nabla f(1,1)=(2,2),\\quad D_{\\mathbf{u}}f(1,1)=2\\sqrt{2}`),
-              tag: "Gradient method"
-            };
-          case 2:
-            return {
-              q: withDisplayMath(`f(x,y)=x^2y+3y,\\quad D_{\\mathbf{u}}f(1,2),\\quad \\mathbf{u}=\\left(1,0\\right)`),
-              s: withDisplayMath(`\\nabla f(x,y)=(2xy,x^2+3),\\quad \\nabla f(1,2)=(4,4),\\quad D_{\\mathbf{u}}f(1,2)=4`),
-              tag: "Partial derivative direction"
-            };
-          case 3:
-            return {
-              q: withDisplayMath(`f(x,y)=e^{x+y},\\quad D_{\\mathbf{u}}f(0,0),\\quad \\mathbf{u}=\\left(\\frac{1}{\\sqrt{2}},-\\frac{1}{\\sqrt{2}}\\right)`),
-              s: withDisplayMath(`\\nabla f(0,0)=(1,1),\\quad D_{\\mathbf{u}}f(0,0)=0`),
-              tag: "Orthogonal direction"
-            };
-          case 4:
-            return {
-              q: withDisplayMath(`f(x,y)=x^2+xy+y^2,\\quad D_{\\mathbf{u}}f(1,0),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{5}}(1,2)`),
-              s: withDisplayMath(`\\nabla f(x,y)=(2x+y,x+2y),\\quad \\nabla f(1,0)=(2,1),\\quad D_{\\mathbf{u}}f(1,0)=\\frac{4}{\\sqrt{5}}`),
-              tag: "Normalized vector"
-            };
-          case 5:
-            return {
-              q: withDisplayMath(`f(x,y,z)=x^2+y^2+z^2,\\quad D_{\\mathbf{u}}f(1,1,1),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{3}}(1,1,1)`),
-              s: withDisplayMath(`\\nabla f(1,1,1)=(2,2,2),\\quad D_{\\mathbf{u}}f(1,1,1)=2\\sqrt{3}`),
-              tag: "Three variables"
-            };
-          case 6:
-            return {
-              q: withDisplayMath(`f(x,y)=\\ln(1+x^2+y^2),\\quad D_{\\mathbf{u}}f(1,0),\\quad \\mathbf{u}=(0,1)`),
-              s: withDisplayMath(`\\nabla f(x,y)=\\left(\\frac{2x}{1+x^2+y^2},\\frac{2y}{1+x^2+y^2}\\right),\\quad D_{\\mathbf{u}}f(1,0)=0`),
-              tag: "Zero directional derivative"
-            };
-          case 7:
-            return {
-              q: withDisplayMath(`f(x,y)=x e^y,\\quad D_{\\mathbf{u}}f(1,0),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{2}}(1,1)`),
-              s: withDisplayMath(`\\nabla f(x,y)=(e^y,xe^y),\\quad \\nabla f(1,0)=(1,1),\\quad D_{\\mathbf{u}}f(1,0)=\\sqrt{2}`),
-              tag: "Gradient method"
-            };
-          case 8:
-            return {
-              q: withDisplayMath(`f(x,y)=x^3-y^2,\\quad D_{\\mathbf{u}}f(1,1),\\quad \\mathbf{u}=\\left(0,1\\right)`),
-              s: withDisplayMath(`\\nabla f(x,y)=(3x^2,-2y),\\quad \\nabla f(1,1)=(3,-2),\\quad D_{\\mathbf{u}}f(1,1)=-2`),
-              tag: "Coordinate direction"
-            };
-          case 9:
-            return {
-              q: withDisplayMath(`f(x,y)=x^2+y^2,\\quad \\text{find the direction of maximum increase at }(1,2)`),
-              s: withDisplayMath(`\\nabla f(1,2)=(2,4),\\quad \\mathbf{u}_{\\max}=\\frac{1}{\\sqrt{5}}(1,2)`),
-              tag: "Maximum increase"
-            };
-          case 10:
-            return {
-              q: withDisplayMath(`f(x,y)=x^2-xy,\\quad D_{\\mathbf{u}}f(1,1),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{2}}(1,-1)`),
-              s: withDisplayMath(`\\nabla f(x,y)=(2x-y,-x),\\quad \\nabla f(1,1)=(1,-1),\\quad D_{\\mathbf{u}}f(1,1)=\\sqrt{2}`),
-              tag: "Gradient method"
-            };
-          case 11:
-            return {
-              q: withDisplayMath(`f(x,y)=\\sqrt{1+x^2+y^2},\\quad D_{\\mathbf{u}}f(0,1),\\quad \\mathbf{u}=(1,0)`),
-              s: withDisplayMath(`\\nabla f(x,y)=\\left(\\frac{x}{\\sqrt{1+x^2+y^2}},\\frac{y}{\\sqrt{1+x^2+y^2}}\\right),\\quad D_{\\mathbf{u}}f(0,1)=0`),
-              tag: "Gradient method"
-            };
-          default:
-            return {
-              q: withDisplayMath(`f(x,y)=x^2+${a}xy+${b}y^2,\\quad D_{\\mathbf{u}}f(1,1),\\quad \\mathbf{u}=\\frac{1}{\\sqrt{2}}(1,1)`),
-              s: withDisplayMath(`\\nabla f(x,y)=(2x+${a}y,${a}x+${2*b}y),\\quad \\nabla f(1,1)=(${2+a},${a+2*b}),\\quad D_{\\mathbf{u}}f(1,1)=\\frac{${2+a}+${a+2*b}}{\\sqrt{2}}`),
-              tag: "Parameterized"
-            };
-        }
-      }, 120);
-
-      if (level === "easy") {
-        return commonPool.filter((_, index) => index % 2 === 0);
-      }
-      if (level === "hard") {
-        return commonPool;
-      }
-      return commonPool.slice(0, 90);
-    }
-
-    function differentiabilityTemplates(level = "medium") {
-      if (level === "easy") {
-        return buildPool(() => {
-          const type = randInt(1, 8);
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`f(x,y)=x^2+y^2.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes. Polynomials are differentiable everywhere.}`),
-                tag: "Polynomial"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`f(x,y)=\\sqrt{1+x^2+y^2}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes. It is a composition of differentiable functions near }(0,0).`),
-                tag: "Composition"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`f(x,y)=|x|+|y|.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{No. Partial derivatives are not compatible with a linear approximation at }(0,0).`),
-                tag: "Absolute value"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{x^2y}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes. }f(x,y)=o(\\sqrt{x^2+y^2}),\\text{ so }f\\text{ is differentiable at }(0,0)\\text{ with }df_{(0,0)}=0.`),
-                tag: "Little-o test"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{xy}{\\sqrt{x^2+y^2}},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{No. Although }f\\to0,\\text{ the quotient }\\frac{f(x,y)}{\\sqrt{x^2+y^2}}\\text{ does not tend to }0.`),
-                tag: "Failure of differentiability"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`f(x,y)=e^{x+y}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes. Smooth functions are differentiable everywhere.}`),
-                tag: "Smooth function"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`f(x,y)=\\max\\{x,y\\}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{No. The directional behavior changes across the line }x=y.`),
-                tag: "Non-smooth"
-              };
-            default:
-              return {
-                q: withDisplayMath(`f(x,y)=x^2y^2.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes. Polynomials are differentiable everywhere.}`),
-                tag: "Polynomial"
-              };
-          }
-        }, 120);
-      }
-
-      if (level === "hard") {
-        return buildPool(() => {
-          const type = randInt(1, 10);
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{x^2y}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Study continuity, partial derivatives, and differentiability at }(0,0).`),
-                s: withDisplayMath(`f\\text{ is continuous at }(0,0),\\ \\partial_x f(0,0)=0,\\ \\partial_y f(0,0)=0,\\text{ and }f\\text{ is differentiable at }(0,0).`),
-                tag: "Full point analysis"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{xy}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Study continuity and differentiability at }(0,0).`),
-                s: withDisplayMath(`f\\text{ is not continuous at }(0,0),\\text{ hence it is not differentiable there.}`),
-                tag: "Path dependence"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{x^3}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\partial_x f(0,0)=1,\\ \\partial_y f(0,0)=0,\\text{ but }f\\text{ is not differentiable at }(0,0).`),
-                tag: "Partials not sufficient"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{x^2y^2}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes. }|f(x,y)|\\le x^2+y^2,\\text{ so }f=o(\\sqrt{x^2+y^2}).`),
-                tag: "Estimate"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`f(x,y)=|x|y.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{No. The increment ratio depends on the sign of }x.`),
-                tag: "Absolute value"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{x^4+y^4}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes. }f(x,y)=O(x^2+y^2),\\text{ so }f=o(\\sqrt{x^2+y^2}).`),
-                tag: "Higher order"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`f(x,y)=\\sqrt{|xy|}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{No. Along }x=y=t,\\ f(t,t)=|t|,\\text{ which is not }o(\\sqrt{2}|t|).`),
-                tag: "Counterexample path"
-              };
-            case 8:
-              return {
-                q: withDisplayMath(`f(x,y)=x^2\\sin\\!\\left(\\frac{1}{x}\\right)+y^2\\quad (x\\ne 0),\\text{ suitably extended at }x=0.\\ \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes, with a suitable extension }f(0,y)=y^2,\\text{ because }x^2\\sin(1/x)=o(\\sqrt{x^2+y^2}).`),
-                tag: "Oscillatory term"
-              };
-            case 9:
-              return {
-                q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{x^2y}{\\sqrt{x^2+y^2}},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes. Since }|f(x,y)|\\le (x^2+y^2),\\text{ the function is differentiable at }(0,0).`),
-                tag: "Estimate"
-              };
-            default:
-              return {
-                q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{xy^2}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-                s: withDisplayMath(`\\text{Yes. }|f(x,y)|\\le |x|\\,|y|\\le \\frac{x^2+y^2}{2},\\text{ hence }f=o(\\sqrt{x^2+y^2}).`),
-                tag: "Estimate"
-              };
-          }
-        }, 120);
-      }
-
-      return buildPool(() => {
-        const type = randInt(1, 10);
-        switch (type) {
-          case 1:
-            return {
-              q: withDisplayMath(`f(x,y)=x^2+y^2.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{Yes. Polynomials are differentiable everywhere.}`),
-              tag: "Polynomial"
-            };
-          case 2:
-            return {
-              q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{x^2y}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{Yes. }f=o(\\sqrt{x^2+y^2}),\\text{ so }f\\text{ is differentiable at }(0,0).`),
-              tag: "Little-o test"
-            };
-          case 3:
-            return {
-              q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{xy}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{No. The function is not continuous at }(0,0).`),
-              tag: "Path dependence"
-            };
-          case 4:
-            return {
-              q: withDisplayMath(`f(x,y)=|x|+|y|.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{No. There is no linear approximation at }(0,0).`),
-              tag: "Absolute value"
-            };
-          case 5:
-            return {
-              q: withDisplayMath(`f(x,y)=e^{x+y}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{Yes. Smooth functions are differentiable everywhere.}`),
-              tag: "Smooth function"
-            };
-          case 6:
-            return {
-              q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{x^2y^2}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{Yes. }|f(x,y)|\\le x^2+y^2.`),
-              tag: "Estimate"
-            };
-          case 7:
-            return {
-              q: withDisplayMath(`f(x,y)=\\max\\{x,y\\}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{No. The behavior is not linear across }x=y.`),
-              tag: "Non-smooth"
-            };
-          case 8:
-            return {
-              q: withDisplayMath(`f(x,y)=\\sqrt{1+x^2+y^2}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{Yes.}`),
-              tag: "Composition"
-            };
-          case 9:
-            return {
-              q: withDisplayMath(`f(x,y)=\\begin{cases}\\frac{x^3}{x^2+y^2},&(x,y)\\ne(0,0)\\\\0,&(x,y)=(0,0)\\end{cases}.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{No.}`),
-              tag: "Partials not sufficient"
-            };
-          default:
-            return {
-              q: withDisplayMath(`f(x,y)=x^2\\sin y+y^2\\cos x.\\quad \\text{Is }f\\text{ differentiable at }(0,0)?`),
-              s: withDisplayMath(`\\text{Yes. It is smooth near }(0,0).`),
-              tag: "Smooth function"
-            };
-          }
-      }, 120);
-    }
-
-    function generatorForTopic(topic, level) {
-      switch (topic) {
-        case "multivariable-limits": return multivariableLimitTemplates(level);
-        case "multiple-integrals": return multipleIntegralTemplates(level);
-        case "directional-derivatives": return directionalDerivativeTemplates(level);
-        case "differentiability": return differentiabilityTemplates(level);
-        default: return [];
-      }
-    }
-
-    function buildExercises(topic, count, level) {
-      const pool = generatorForTopic(topic, level);
-      return sampleExercises(pool, count);
-    }
-
-    function buildExamSheet(level) {
-      const topics = [
-        "multivariable-limits",
-        "multiple-integrals",
-        "directional-derivatives",
-        "differentiability"
-      ];
-      const chosen = topics.map((topic, i) => {
-        const pool = generatorForTopic(topic, level);
-        const ex = choice(pool);
-        return { index: i + 1, ...ex, examTopic: topic };
-      });
-      return shuffle(chosen).map((ex, index) => ({ ...ex, index: index + 1 }));
-    }
-
-    let currentTopic = "multivariable-limits";
-    let solutionsVisible = false;
-    let currentExercises = [];
-
-    function labelForTopic(topic) {
-      switch (topic) {
-        case "multivariable-limits": return "Multivariable Limits";
-        case "multiple-integrals": return "Multiple Integrals";
-        case "directional-derivatives": return "Directional Derivatives";
-        case "differentiability": return "Differentiability";
-        case "exam": return "Exam Mode";
-        default: return "Worksheet";
-      }
-    }
-
-    function defaultTitleForTopic(topic) {
-      switch (topic) {
-        case "multivariable-limits": return "Multivariable Limits Worksheet";
-        case "multiple-integrals": return "Multiple Integrals Worksheet";
-        case "directional-derivatives": return "Directional Derivatives Worksheet";
-        case "differentiability": return "Differentiability Worksheet";
-        case "exam": return "Calculus II Exam Practice";
-        default: return "Calculus II Worksheet";
-      }
-    }
-
-    function updateTopicButtons() {
-      document.querySelectorAll("#topicNav button").forEach((btn) => {
-        btn.classList.toggle("active", btn.dataset.topic === currentTopic);
-      });
-    }
-
-    function updatePills() {
-      const level = document.getElementById("level").value;
-      document.getElementById("levelPill").textContent = level.toUpperCase();
-      document.getElementById("solutionsPill").textContent = solutionsVisible ? "VISIBLE" : "HIDDEN";
-    }
-
-    async function typesetMath(elements) {
-      if (window.MathJax && window.MathJax.typesetPromise) {
-        await window.MathJax.typesetPromise(elements);
-      }
-    }
-
-    async function renderLists() {
-      const exerciseList = document.getElementById("exerciseList");
-      const solutionList = document.getElementById("solutionList");
-      const solutionsCard = document.getElementById("solutionsCard");
-
-      exerciseList.innerHTML = "";
-      solutionList.innerHTML = "";
-
-      currentExercises.forEach((ex) => {
-        const tag = ex.examTopic ? labelForTopic(ex.examTopic).toUpperCase() : ex.tag;
-
-        const exEl = document.createElement("div");
-        exEl.className = "exercise";
-        exEl.innerHTML = `
-          <div class="exercise-head">
-            <div class="exercise-number">Exercise ${ex.index}</div>
-            <div class="tag">${tag}</div>
-          </div>
-          <div class="math">${ex.q}</div>
-        `;
-        exerciseList.appendChild(exEl);
-
-        const solEl = document.createElement("div");
-        solEl.className = "exercise";
-        solEl.innerHTML = `
-          <div class="exercise-head">
-            <div class="exercise-number">Solution ${ex.index}</div>
-            <div class="tag">${tag}</div>
-          </div>
-          <div class="math">${ex.s}</div>
-        `;
-        solutionList.appendChild(solEl);
-      });
-
-      solutionsCard.classList.toggle("hidden", !solutionsVisible);
-      updatePills();
-      await typesetMath([exerciseList, solutionList]);
-    }
-
-    async function generateWorksheet() {
-      const titleInput = document.getElementById("title");
-      const countInput = document.getElementById("count");
-      const levelSelect = document.getElementById("level");
-      const previewTitle = document.getElementById("previewTitle");
-      const status = document.getElementById("status");
-
-      const count = Math.max(1, Math.min(50, Number(countInput.value) || 10));
-      countInput.value = count;
-
-      const level = levelSelect.value;
-      const title = titleInput.value.trim() || defaultTitleForTopic(currentTopic);
-      previewTitle.textContent = title;
-
-      currentExercises = currentTopic === "exam"
-        ? buildExamSheet(level)
-        : buildExercises(currentTopic, count, level);
-
-      await renderLists();
-
-      status.textContent = currentTopic === "exam"
-        ? `Generated ${currentExercises.length} exam exercises.`
-        : `Generated ${currentExercises.length} exercises.`;
-    }
-
-    async function setTopic(topic) {
-      currentTopic = topic;
-      const titleInput = document.getElementById("title");
-      const countWrap = document.getElementById("countWrap");
-      const status = document.getElementById("status");
-
-      titleInput.value = defaultTitleForTopic(topic);
-      countWrap.classList.toggle("hidden", topic === "exam");
-      updateTopicButtons();
-      solutionsVisible = false;
-      document.getElementById("toggleSolutionsBtn").textContent = "Show solutions";
-      status.textContent = "Ready.";
-
-      await generateWorksheet();
-    }
-
-    function buildPdfMarkup() {
-      const title = document.getElementById("previewTitle").textContent || "Worksheet";
-      const level = document.getElementById("level").value.toUpperCase();
-      const pdfLevel = withDisplayMath(`\\text{Difficulty: } ${latexText(level)}`);
-      const pdfExercises = withDisplayMath(`\\text{Exercises}`);
-      const pdfSolutions = withDisplayMath(`\\text{Solutions}`);
-
-      const exerciseHtml = currentExercises.map((ex) => {
-        const tag = ex.examTopic ? labelForTopic(ex.examTopic).toUpperCase() : ex.tag;
-        return `
-          <div class="pdf-exercise">
-            <div class="pdf-head">
-              <div class="pdf-num">Exercise ${ex.index}</div>
-              <div class="pdf-tag">${tag}</div>
-            </div>
-            <div class="pdf-math">${ex.q}</div>
-          </div>
-        `;
-      }).join("");
-
-      const solutionHtml = currentExercises.map((ex) => {
-        const tag = ex.examTopic ? labelForTopic(ex.examTopic).toUpperCase() : ex.tag;
-        return `
-          <div class="pdf-exercise">
-            <div class="pdf-head">
-              <div class="pdf-num">Solution ${ex.index}</div>
-              <div class="pdf-tag">${tag}</div>
-            </div>
-            <div class="pdf-math">${ex.s}</div>
-          </div>
-        `;
-      }).join("");
-
-      return `
-        <div class="pdf-page">
-          <div class="pdf-title">${title}</div>
-          <div class="pdf-meta">${pdfLevel}</div>
-          <div class="pdf-section-title">${pdfExercises}</div>
-          ${exerciseHtml}
-        </div>
-        ${solutionsVisible ? `
-        <div class="pdf-page">
-          <div class="pdf-title">${title}</div>
-          <div class="pdf-meta">${pdfSolutions}</div>
-          <div class="pdf-section-title">${pdfSolutions}</div>
-          ${solutionHtml}
-        </div>` : ""}
-      `;
-    }
-
-    async function downloadPdf() {
-      const status = document.getElementById("status");
-      const pdfArea = document.getElementById("pdfArea");
-      const title = document.getElementById("previewTitle").textContent || "worksheet";
-
-      try {
-        status.textContent = "Preparing PDF...";
-        pdfArea.innerHTML = buildPdfMarkup();
-        await typesetMath([pdfArea]);
-
-        const pages = Array.from(pdfArea.querySelectorAll(".pdf-page"));
-        const { jsPDF } = window.jspdf;
-        const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
-        const pageWidth = pdf.internal.pageSize.getWidth();
-        const pageHeight = pdf.internal.pageSize.getHeight();
-
-        for (let i = 0; i < pages.length; i++) {
-          const canvas = await html2canvas(pages[i], {
-            scale: 2,
-            useCORS: true,
-            backgroundColor: "#ffffff"
-          });
-
-          const imgData = canvas.toDataURL("image/png");
-          const imgWidth = pageWidth;
-          const imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-          if (i > 0) pdf.addPage();
-          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, Math.min(imgHeight, pageHeight));
-        }
-
-        const safeName = title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "") || "worksheet";
-
-        pdf.save(`${safeName}.pdf`);
-        status.textContent = "PDF downloaded successfully.";
-      } catch (err) {
-        status.textContent = "PDF generation failed.";
-        console.error(err);
-      }
-    }
-
-    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
-
-    document.getElementById("toggleSolutionsBtn").addEventListener("click", async () => {
-      solutionsVisible = !solutionsVisible;
-      document.getElementById("toggleSolutionsBtn").textContent = solutionsVisible ? "Hide solutions" : "Show solutions";
-      await renderLists();
-    });
-
-    document.getElementById("downloadBtn").addEventListener("click", downloadPdf);
-    document.getElementById("level").addEventListener("change", async () => {
-      updatePills();
-      await generateWorksheet();
-    });
-
-    document.querySelectorAll("#topicNav button").forEach((btn) => {
-      btn.addEventListener("click", () => setTopic(btn.dataset.topic));
-    });
-
-    setTopic("multivariable-limits");
-  </script>
-</body>
-</html>
-  </textarea>
-
-  <textarea id="src-linalg" hidden>
-<!DOCTYPE html>
-<html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Geometry and Linear Algebra Generator</title>
-  <meta
-    name="description"
-    content="University-style Geometry and Linear Algebra worksheet generator with systems, determinants, vector spaces, linear maps, eigenvalues, orthogonality, quadratic forms, and exam mode."
-  />
+  <title>Statistics Worksheet Generator</title>
+  <meta name="description" content="Generatore di esercizi di statistica in stile universitario." />
 
   <script>
     window.MathJax = {
@@ -3087,15 +21,14 @@
 
   <style>
     :root {
-      --bg-1: #08101d;
-      --bg-2: #13233f;
+      --bg-1: #08111f;
+      --bg-2: #152540;
       --panel: rgba(255,255,255,0.07);
       --panel-strong: rgba(255,255,255,0.11);
       --text: #eef2ff;
       --muted: #bac6e9;
-      --accent: #72a1ff;
-      --accent-2: #8f76ff;
-      --accent-3: #59e1c1;
+      --accent: #73a7ff;
+      --accent-2: #8e78ff;
       --border: rgba(255,255,255,0.14);
       --shadow: 0 20px 60px rgba(0,0,0,0.28);
       --tag-bg: rgba(89,225,193,0.12);
@@ -3104,20 +37,18 @@
     }
 
     * { box-sizing: border-box; }
-
     body {
       margin: 0;
       font-family: Inter, Arial, sans-serif;
       color: var(--text);
       background:
-        radial-gradient(circle at top left, rgba(114,161,255,0.20), transparent 28%),
-        radial-gradient(circle at top right, rgba(143,118,255,0.16), transparent 30%),
+        radial-gradient(circle at top left, rgba(115,167,255,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(142,120,255,0.15), transparent 30%),
         linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
       min-height: 100vh;
     }
 
-    .wrap { max-width: 1280px; margin: 0 auto; padding: 28px; }
-
+    .wrap { max-width: 1260px; margin: 0 auto; padding: 28px; }
     .hero {
       display: grid;
       grid-template-columns: 88px 1fr;
@@ -3125,7 +56,6 @@
       align-items: center;
       margin-bottom: 24px;
     }
-
     .hero-badge {
       width: 88px;
       height: 88px;
@@ -3135,16 +65,14 @@
       font-size: 30px;
       font-weight: 800;
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
-      box-shadow: 0 18px 44px rgba(114,161,255,0.28);
+      box-shadow: 0 18px 44px rgba(115,167,255,0.28);
     }
-
     .hero h1 {
       margin: 0 0 10px;
       font-size: clamp(2rem, 4.5vw, 3.5rem);
       line-height: 1.02;
       letter-spacing: -0.03em;
     }
-
     .hero p {
       margin: 0;
       color: var(--muted);
@@ -3159,7 +87,6 @@
       flex-wrap: wrap;
       margin: 20px 0 28px;
     }
-
     .topic-nav button {
       width: auto;
       padding: 11px 16px;
@@ -3171,14 +98,12 @@
       font-weight: 700;
       transition: 0.2s ease;
     }
-
     .topic-nav button:hover { transform: translateY(-1px); color: var(--text); }
-
     .topic-nav button.active {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       color: white;
       border: none;
-      box-shadow: 0 14px 30px rgba(114,161,255,0.22);
+      box-shadow: 0 14px 30px rgba(115,167,255,0.22);
     }
 
     .grid {
@@ -3187,7 +112,6 @@
       gap: 24px;
       align-items: start;
     }
-
     .card {
       background: var(--panel);
       border: 1px solid var(--border);
@@ -3196,17 +120,10 @@
       box-shadow: var(--shadow);
       backdrop-filter: blur(14px);
     }
-
     .settings-card { position: sticky; top: 18px; }
     .stack > * + * { margin-top: 16px; }
-
     .card h2 { margin: 0 0 6px; font-size: 1.2rem; }
-
-    .subtle, .status {
-      color: var(--muted);
-      line-height: 1.6;
-      font-size: 0.95rem;
-    }
+    .subtle, .status { color: var(--muted); line-height: 1.6; font-size: 0.95rem; }
 
     label {
       display: block;
@@ -3215,7 +132,6 @@
       font-size: 0.95rem;
       font-weight: 600;
     }
-
     input, select, button {
       width: 100%;
       padding: 13px 14px;
@@ -3226,21 +142,17 @@
       font-size: 1rem;
       outline: none;
     }
-
     input:focus, select:focus {
-      border-color: rgba(114,161,255,0.65);
-      box-shadow: 0 0 0 4px rgba(114,161,255,0.12);
+      border-color: rgba(115,167,255,0.65);
+      box-shadow: 0 0 0 4px rgba(115,167,255,0.12);
     }
-
     button { cursor: pointer; font-weight: 800; transition: 0.2s ease; }
     button:hover { transform: translateY(-1px); }
-
     .primary {
       background: linear-gradient(135deg, var(--accent), var(--accent-2));
       border: none;
-      box-shadow: 0 14px 28px rgba(114,161,255,0.25);
+      box-shadow: 0 14px 28px rgba(115,167,255,0.25);
     }
-
     .secondary { background: rgba(255,255,255,0.06); }
 
     .preview-title-row {
@@ -3251,7 +163,6 @@
       flex-wrap: wrap;
       margin-bottom: 14px;
     }
-
     .level-pill {
       display: inline-block;
       padding: 7px 11px;
@@ -3271,7 +182,6 @@
       margin-top: 14px;
       background: rgba(255,255,255,0.03);
     }
-
     .exercise-head {
       display: flex;
       gap: 10px;
@@ -3280,7 +190,6 @@
       flex-wrap: wrap;
       margin-bottom: 10px;
     }
-
     .tag {
       display: inline-block;
       font-size: 0.78rem;
@@ -3291,16 +200,17 @@
       border-radius: 999px;
       font-weight: 700;
     }
-
     .exercise-number {
       color: var(--muted);
       font-weight: 700;
       font-size: 0.95rem;
     }
-
-    .math { font-size: 1.08rem; line-height: 1.75; overflow-wrap: anywhere; }
+    .math {
+      font-size: 1.08rem;
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+    }
     .solutions-card.hidden, .hidden { display: none !important; }
-
     .footer-copy {
       margin-top: 28px;
       color: var(--muted);
@@ -3317,7 +227,6 @@
       color: black;
       padding: 40px;
     }
-
     .pdf-page {
       width: 100%;
       min-height: 1040px;
@@ -3326,7 +235,6 @@
       color: black;
       page-break-after: always;
     }
-
     .pdf-page:last-child { page-break-after: auto; }
     .pdf-title { font-size: 28px; font-weight: 700; margin-bottom: 6px; color: black; }
     .pdf-meta { font-size: 14px; color: #333; margin-bottom: 22px; }
@@ -3339,7 +247,6 @@
       background: #fff;
       break-inside: avoid;
     }
-
     .pdf-head {
       display: flex;
       justify-content: space-between;
@@ -3348,7 +255,6 @@
       margin-bottom: 8px;
       flex-wrap: wrap;
     }
-
     .pdf-tag {
       display: inline-block;
       font-size: 11px;
@@ -3359,7 +265,6 @@
       color: #165c4f;
       font-weight: 700;
     }
-
     .pdf-num { color: #444; font-weight: 700; font-size: 13px; }
     .pdf-math { color: black; font-size: 16px; line-height: 1.6; }
 
@@ -3374,23 +279,22 @@
 <body>
   <div class="wrap">
     <section class="hero">
-      <div class="hero-badge">A</div>
+      <div class="hero-badge">Σ</div>
       <div>
-        <h1>Geometry and Linear Algebra Generator</h1>
+        <h1>Statistics Worksheet Generator</h1>
         <p>
-          Generate university-style worksheets inspired by first-year Geometry and Linear Algebra courses:
-          linear systems, matrices and determinants, vector spaces and linear maps, eigenvalues and diagonalization,
-          orthogonality and quadratic forms, plus mixed exam-mode practice. All exercises and solutions are rendered in LaTeX.
+          Genera schede di esercizi in stile universitario per statistica descrittiva, distribuzioni notevoli,
+          intervalli di confidenza e test d'ipotesi, regressione lineare e una modalità esame mista.
+          Solo formule, esercizi e soluzioni vengono renderizzati in LaTeX.
         </p>
       </div>
     </section>
 
     <div class="topic-nav" id="topicNav">
-      <button data-topic="systems" class="active">Linear Systems</button>
-      <button data-topic="matrices">Matrices & Determinants</button>
-      <button data-topic="vector-spaces">Vector Spaces & Linear Maps</button>
-      <button data-topic="eigen">Eigenvalues & Diagonalization</button>
-      <button data-topic="orthogonality">Orthogonality & Quadratic Forms</button>
+      <button data-topic="descriptive" class="active">Descriptive Statistics</button>
+      <button data-topic="distributions">Distributions & Probability</button>
+      <button data-topic="inference">Confidence Intervals & Tests</button>
+      <button data-topic="regression">Regression & Correlation</button>
       <button data-topic="exam">Exam Mode</button>
     </div>
 
@@ -3398,12 +302,12 @@
       <div class="card settings-card stack">
         <div>
           <h2>Settings</h2>
-          <div class="subtle">Choose a topic, difficulty, and generate a fresh GAL-style worksheet instantly.</div>
+          <div class="subtle">Scegli argomento, difficoltà e genera una nuova scheda in stile esame.</div>
         </div>
 
         <div>
           <label for="title">Worksheet title</label>
-          <input id="title" value="Geometry and Linear Algebra Worksheet" />
+          <input id="title" value="Statistics Worksheet" />
         </div>
 
         <div id="countWrap">
@@ -3430,15 +334,15 @@
       <div>
         <div class="card">
           <div class="preview-title-row">
-            <h2 id="previewTitle" style="margin:0;">Geometry and Linear Algebra Worksheet</h2>
+            <h2 id="previewTitle" style="margin: 0;">Statistics Worksheet</h2>
             <div class="level-pill" id="levelPill">MEDIUM</div>
           </div>
           <div id="exerciseList"></div>
         </div>
 
-        <div class="card solutions-card hidden" id="solutionsCard" style="margin-top:24px;">
+        <div class="card solutions-card hidden" id="solutionsCard" style="margin-top: 24px;">
           <div class="preview-title-row">
-            <h2 style="margin:0;">Solutions</h2>
+            <h2 style="margin: 0;">Solutions</h2>
             <div class="level-pill" id="solutionsPill">HIDDEN</div>
           </div>
           <div id="solutionList"></div>
@@ -3447,8 +351,7 @@
     </div>
 
     <div class="footer-copy">
-      In Exam Mode, the generator creates one exercise for each macro-topic:
-      systems, determinants, vector spaces/linear maps, eigenvalues, and orthogonality/quadratic forms.
+      In Exam Mode, il generatore crea un esercizio per ciascuno dei quattro macro-argomenti.
     </div>
   </div>
 
@@ -3456,27 +359,11 @@
 
   <script>
     const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const choice = (arr) => arr[Math.floor(Math.random() * arr.length)];
 
-    const choice = (arr) => {
-      if (!Array.isArray(arr) || arr.length === 0) throw new Error("Cannot choose from an empty array.");
-      return arr[Math.floor(Math.random() * arr.length)];
-    };
-
-    function gcd(a, b) {
-      a = Math.abs(a); b = Math.abs(b);
-      while (b !== 0) { const t = b; b = a % b; a = t; }
-      return a;
+    function withDisplayMath(latex) {
+      return `\\[${latex}\\]`;
     }
-
-    function frac(n, d) {
-      if (d === 0) throw new Error("Denominator cannot be zero.");
-      const sign = d < 0 ? -1 : 1;
-      n *= sign; d *= sign;
-      const g = gcd(n, d);
-      return `\\frac{${n / g}}{${d / g}}`;
-    }
-
-    function withDisplayMath(latex) { return `\\[${latex}\\]`; }
 
     function latexText(text) {
       return String(text)
@@ -3485,6 +372,30 @@
         .replace(/_/g, "\\_")
         .replace(/&/g, "\\&")
         .replace(/#/g, "\\#");
+    }
+
+    function dec(num, digits = 2) {
+      return Number(num.toFixed(digits));
+    }
+
+    function gcd(a, b) {
+      a = Math.abs(a);
+      b = Math.abs(b);
+      while (b !== 0) {
+        const t = b;
+        b = a % b;
+        a = t;
+      }
+      return a;
+    }
+
+    function frac(n, d) {
+      if (d === 0) throw new Error("Denominator cannot be zero.");
+      const sign = d < 0 ? -1 : 1;
+      n *= sign;
+      d *= sign;
+      const g = gcd(n, d);
+      return `\\frac{${n / g}}{${d / g}}`;
     }
 
     function shuffle(array) {
@@ -3496,26 +407,7 @@
       return arr;
     }
 
-    function sampleExercises(pool, count) {
-      if (!Array.isArray(pool) || pool.length === 0) return [];
-      const out = [];
-      while (out.length < count) {
-        const round = shuffle(pool);
-        for (const ex of round) {
-          out.push(ex);
-          if (out.length >= count) break;
-        }
-      }
-      return out.slice(0, count).map((ex, index) => ({
-        index: index + 1,
-        q: ex.q,
-        s: ex.s,
-        tag: ex.tag,
-        examTopic: ex.examTopic
-      }));
-    }
-
-    function buildPool(factory, size = 140) {
+    function buildPool(factory, size = 100) {
       const seen = new Set();
       const out = [];
       let attempts = 0;
@@ -3530,1003 +422,425 @@
       return shuffle(out);
     }
 
-    function systemsTemplates(level = "medium") {
-      if (level === "easy") {
-        return buildPool(() => {
-          const a = randInt(1,4), b = randInt(1,4), c = randInt(1,4);
-          const x0 = randInt(-2,3), y0 = randInt(-2,3), z0 = randInt(-2,3);
-          const eq1 = a*x0 + y0;
-          const eq2 = x0 + b*y0;
-          const type = randInt(1,7);
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\text{Solve }\\begin{cases}${a}x+y=${eq1}\\\\x+${b}y=${eq2}\\end{cases}`),
-                s: withDisplayMath(`(x,y)=(${x0},${y0})`),
-                tag: "2x2 system"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\text{Solve }\\begin{cases}x+y+z=${x0+y0+z0}\\\\x-y+z=${x0-y0+z0}\\\\2x+z=${2*x0+z0}\\end{cases}`),
-                s: withDisplayMath(`(x,y,z)=(${x0},${y0},${z0})`),
-                tag: "3x3 system"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\text{Find the rank of }A=\\begin{pmatrix}1&2&3\\\\2&4&6\\\\1&0&1\\end{pmatrix}`),
-                s: withDisplayMath(`\\operatorname{rank}(A)=2`),
-                tag: "Rank"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\text{Discuss the system }\\begin{cases}x+y=1\\\\2x+2y=2\\end{cases}`),
-                s: withDisplayMath(`\\text{Infinitely many solutions: }x=1-t,\\ y=t`),
-                tag: "Compatibility"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\text{Discuss the system }\\begin{cases}x+y=1\\\\2x+2y=3\\end{cases}`),
-                s: withDisplayMath(`\\text{No solution}`),
-                tag: "Incompatible system"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\text{Solve }\\begin{cases}x+2y-z=1\\\\2x-y+z=0\\\\x+y+z=2\\end{cases}`),
-                s: withDisplayMath(`(x,y,z)=\\left(\\frac{1}{3},\\frac{2}{3},1\\right)`),
-                tag: "Gaussian elimination"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\text{Find }\\dim\\ker A\\text{ for }A=\\begin{pmatrix}1&0&1\\\\0&1&1\\end{pmatrix}`),
-                s: withDisplayMath(`\\dim\\ker A=1`),
-                tag: "Kernel dimension"
-              };
-          }
-        }, 120);
+    function sampleExercises(pool, count) {
+      if (!Array.isArray(pool) || pool.length === 0) return [];
+      const out = [];
+      while (out.length < count) {
+        for (const ex of shuffle(pool)) {
+          out.push(ex);
+          if (out.length >= count) break;
+        }
       }
-
-      if (level === "hard") {
-        return buildPool(() => {
-          const type = randInt(1,10);
-          switch (type) {
-            case 1:
-              return {
-                q: withDisplayMath(`\\text{For which }\\lambda\\in\\mathbb{R}\\text{ does }\\begin{cases}x+y+z=1\\\\x+2y+3z=\\lambda\\\\2x+3y+4z=\\lambda+1\\end{cases}\\text{ have solutions?}`),
-                s: withDisplayMath(`\\text{The system is compatible for every }\\lambda,\\text{ with a unique solution.}`),
-                tag: "Parameter study"
-              };
-            case 2:
-              return {
-                q: withDisplayMath(`\\text{For which }k\\text{ is }\\begin{cases}x+y+z=1\\\\x+2y+3z=2\\\\2x+3y+(k+2)z=3\\end{cases}\\text{ compatible?}`),
-                s: withDisplayMath(`\\det A = k-1.\\ \\text{Unique solution if }k\\neq 1;\\ \\text{if }k=1\\text{ the system is compatible with infinitely many solutions.}`),
-                tag: "Rouché-Capelli"
-              };
-            case 3:
-              return {
-                q: withDisplayMath(`\\text{Compute a basis of }\\ker A\\text{ for }A=\\begin{pmatrix}1&2&1&0\\\\0&1&1&1\\\\1&3&2&1\\end{pmatrix}`),
-                s: withDisplayMath(`\\ker A=\\operatorname{span}\\{(-1,-1,1,0),(2,-1,0,1)\\}`),
-                tag: "Kernel basis"
-              };
-            case 4:
-              return {
-                q: withDisplayMath(`\\text{Solve }AX=b\\text{ with }A=\\begin{pmatrix}1&1&1\\\\1&2&3\\\\1&3&6\\end{pmatrix},\\ b=\\begin{pmatrix}1\\\\2\\\\3\\end{pmatrix}`),
-                s: withDisplayMath(`X=\\begin{pmatrix}1\\\\0\\\\0\\end{pmatrix}`),
-                tag: "Triangular elimination"
-              };
-            case 5:
-              return {
-                q: withDisplayMath(`\\text{Find the rank of }A=\\begin{pmatrix}1&2&3&4\\\\2&4&6&8\\\\1&1&1&1\\\\0&1&2&3\\end{pmatrix}`),
-                s: withDisplayMath(`\\operatorname{rank}(A)=2`),
-                tag: "Rank"
-              };
-            case 6:
-              return {
-                q: withDisplayMath(`\\text{Discuss the dimension of the solution set of }\\begin{cases}x+y+z+t=0\\\\x+2y+3z+4t=0\\end{cases}`),
-                s: withDisplayMath(`\\dim\\mathcal{S}=2`),
-                tag: "Homogeneous system"
-              };
-            case 7:
-              return {
-                q: withDisplayMath(`\\text{Find a basis of the row space of }A=\\begin{pmatrix}1&2&1\\\\0&1&1\\\\1&3&2\\end{pmatrix}`),
-                s: withDisplayMath(`\\text{A basis is }\\{(1,2,1),(0,1,1)\\}`),
-                tag: "Row space"
-              };
-            case 8:
-              return {
-                q: withDisplayMath(`\\text{Compute }\\dim\\operatorname{Im}A\\text{ and }\\dim\\ker A\\text{ for }A:\\mathbb{R}^4\\to\\mathbb{R}^3,\\ A=\\begin{pmatrix}1&0&1&2\\\\0&1&1&1\\\\1&1&2&3\\end{pmatrix}`),
-                s: withDisplayMath(`\\operatorname{rank}(A)=2,\\quad \\dim\\ker A=2`),
-                tag: "Rank-nullity"
-              };
-            case 9:
-              return {
-                q: withDisplayMath(`\\text{Reduce }A=\\begin{pmatrix}1&2&1\\\\2&4&2\\\\1&1&0\\end{pmatrix}\\text{ to row echelon form.}`),
-                s: withDisplayMath(`\\begin{pmatrix}1&2&1\\\\0&1&1\\\\0&0&0\\end{pmatrix}`),
-                tag: "Row reduction"
-              };
-            default:
-              return {
-                q: withDisplayMath(`\\text{Give all solutions of }\\begin{cases}x+y+z=0\\\\2x+2y+2z=0\\\\x-z=1\\end{cases}`),
-                s: withDisplayMath(`(x,y,z)=(1-t,t,-t),\\quad t\\in\\mathbb{R}`),
-                tag: "Parametric solution"
-              };
-          }
-        }, 140);
-      }
-
-      return buildPool(() => {
-        const type = randInt(1,10);
-        switch (type) {
-          case 1:
-            return {
-              q: withDisplayMath(`\\text{Solve }\\begin{cases}x+y=3\\\\2x-y=0\\end{cases}`),
-              s: withDisplayMath(`(x,y)=(1,2)`),
-              tag: "2x2 system"
-            };
-          case 2:
-            return {
-              q: withDisplayMath(`\\text{Discuss }\\begin{cases}x+y+z=1\\\\2x+2y+2z=2\\\\x-y=0\\end{cases}`),
-              s: withDisplayMath(`\\text{Infinitely many solutions: }(x,y,z)=(t,t,1-2t)`),
-              tag: "Compatibility"
-            };
-          case 3:
-            return {
-              q: withDisplayMath(`\\text{Compute }\\operatorname{rank}\\begin{pmatrix}1&2&3\\\\2&4&6\\\\1&1&1\\end{pmatrix}`),
-              s: withDisplayMath(`2`),
-              tag: "Rank"
-            };
-          case 4:
-            return {
-              q: withDisplayMath(`\\text{Find a basis of }\\ker\\begin{pmatrix}1&1&0\\\\0&1&1\\end{pmatrix}`),
-              s: withDisplayMath(`\\ker A=\\operatorname{span}\\{(1,-1,1)\\}`),
-              tag: "Kernel"
-            };
-          case 5:
-            return {
-              q: withDisplayMath(`\\text{Solve }\\begin{cases}x+2y-z=1\\\\2x-y+z=0\\\\x+y+z=2\\end{cases}`),
-              s: withDisplayMath(`(x,y,z)=\\left(\\frac{1}{3},\\frac{2}{3},1\\right)`),
-              tag: "Gaussian elimination"
-            };
-          case 6:
-            return {
-              q: withDisplayMath(`\\text{Determine }\\dim\\mathcal{S}\\text{ for }\\begin{cases}x+y+z+t=0\\\\x+2y+3z+4t=0\\end{cases}`),
-              s: withDisplayMath(`2`),
-              tag: "Homogeneous system"
-            };
-          case 7:
-            return {
-              q: withDisplayMath(`\\text{Compute }\\dim\\ker A\\text{ for }A=\\begin{pmatrix}1&0&1&2\\\\0&1&1&1\\\\1&1&2&3\\end{pmatrix}`),
-              s: withDisplayMath(`2`),
-              tag: "Rank-nullity"
-            };
-          case 8:
-            return {
-              q: withDisplayMath(`\\text{Is }\\begin{cases}x+y=1\\\\2x+2y=3\\end{cases}\\text{ compatible?}`),
-              s: withDisplayMath(`\\text{No}`),
-              tag: "Incompatible system"
-            };
-          case 9:
-            return {
-              q: withDisplayMath(`\\text{Find a basis of }\\operatorname{Im}A\\text{ for }A=\\begin{pmatrix}1&0&1\\\\0&1&1\\\\1&1&2\\end{pmatrix}`),
-              s: withDisplayMath(`\\operatorname{Im}A=\\operatorname{span}\\{(1,0,1),(0,1,1)\\}`),
-              tag: "Image"
-            };
-          default:
-            return {
-              q: withDisplayMath(`\\text{Give all solutions of }x+y+z=0`),
-              s: withDisplayMath(`(x,y,z)=(-s-t,s,t),\\quad s,t\\in\\mathbb{R}`),
-              tag: "Parametric form"
-            };
-          }
-      }, 130);
+      return out.slice(0, count).map((ex, index) => ({
+        index: index + 1,
+        q: ex.q,
+        s: ex.s,
+        tag: ex.tag,
+        examTopic: ex.examTopic
+      }));
     }
 
-    function matricesTemplates(level = "medium") {
+    function descriptiveTemplates(level = "medium") {
       if (level === "easy") {
         return buildPool(() => {
-          const a = randInt(1,5), b = randInt(1,4), c = randInt(1,4);
-          const det = a*c - b;
-          const type = randInt(1,8);
+          const mean = randInt(10, 30);
+          const variance = randInt(4, 16);
+          const n = randInt(5, 12);
+          const type = randInt(1, 8);
           switch (type) {
             case 1:
-              return {
-                q: withDisplayMath(`\\det\\begin{pmatrix}${a}&1\\\\${b}&${c}\\end{pmatrix}`),
-                s: withDisplayMath(`${det}`),
-                tag: "2x2 determinant"
-              };
+              return { q: withDisplayMath(`\\text{A sample has values }2,4,4,6,9.\\ \\text{Compute the mean.}`), s: withDisplayMath(`\\bar x = \\frac{2+4+4+6+9}{5}=5`), tag: "Mean" };
             case 2:
-              return {
-                q: withDisplayMath(`\\det\\begin{pmatrix}1&2&0\\\\0&1&3\\\\0&0&2\\end{pmatrix}`),
-                s: withDisplayMath(`2`),
-                tag: "Triangular determinant"
-              };
+              return { q: withDisplayMath(`\\text{A sample has values }1,3,3,5,8.\\ \\text{Find the median.}`), s: withDisplayMath(`\\text{Median}=3`), tag: "Median" };
             case 3:
-              return {
-                q: withDisplayMath(`\\text{Find }A^{-1}\\text{ for }A=\\begin{pmatrix}1&1\\\\0&2\\end{pmatrix}`),
-                s: withDisplayMath(`A^{-1}=\\begin{pmatrix}1&-\\frac{1}{2}\\\\0&\\frac{1}{2}\\end{pmatrix}`),
-                tag: "Inverse"
-              };
+              return { q: withDisplayMath(`\\text{A sample has mean }${mean}\\text{ and variance }${variance}.\\ \\text{Find the standard deviation.}`), s: withDisplayMath(`s = \\sqrt{${variance}} = ${Math.sqrt(variance)}`), tag: "Variance" };
             case 4:
-              return {
-                q: withDisplayMath(`\\text{Compute }AB\\text{ for }A=\\begin{pmatrix}1&2\\\\0&1\\end{pmatrix},\\ B=\\begin{pmatrix}2&0\\\\1&1\\end{pmatrix}`),
-                s: withDisplayMath(`AB=\\begin{pmatrix}4&2\\\\1&1\\end{pmatrix}`),
-                tag: "Matrix product"
-              };
+              return { q: withDisplayMath(`\\text{For the data }1,2,2,4,7\\text{, determine the mode.}`), s: withDisplayMath(`\\text{Mode}=2`), tag: "Mode" };
             case 5:
-              return {
-                q: withDisplayMath(`\\text{Is }A=\\begin{pmatrix}1&2\\\\2&4\\end{pmatrix}\\text{ invertible?}`),
-                s: withDisplayMath(`\\det A = 0,\\text{ so }A\\text{ is not invertible.}`),
-                tag: "Invertibility"
-              };
+              return { q: withDisplayMath(`\\text{A sample of size }${n}\\text{ has total sum }${mean * n}.\\ \\text{Find the sample mean.}`), s: withDisplayMath(`\\bar x = \\frac{${mean * n}}{${n}} = ${mean}`), tag: "Mean" };
             case 6:
-              return {
-                q: withDisplayMath(`\\det\\begin{pmatrix}1&1&1\\\\0&1&1\\\\0&0&1\\end{pmatrix}`),
-                s: withDisplayMath(`1`),
-                tag: "Upper triangular"
-              };
+              return { q: withDisplayMath(`\\text{For the ordered data }1,3,5,7,9\\text{, compute the range.}`), s: withDisplayMath(`R = 9 - 1 = 8`), tag: "Range" };
             case 7:
-              return {
-                q: withDisplayMath(`\\text{Compute }\\operatorname{tr}\\begin{pmatrix}1&2&0\\\\0&3&1\\\\1&0&2\\end{pmatrix}`),
-                s: withDisplayMath(`6`),
-                tag: "Trace"
-              };
+              return { q: withDisplayMath(`\\text{If }Var(X) = ${variance}\\text{, compute }Var(2X).`), s: withDisplayMath(`Var(2X)=4Var(X)=${4 * variance}`), tag: "Variance rules" };
             default:
-              return {
-                q: withDisplayMath(`\\text{Find the adjugate of }\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}`),
-                s: withDisplayMath(`\\operatorname{adj}(A)=\\begin{pmatrix}4&-2\\\\-3&1\\end{pmatrix}`),
-                tag: "Adjugate"
-              };
+              return { q: withDisplayMath(`\\text{If }E(X)=${mean}\\text{, compute }E(X+3).`), s: withDisplayMath(`E(X+3)=E(X)+3=${mean + 3}`), tag: "Expectation rules" };
           }
-        }, 120);
+        }, 90);
       }
 
       if (level === "hard") {
         return buildPool(() => {
-          const type = randInt(1,10);
+          const n = randInt(8, 20);
+          const mean = randInt(12, 28);
+          const sd = randInt(2, 7);
+          const type = randInt(1, 10);
           switch (type) {
             case 1:
-              return {
-                q: withDisplayMath(`\\det\\begin{pmatrix}1&2&3\\\\0&1&4\\\\5&6&0\\end{pmatrix}`),
-                s: withDisplayMath(`1`),
-                tag: "3x3 determinant"
-              };
+              return { q: withDisplayMath(`\\text{A sample of size }${n}\\text{ has mean }${mean}\\text{ and variance }${sd * sd}.\\ \\text{Find }\\sum_{i=1}^{${n}} (x_i-\\bar x)^2.`), s: withDisplayMath(`\\sum (x_i-\\bar x)^2 = (${n}-1)${sd * sd}=${(n - 1) * sd * sd}`), tag: "Sample variance" };
             case 2:
-              return {
-                q: withDisplayMath(`\\text{Find }A^{-1}\\text{ for }A=\\begin{pmatrix}1&1&0\\\\0&1&1\\\\1&0&1\\end{pmatrix}`),
-                s: withDisplayMath(`A^{-1}=\\frac{1}{2}\\begin{pmatrix}1&-1&1\\\\1&1&-1\\\\-1&1&1\\end{pmatrix}`),
-                tag: "Inverse 3x3"
-              };
+              return { q: withDisplayMath(`\\text{Data: }2,4,5,7,12,13.\\ \\text{Compute the mean and the median.}`), s: withDisplayMath(`\\bar x = \\frac{43}{6},\\quad \\text{median}=6`), tag: "Descriptive summary" };
             case 3:
-              return {
-                q: withDisplayMath(`\\det\\begin{pmatrix}1&1&1&1\\\\1&2&3&4\\\\1&3&6&10\\\\1&4&10&20\\end{pmatrix}`),
-                s: withDisplayMath(`1`),
-                tag: "Structured determinant"
-              };
+              return { q: withDisplayMath(`\\text{If }E(X)=4,\\text{ }Var(X)=9,\\text{ compute }E(3X-2)\\text{ and }Var(3X-2).`), s: withDisplayMath(`E(3X-2)=10,\\quad Var(3X-2)=81`), tag: "Linear transformations" };
             case 4:
-              return {
-                q: withDisplayMath(`\\text{Find all }k\\text{ such that }A=\\begin{pmatrix}1&k\\\\2&4\\end{pmatrix}\\text{ is invertible.}`),
-                s: withDisplayMath(`\\det A = 4-2k,\\quad A\\text{ invertible iff }k\\neq 2`),
-                tag: "Parameter"
-              };
+              return { q: withDisplayMath(`\\text{The relative frequencies of a categorical variable are }0.2,0.5,0.3.\\ \\text{Find the modal class.}`), s: withDisplayMath(`\\text{Modal class = second category}`), tag: "Frequencies" };
             case 5:
-              return {
-                q: withDisplayMath(`\\text{Compute }A^2\\text{ for }A=\\begin{pmatrix}1&1&0\\\\0&1&1\\\\0&0&1\\end{pmatrix}`),
-                s: withDisplayMath(`A^2=\\begin{pmatrix}1&2&1\\\\0&1&2\\\\0&0&1\\end{pmatrix}`),
-                tag: "Powers"
-              };
+              return { q: withDisplayMath(`\\text{A sample is standardized as }y_i=\\frac{x_i-\\bar x}{s}.\\ \\text{What are the mean and variance of }y?`), s: withDisplayMath(`\\bar y = 0,\\quad s_y^2 = 1`), tag: "Standardization" };
             case 6:
-              return {
-                q: withDisplayMath(`\\text{Show whether }AB=BA\\text{ for }A=\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix},\\ B=\\begin{pmatrix}1&0\\\\1&1\\end{pmatrix}`),
-                s: withDisplayMath(`AB=\\begin{pmatrix}2&1\\\\1&1\\end{pmatrix},\\quad BA=\\begin{pmatrix}1&1\\\\1&2\\end{pmatrix},\\quad AB\\neq BA`),
-                tag: "Non-commutativity"
-              };
+              return { q: withDisplayMath(`\\text{For grouped data with class midpoints }5,10,15\\text{ and frequencies }2,5,3, compute the weighted mean.}`), s: withDisplayMath(`\\bar x = \\frac{5\\cdot2+10\\cdot5+15\\cdot3}{10}=10.5`), tag: "Weighted mean" };
             case 7:
-              return {
-                q: withDisplayMath(`\\det\\begin{pmatrix}2&1&0\\\\1&2&1\\\\0&1&2\\end{pmatrix}`),
-                s: withDisplayMath(`4`),
-                tag: "Tridiagonal determinant"
-              };
+              return { q: withDisplayMath(`\\text{If }Cov(X,Y)=3,\\text{ }Var(X)=4,\\text{ }Var(Y)=9,\\text{ compute the correlation coefficient.}`), s: withDisplayMath(`\\rho = \\frac{3}{2\\cdot3}=\\frac{1}{2}`), tag: "Correlation" };
             case 8:
-              return {
-                q: withDisplayMath(`\\text{Find }\\chi_A(\\lambda)\\text{ for }A=\\begin{pmatrix}1&1\\\\0&2\\end{pmatrix}`),
-                s: withDisplayMath(`\\chi_A(\\lambda)=(1-\\lambda)(2-\\lambda)`),
-                tag: "Characteristic polynomial"
-              };
+              return { q: withDisplayMath(`\\text{The standardized value of }x=18\\text{ is }z=2\\text{ for a distribution with }\\mu=10.\\ \\text{Find }\\sigma.`), s: withDisplayMath(`2=\\frac{18-10}{\\sigma}\\Rightarrow \\sigma=4`), tag: "Z-score" };
             case 9:
-              return {
-                q: withDisplayMath(`\\text{Compute }\\det(AB)\\text{ if }\\det A=2,\\ \\det B=-3`),
-                s: withDisplayMath(`\\det(AB)=-6`),
-                tag: "Determinant property"
-              };
+              return { q: withDisplayMath(`\\text{Compare the dispersion of two datasets with standard deviations }2\\text{ and }5.`), s: withDisplayMath(`\\text{The second dataset is more dispersed.}`), tag: "Interpretation" };
             default:
-              return {
-                q: withDisplayMath(`\\text{Find all }x\\text{ such that }\\det\\begin{pmatrix}x&1&0\\\\1&x&1\\\\0&1&x\\end{pmatrix}=0`),
-                s: withDisplayMath(`x(x^2-2)=0,\\quad x\\in\\{0,\\sqrt2,-\\sqrt2\\}`),
-                tag: "Polynomial determinant"
-              };
+              return { q: withDisplayMath(`\\text{If }E(X)=7\\text{ and }E(X^2)=58,\\text{ compute }Var(X).`), s: withDisplayMath(`Var(X)=58-49=9`), tag: "Moments" };
           }
-        }, 140);
+        }, 110);
       }
 
       return buildPool(() => {
-        const type = randInt(1,10);
+        const type = randInt(1, 10);
         switch (type) {
           case 1:
-            return {
-              q: withDisplayMath(`\\det\\begin{pmatrix}2&1\\\\3&4\\end{pmatrix}`),
-              s: withDisplayMath(`5`),
-              tag: "2x2 determinant"
-            };
+            return { q: withDisplayMath(`\\text{Data: }3,5,5,7,10.\\ \\text{Compute the mean.}`), s: withDisplayMath(`\\bar x = 6`), tag: "Mean" };
           case 2:
-            return {
-              q: withDisplayMath(`\\det\\begin{pmatrix}1&2&3\\\\0&1&4\\\\5&6&0\\end{pmatrix}`),
-              s: withDisplayMath(`1`),
-              tag: "3x3 determinant"
-            };
+            return { q: withDisplayMath(`\\text{For the data }1,2,2,4,7\\text{, determine the mode and median.}`), s: withDisplayMath(`\\text{Mode}=2,\\quad \\text{median}=2`), tag: "Summary" };
           case 3:
-            return {
-              q: withDisplayMath(`\\text{Find }A^{-1}\\text{ for }A=\\begin{pmatrix}1&1\\\\0&2\\end{pmatrix}`),
-              s: withDisplayMath(`\\begin{pmatrix}1&-\\frac12\\\\0&\\frac12\\end{pmatrix}`),
-              tag: "Inverse"
-            };
+            return { q: withDisplayMath(`\\text{If }Var(X)=5,\\text{ compute }Var(X+4).`), s: withDisplayMath(`Var(X+4)=5`), tag: "Variance rules" };
           case 4:
-            return {
-              q: withDisplayMath(`\\text{Compute }AB\\text{ for }A=\\begin{pmatrix}1&2\\\\0&1\\end{pmatrix},\\ B=\\begin{pmatrix}2&0\\\\1&1\\end{pmatrix}`),
-              s: withDisplayMath(`\\begin{pmatrix}4&2\\\\1&1\\end{pmatrix}`),
-              tag: "Product"
-            };
+            return { q: withDisplayMath(`\\text{If }E(X)=8,\\text{ compute }E(2X-1).`), s: withDisplayMath(`E(2X-1)=15`), tag: "Expectation rules" };
           case 5:
-            return {
-              q: withDisplayMath(`\\text{Is }A=\\begin{pmatrix}1&2\\\\2&4\\end{pmatrix}\\text{ invertible?}`),
-              s: withDisplayMath(`\\text{No}`),
-              tag: "Invertibility"
-            };
+            return { q: withDisplayMath(`\\text{A sample has variance }9.\\ \\text{Find the standard deviation.}`), s: withDisplayMath(`s=3`), tag: "Variance" };
           case 6:
-            return {
-              q: withDisplayMath(`\\text{Compute }\\chi_A(\\lambda)\\text{ for }A=\\begin{pmatrix}1&1\\\\0&2\\end{pmatrix}`),
-              s: withDisplayMath(`(1-\\lambda)(2-\\lambda)`),
-              tag: "Characteristic polynomial"
-            };
+            return { q: withDisplayMath(`\\text{If }Cov(X,Y)=2,\\text{ }Var(X)=4,\\text{ }Var(Y)=1,\\text{ compute }\\rho_{XY}.`), s: withDisplayMath(`\\rho_{XY}=1`), tag: "Correlation" };
           case 7:
-            return {
-              q: withDisplayMath(`\\det\\begin{pmatrix}2&1&0\\\\1&2&1\\\\0&1&2\\end{pmatrix}`),
-              s: withDisplayMath(`4`),
-              tag: "3x3 determinant"
-            };
+            return { q: withDisplayMath(`\\text{For grouped data with midpoints }10,20\\text{ and frequencies }3,2, compute the weighted mean.}`), s: withDisplayMath(`\\bar x = 14`), tag: "Weighted mean" };
           case 8:
-            return {
-              q: withDisplayMath(`\\operatorname{tr}\\begin{pmatrix}1&2&0\\\\0&3&1\\\\1&0&2\\end{pmatrix}`),
-              s: withDisplayMath(`6`),
-              tag: "Trace"
-            };
+            return { q: withDisplayMath(`\\text{If }E(X)=6\\text{ and }E(X^2)=45,\\text{ compute }Var(X).`), s: withDisplayMath(`9`), tag: "Moments" };
           case 9:
-            return {
-              q: withDisplayMath(`\\det(AB)\\text{ if }\\det A=2,\\ \\det B=-3`),
-              s: withDisplayMath(`-6`),
-              tag: "Property"
-            };
+            return { q: withDisplayMath(`\\text{The z-score of }x=14\\text{ is }1\\text{ and }\\mu=10.\\ \\text{Find }\\sigma.`), s: withDisplayMath(`\\sigma = 4`), tag: "Z-score" };
           default:
-            return {
-              q: withDisplayMath(`\\text{Find the adjugate of }\\begin{pmatrix}1&2\\\\3&4\\end{pmatrix}`),
-              s: withDisplayMath(`\\begin{pmatrix}4&-2\\\\-3&1\\end{pmatrix}`),
-              tag: "Adjugate"
-            };
-          }
-      }, 130);
+            return { q: withDisplayMath(`\\text{For the ordered data }2,4,6,8,10\\text{, compute the range.}`), s: withDisplayMath(`8`), tag: "Range" };
+        }
+      }, 100);
     }
 
-    function vectorSpacesTemplates(level = "medium") {
+    function distributionsTemplates(level = "medium") {
       if (level === "easy") {
         return buildPool(() => {
-          const type = randInt(1,8);
+          const n = randInt(5, 15);
+          const p = [0.2, 0.3, 0.4, 0.5][randInt(0, 3)];
+          const lambda = randInt(2, 8);
+          const type = randInt(1, 10);
           switch (type) {
             case 1:
-              return {
-                q: withDisplayMath(`\\text{Are }(1,0,1)\\text{ and }(2,1,3)\\text{ linearly independent in }\\mathbb{R}^3?`),
-                s: withDisplayMath(`\\text{Yes}`),
-                tag: "Linear independence"
-              };
+              return { q: withDisplayMath(`X\\sim Bernoulli(0.3).\\ \\text{Compute }E(X)\\text{ and }Var(X).`), s: withDisplayMath(`E(X)=0.3,\\quad Var(X)=0.21`), tag: "Bernoulli" };
             case 2:
-              return {
-                q: withDisplayMath(`\\text{Find }\\dim\\operatorname{span}\\{(1,0,0),(0,1,0),(1,1,0)\\}`),
-                s: withDisplayMath(`2`),
-                tag: "Span dimension"
-              };
+              return { q: withDisplayMath(`X\\sim Bin(${n},${p}).\\ \\text{Compute }E(X).`), s: withDisplayMath(`E(X)=np=${dec(n * p)}`), tag: "Binomial" };
             case 3:
-              return {
-                q: withDisplayMath(`\\text{Is }W=\\{(x,y,z)\\in\\mathbb{R}^3:x+y+z=0\\}\\text{ a subspace?}`),
-                s: withDisplayMath(`\\text{Yes}`),
-                tag: "Subspace test"
-              };
+              return { q: withDisplayMath(`X\\sim Bin(${n},${p}).\\ \\text{Compute }Var(X).`), s: withDisplayMath(`Var(X)=np(1-p)=${dec(n * p * (1 - p))}`), tag: "Binomial" };
             case 4:
-              return {
-                q: withDisplayMath(`\\text{Find a basis of }W=\\{(x,y,z):x+y+z=0\\}`),
-                s: withDisplayMath(`W=\\operatorname{span}\\{(1,-1,0),(1,0,-1)\\}`),
-                tag: "Basis"
-              };
+              return { q: withDisplayMath(`X\\sim Poisson(${lambda}).\\ \\text{Compute }E(X)\\text{ and }Var(X).`), s: withDisplayMath(`E(X)=Var(X)=${lambda}`), tag: "Poisson" };
             case 5:
-              return {
-                q: withDisplayMath(`T:\\mathbb{R}^2\\to\\mathbb{R}^2,\\ T(x,y)=(x+y,y).\\ \\text{Find the matrix of }T\\text{ in the canonical basis.}`),
-                s: withDisplayMath(`\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}`),
-                tag: "Linear map matrix"
-              };
+              return { q: withDisplayMath(`X\\sim N(10,4).\\ \\text{Find }P(X\\le 10).`), s: withDisplayMath(`P(X\\le 10)=0.5`), tag: "Normal" };
             case 6:
-              return {
-                q: withDisplayMath(`\\text{Is }T(x,y)=(x+y,1)\\text{ linear?}`),
-                s: withDisplayMath(`\\text{No}`),
-                tag: "Linearity test"
-              };
+              return { q: withDisplayMath(`X\\sim Exp(\\lambda=2).\\ \\text{Compute }E(X).`), s: withDisplayMath(`E(X)=\\frac{1}{2}`), tag: "Exponential" };
             case 7:
-              return {
-                q: withDisplayMath(`\\text{Find }\\dim P_2(\\mathbb{R})`),
-                s: withDisplayMath(`3`),
-                tag: "Polynomial space"
-              };
+              return { q: withDisplayMath(`\\text{A fair die is rolled once. Find }P(X\\text{ is even}).`), s: withDisplayMath(`P(X\\text{ even})=\\frac{1}{2}`), tag: "Discrete probability" };
+            case 8:
+              return { q: withDisplayMath(`\\text{If }X\\sim U(0,1),\\text{ find }P(X\\le 0.3).`), s: withDisplayMath(`0.3`), tag: "Uniform" };
+            case 9:
+              return { q: withDisplayMath(`\\text{For }X\\sim Bin(10,0.5),\\text{ compute }E(X/2).`), s: withDisplayMath(`2.5`), tag: "Expectation" };
             default:
-              return {
-                q: withDisplayMath(`\\text{Do }(1,1,0),(1,0,1),(0,1,1)\\text{ form a basis of }\\mathbb{R}^3?`),
-                s: withDisplayMath(`\\text{Yes, since the determinant of the matrix with these columns is }-2\\neq 0`),
-                tag: "Basis test"
-              };
+              return { q: withDisplayMath(`\\text{State the CLT informally.}`), s: withDisplayMath(`\\text{The standardized sample mean tends to a normal distribution as }n\\to\\infty.`), tag: "CLT" };
           }
-        }, 120);
+        }, 90);
       }
 
       if (level === "hard") {
         return buildPool(() => {
-          const type = randInt(1,10);
+          const n = randInt(20, 100);
+          const p = [0.1, 0.2, 0.3, 0.4][randInt(0, 3)];
+          const lambda = randInt(4, 12);
+          const type = randInt(1, 10);
           switch (type) {
             case 1:
-              return {
-                q: withDisplayMath(`\\text{Find a basis and the dimension of }W=\\{(x,y,z,t)\\in\\mathbb{R}^4:x+y+z+t=0,\\ x-z=0\\}`),
-                s: withDisplayMath(`W=\\operatorname{span}\\{(-1,0,1,0),(-1,1,1,-1)\\},\\quad \\dim W=2`),
-                tag: "Subspace with equations"
-              };
+              return { q: withDisplayMath(`X\\sim Bin(${n},${p}).\\ \\text{Find the normal approximation parameters.}`), s: withDisplayMath(`\\mu=np=${dec(n * p)},\\quad \\sigma^2=np(1-p)=${dec(n * p * (1 - p))}`), tag: "Normal approximation" };
             case 2:
-              return {
-                q: withDisplayMath(`T:\\mathbb{R}^3\\to\\mathbb{R}^2,\\ T(x,y,z)=(x+y,y+z).\\ \\text{Find }\\ker T\\text{ and }\\operatorname{Im}T.`),
-                s: withDisplayMath(`\\ker T=\\operatorname{span}\\{(1,-1,1)\\},\\quad \\operatorname{Im}T=\\mathbb{R}^2`),
-                tag: "Kernel and image"
-              };
+              return { q: withDisplayMath(`X\\sim Poisson(${lambda}).\\ \\text{State the approximating normal law.}`), s: withDisplayMath(`X \\approx N(${lambda},${lambda})`), tag: "Poisson approximation" };
             case 3:
-              return {
-                q: withDisplayMath(`\\text{Determine whether }\\{1+x,\\ x+x^2,\\ 1+x^2\\}\\text{ is a basis of }P_2(\\mathbb{R})`),
-                s: withDisplayMath(`\\text{Yes}`),
-                tag: "Polynomial basis"
-              };
+              return { q: withDisplayMath(`X_1,\\dots,X_n\\text{ i.i.d. with }E(X_i)=5,\\text{ }Var(X_i)=9.\\ \\text{Find }E(\\bar X)\\text{ and }Var(\\bar X).`), s: withDisplayMath(`E(\\bar X)=5,\\quad Var(\\bar X)=\\frac{9}{n}`), tag: "Sample mean" };
             case 4:
-              return {
-                q: withDisplayMath(`\\text{Find the matrix of }T:\\mathbb{R}^2\\to\\mathbb{R}^2,\\ T(x,y)=(2x-y,x+3y)`),
-                s: withDisplayMath(`\\begin{pmatrix}2&-1\\\\1&3\\end{pmatrix}`),
-                tag: "Matrix of linear map"
-              };
+              return { q: withDisplayMath(`X\\sim N(0,1).\\ \\text{Express }P(|X|\\le 1.96).`), s: withDisplayMath(`P(|X|\\le 1.96)\\approx 0.95`), tag: "Standard normal" };
             case 5:
-              return {
-                q: withDisplayMath(`\\text{Let }T:\\mathbb{R}^3\\to\\mathbb{R}^3\\text{ be defined by }T(x,y,z)=(x-y,y-z,z-x).\\ \\text{Find }\\dim\\ker T.`),
-                s: withDisplayMath(`\\dim\\ker T=1`),
-                tag: "Kernel dimension"
-              };
+              return { q: withDisplayMath(`X\\sim Exp(\\lambda).\\ \\text{Show the memoryless property in formula form.}`), s: withDisplayMath(`P(X>s+t\\mid X>s)=P(X>t)`), tag: "Exponential" };
             case 6:
-              return {
-                q: withDisplayMath(`\\text{Extend }\\{(1,0,1),(0,1,1)\\}\\text{ to a basis of }\\mathbb{R}^3`),
-                s: withDisplayMath(`\\text{One possible basis is }\\{(1,0,1),(0,1,1),(1,0,0)\\}`),
-                tag: "Basis extension"
-              };
+              return { q: withDisplayMath(`\\text{When is a normal approximation to a binomial usually reasonable?}`), s: withDisplayMath(`\\text{Typically when }np\\ge 5\\text{ and }n(1-p)\\ge 5.`), tag: "Approximation criteria" };
             case 7:
-              return {
-                q: withDisplayMath(`\\text{Find coordinates of }(1,2)\\text{ in the basis }\\mathcal{B}=\\{(1,1),(1,-1)\\}`),
-                s: withDisplayMath(`[(1,2)]_{\\mathcal B}=\\left(\\frac{3}{2},-\\frac{1}{2}\\right)`),
-                tag: "Change of basis"
-              };
+              return { q: withDisplayMath(`X\\sim N(\\mu,\\sigma^2).\\ \\text{Standardize }P(X\\le x).`), s: withDisplayMath(`P(X\\le x)=\\Phi\\left(\\frac{x-\\mu}{\\sigma}\\right)`), tag: "Standardization" };
             case 8:
-              return {
-                q: withDisplayMath(`\\text{Is }W=\\{p\\in P_3(\\mathbb{R}):p(1)=0\\}\\text{ a subspace? Find its dimension.}`),
-                s: withDisplayMath(`\\text{Yes},\\quad \\dim W=3`),
-                tag: "Polynomial subspace"
-              };
+              return { q: withDisplayMath(`X\\sim Poisson(\\lambda).\\ \\text{Find }P(X=0).`), s: withDisplayMath(`P(X=0)=e^{-\\lambda}`), tag: "Poisson" };
             case 9:
-              return {
-                q: withDisplayMath(`T:\\mathbb{R}^2\\to\\mathbb{R}^2,\\ T(x,y)=(x+y,x+y).\\ \\text{Is }T\\text{ injective? surjective?}`),
-                s: withDisplayMath(`\\text{Neither injective nor surjective}`),
-                tag: "Injective/surjective"
-              };
+              return { q: withDisplayMath(`X_1,\\dots,X_n\\text{ i.i.d. Bernoulli}(p).\\ \\text{Identify the distribution of }\\sum X_i.`), s: withDisplayMath(`\\sum X_i \\sim Bin(n,p)`), tag: "Bernoulli sum" };
             default:
-              return {
-                q: withDisplayMath(`\\text{Find a basis of }U\\cap V\\text{ where }U=\\operatorname{span}\\{(1,0,1),(0,1,1)\\},\\ V=\\operatorname{span}\\{(1,1,2)\\}`),
-                s: withDisplayMath(`U\\cap V=\\operatorname{span}\\{(1,1,2)\\}`),
-                tag: "Intersection of subspaces"
-              };
+              return { q: withDisplayMath(`\\text{State the mean and variance of }U(a,b).`), s: withDisplayMath(`E(X)=\\frac{a+b}{2},\\quad Var(X)=\\frac{(b-a)^2}{12}`), tag: "Uniform" };
           }
-        }, 140);
+        }, 110);
       }
 
       return buildPool(() => {
-        const type = randInt(1,10);
+        const n = randInt(10, 25);
+        const p = [0.2, 0.3, 0.4, 0.5][randInt(0, 3)];
+        const lambda = randInt(2, 10);
+        const type = randInt(1, 10);
         switch (type) {
           case 1:
-            return {
-              q: withDisplayMath(`\\text{Is }W=\\{(x,y,z)\\in\\mathbb{R}^3:x+y+z=0\\}\\text{ a subspace?}`),
-              s: withDisplayMath(`\\text{Yes}`),
-              tag: "Subspace"
-            };
+            return { q: withDisplayMath(`X\\sim Bin(${n},${p}).\\ \\text{Compute }E(X)\\text{ and }Var(X).`), s: withDisplayMath(`E(X)=${dec(n * p)},\\quad Var(X)=${dec(n * p * (1 - p))}`), tag: "Binomial" };
           case 2:
-            return {
-              q: withDisplayMath(`\\text{Find a basis of }W=\\{(x,y,z):x+y+z=0\\}`),
-              s: withDisplayMath(`\\{(1,-1,0),(1,0,-1)\\}`),
-              tag: "Basis"
-            };
+            return { q: withDisplayMath(`X\\sim Poisson(${lambda}).\\ \\text{Compute }P(X=0).`), s: withDisplayMath(`e^{-${lambda}}`), tag: "Poisson" };
           case 3:
-            return {
-              q: withDisplayMath(`\\text{Find }\\dim\\operatorname{span}\\{(1,0,0),(0,1,0),(1,1,0)\\}`),
-              s: withDisplayMath(`2`),
-              tag: "Dimension"
-            };
+            return { q: withDisplayMath(`X\\sim N(\\mu,\\sigma^2).\\ \\text{Write the standardized variable.}`), s: withDisplayMath(`Z=\\frac{X-\\mu}{\\sigma}`), tag: "Normal" };
           case 4:
-            return {
-              q: withDisplayMath(`T(x,y)=(x+y,y).\\ \\text{Find the matrix of }T`),
-              s: withDisplayMath(`\\begin{pmatrix}1&1\\\\0&1\\end{pmatrix}`),
-              tag: "Linear map"
-            };
+            return { q: withDisplayMath(`X\\sim Exp(\\lambda=4).\\ \\text{Compute }E(X).`), s: withDisplayMath(`\\frac{1}{4}`), tag: "Exponential" };
           case 5:
-            return {
-              q: withDisplayMath(`T:\\mathbb{R}^3\\to\\mathbb{R}^2,\\ T(x,y,z)=(x+y,y+z).\\ \\text{Find }\\ker T`),
-              s: withDisplayMath(`\\operatorname{span}\\{(1,-1,1)\\}`),
-              tag: "Kernel"
-            };
+            return { q: withDisplayMath(`\\text{State the CLT informally.}`), s: withDisplayMath(`\\text{The sample mean becomes approximately normal for large }n.`), tag: "CLT" };
           case 6:
-            return {
-              q: withDisplayMath(`\\text{Is }\\{1+x,\\ x+x^2,\\ 1+x^2\\}\\text{ a basis of }P_2(\\mathbb{R})?`),
-              s: withDisplayMath(`\\text{Yes}`),
-              tag: "Polynomial basis"
-            };
+            return { q: withDisplayMath(`X\\sim Bernoulli(0.7).\\ \\text{Compute }Var(X).`), s: withDisplayMath(`0.21`), tag: "Bernoulli" };
           case 7:
-            return {
-              q: withDisplayMath(`\\text{Find coordinates of }(1,2)\\text{ in }\\mathcal{B}=\\{(1,1),(1,-1)\\}`),
-              s: withDisplayMath(`\\left(\\frac{3}{2},-\\frac12\\right)`),
-              tag: "Coordinates"
-            };
+            return { q: withDisplayMath(`X\\sim U(0,1).\\ \\text{Find }P(X>0.8).`), s: withDisplayMath(`0.2`), tag: "Uniform" };
           case 8:
-            return {
-              q: withDisplayMath(`\\text{Is }T(x,y)=(x+y,1)\\text{ linear?}`),
-              s: withDisplayMath(`\\text{No}`),
-              tag: "Linearity"
-            };
+            return { q: withDisplayMath(`X_1,\\dots,X_n\\text{ i.i.d. with variance }4.\\ \\text{Find }Var(\\bar X).`), s: withDisplayMath(`\\frac{4}{n}`), tag: "Sample mean" };
           case 9:
-            return {
-              q: withDisplayMath(`\\text{Find }\\dim P_3(\\mathbb{R})`),
-              s: withDisplayMath(`4`),
-              tag: "Polynomial space"
-            };
+            return { q: withDisplayMath(`\\text{When is the normal approximation to a binomial usually acceptable?}`), s: withDisplayMath(`\\text{When }np\\text{ and }n(1-p)\\text{ are sufficiently large.}`), tag: "Approximation" };
           default:
-            return {
-              q: withDisplayMath(`\\text{Do }(1,1,0),(1,0,1),(0,1,1)\\text{ form a basis of }\\mathbb{R}^3?`),
-              s: withDisplayMath(`\\text{Yes}`),
-              tag: "Basis test"
-            };
-          }
-      }, 130);
+            return { q: withDisplayMath(`X\\sim Poisson(3).\\ \\text{Compute }E(X).`), s: withDisplayMath(`3`), tag: "Poisson" };
+        }
+      }, 100);
     }
 
-    function eigenTemplates(level = "medium") {
+    function inferenceTemplates(level = "medium") {
       if (level === "easy") {
         return buildPool(() => {
-          const type = randInt(1,8);
+          const n = randInt(16, 64);
+          const sigma = [2, 3, 4, 5][randInt(0, 3)];
+          const xbar = randInt(10, 30);
+          const type = randInt(1, 10);
           switch (type) {
             case 1:
-              return {
-                q: withDisplayMath(`\\text{Find the eigenvalues of }A=\\begin{pmatrix}2&0\\\\0&3\\end{pmatrix}`),
-                s: withDisplayMath(`\\lambda_1=2,\\ \\lambda_2=3`),
-                tag: "Diagonal matrix"
-              };
+              return { q: withDisplayMath(`\\text{For a normal population with known }\\sigma=${sigma},\\text{ }n=${n},\\text{ }\\bar x=${xbar},\\text{ write the 95\\% CI for }\\mu.`), s: withDisplayMath(`\\bar x \\pm 1.96\\frac{\\sigma}{\\sqrt n} = ${xbar} \\pm 1.96\\frac{${sigma}}{\\sqrt{${n}}}`), tag: "CI for mean" };
             case 2:
-              return {
-                q: withDisplayMath(`\\text{Find the eigenvalues of }A=\\begin{pmatrix}1&1\\\\0&2\\end{pmatrix}`),
-                s: withDisplayMath(`\\lambda_1=1,\\ \\lambda_2=2`),
-                tag: "Triangular matrix"
-              };
+              return { q: withDisplayMath(`\\text{State the null and alternative hypotheses for a two-sided test on }\\mu\\text{ with reference value }10.`), s: withDisplayMath(`H_0:\\mu=10,\\quad H_1:\\mu\\ne 10`), tag: "Hypotheses" };
             case 3:
-              return {
-                q: withDisplayMath(`\\text{Find an eigenvector for }\\lambda=2\\text{ of }A=\\begin{pmatrix}2&1\\\\0&2\\end{pmatrix}`),
-                s: withDisplayMath(`\\operatorname{span}\\{(1,0)\\}`),
-                tag: "Eigenspace"
-              };
+              return { q: withDisplayMath(`\\text{What does a p-value measure?}`), s: withDisplayMath(`\\text{The probability, under }H_0,\\text{ of observing data at least as extreme as the sample.}`), tag: "P-value" };
             case 4:
-              return {
-                q: withDisplayMath(`\\text{Is }A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}\\text{ diagonalizable?}`),
-                s: withDisplayMath(`\\text{Yes}`),
-                tag: "Diagonalizability"
-              };
+              return { q: withDisplayMath(`\\text{At significance level }\\alpha=0.05,\\text{ when do we reject }H_0\\text{ using the p-value?}`), s: withDisplayMath(`\\text{Reject }H_0\\text{ if p-value }<0.05`), tag: "Decision rule" };
             case 5:
-              return {
-                q: withDisplayMath(`\\text{Compute }\\chi_A(\\lambda)\\text{ for }A=\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}`),
-                s: withDisplayMath(`\\chi_A(\\lambda)=\\lambda^2-1`),
-                tag: "Characteristic polynomial"
-              };
+              return { q: withDisplayMath(`\\text{Give the standard error of }\\bar X\\text{ when }Var(X)=\\sigma^2\\text{ and sample size is }n.`), s: withDisplayMath(`SE(\\bar X)=\\frac{\\sigma}{\\sqrt n}`), tag: "Standard error" };
             case 6:
-              return {
-                q: withDisplayMath(`\\text{Find the eigenvalues of }A=\\begin{pmatrix}1&0&0\\\\0&2&0\\\\0&0&2\\end{pmatrix}`),
-                s: withDisplayMath(`1,2,2`),
-                tag: "Multiplicity"
-              };
+              return { q: withDisplayMath(`\\text{State a 95\\% confidence interval for a proportion }p\\text{ using }\\hat p.`), s: withDisplayMath(`\\hat p \\pm 1.96\\sqrt{\\frac{\\hat p(1-\\hat p)}{n}}`), tag: "CI for proportion" };
             case 7:
-              return {
-                q: withDisplayMath(`\\text{Find a basis of the eigenspace of }\\lambda=3\\text{ for }A=\\begin{pmatrix}3&0\\\\0&3\\end{pmatrix}`),
-                s: withDisplayMath(`\\mathbb{R}^2`),
-                tag: "Whole space eigenspace"
-              };
+              return { q: withDisplayMath(`\\text{Define Type I error.}`), s: withDisplayMath(`\\text{Rejecting }H_0\\text{ when }H_0\\text{ is true.}`), tag: "Errors" };
+            case 8:
+              return { q: withDisplayMath(`\\text{Define Type II error.}`), s: withDisplayMath(`\\text{Failing to reject }H_0\\text{ when }H_1\\text{ is true.}`), tag: "Errors" };
+            case 9:
+              return { q: withDisplayMath(`\\text{For a z-test, write the statistic for }H_0:\\mu=\\mu_0\\text{ with known }\\sigma.`), s: withDisplayMath(`Z=\\frac{\\bar X-\\mu_0}{\\sigma/\\sqrt n}`), tag: "Z-test" };
             default:
-              return {
-                q: withDisplayMath(`\\text{If }A\\text{ has eigenvalues }1,2,3,\\text{ what is }\\det A?`),
-                s: withDisplayMath(`6`),
-                tag: "Determinant and eigenvalues"
-              };
+              return { q: withDisplayMath(`\\text{What is the confidence level of a 99\\% confidence interval?}`), s: withDisplayMath(`0.99`), tag: "Confidence level" };
           }
-        }, 120);
+        }, 90);
       }
 
       if (level === "hard") {
         return buildPool(() => {
-          const type = randInt(1,10);
+          const n = randInt(12, 40);
+          const xbar = randInt(15, 28);
+          const s = randInt(2, 6);
+          const mu0 = randInt(14, 26);
+          const type = randInt(1, 10);
           switch (type) {
             case 1:
-              return {
-                q: withDisplayMath(`\\text{Diagonalize }A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}`),
-                s: withDisplayMath(`\\lambda_1=3\\text{ with eigenvector }(1,1),\\ \\lambda_2=1\\text{ with eigenvector }(1,-1),\\ \\text{so }A=PDP^{-1}`),
-                tag: "Diagonalization"
-              };
+              return { q: withDisplayMath(`\\text{A normal sample has }n=${n},\\text{ }\\bar x=${xbar},\\text{ }s=${s}.\\ \\text{Write the 95\\% t-interval for }\\mu.`), s: withDisplayMath(`${xbar} \\pm t_{0.975,${n - 1}}\\frac{${s}}{\\sqrt{${n}}}`), tag: "t-interval" };
             case 2:
-              return {
-                q: withDisplayMath(`\\text{Find the eigenvalues and eigenspaces of }A=\\begin{pmatrix}1&1&0\\\\0&2&0\\\\0&0&2\\end{pmatrix}`),
-                s: withDisplayMath(`\\lambda=1\\Rightarrow E_1=\\operatorname{span}\\{(1,0,0)\\},\\quad \\lambda=2\\Rightarrow E_2=\\operatorname{span}\\{(1,1,0),(0,0,1)\\}`),
-                tag: "Repeated eigenvalue"
-              };
+              return { q: withDisplayMath(`\\text{For }H_0:\\mu=${mu0}\\text{ vs }H_1:\\mu>${mu0},\\text{ write the t-statistic.}`), s: withDisplayMath(`T=\\frac{\\bar X-${mu0}}{S/\\sqrt n}`), tag: "One-sided t-test" };
             case 3:
-              return {
-                q: withDisplayMath(`\\text{Is }A=\\begin{pmatrix}2&1\\\\0&2\\end{pmatrix}\\text{ diagonalizable?}`),
-                s: withDisplayMath(`\\text{No. The eigenspace for }\\lambda=2\\text{ has dimension }1`),
-                tag: "Defective matrix"
-              };
+              return { q: withDisplayMath(`\\text{Explain the duality between confidence intervals and two-sided tests.}`), s: withDisplayMath(`\\text{At level }\\alpha,\\text{ }H_0\\text{ is not rejected iff the hypothesized parameter belongs to the }(1-\\alpha)\\text{ confidence interval.}`), tag: "Theory" };
             case 4:
-              return {
-                q: withDisplayMath(`\\text{Find }A^n\\text{ for }A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}`),
-                s: withDisplayMath(`A^n=\\begin{pmatrix}1&0\\\\0&2^n\\end{pmatrix}`),
-                tag: "Powers via eigenvalues"
-              };
+              return { q: withDisplayMath(`\\text{A sample proportion is }\\hat p=0.6\\text{ with }n=100.\\ \\text{Write the 95\\% CI.}`), s: withDisplayMath(`0.6 \\pm 1.96\\sqrt{\\frac{0.6\\cdot0.4}{100}}`), tag: "Proportion CI" };
             case 5:
-              return {
-                q: withDisplayMath(`\\text{Find the characteristic polynomial of }A=\\begin{pmatrix}1&1&0\\\\1&1&0\\\\0&0&3\\end{pmatrix}`),
-                s: withDisplayMath(`\\chi_A(\\lambda)=(3-\\lambda)\\lambda(2-\\lambda)`),
-                tag: "Characteristic polynomial"
-              };
+              return { q: withDisplayMath(`\\text{State the rejection region for a two-sided z-test at level }\\alpha=0.05.`), s: withDisplayMath(`|Z|>1.96`), tag: "Critical region" };
             case 6:
-              return {
-                q: withDisplayMath(`\\text{A matrix has characteristic polynomial }(\\lambda-1)^2(\\lambda+2).\\ \\text{What are its eigenvalues and algebraic multiplicities?}`),
-                s: withDisplayMath(`1\\text{ of multiplicity }2,\\quad -2\\text{ of multiplicity }1`),
-                tag: "Interpretation"
-              };
+              return { q: withDisplayMath(`\\text{How does the length of a confidence interval change as }n\\text{ increases?}`), s: withDisplayMath(`\\text{It decreases like }1/\\sqrt n.`), tag: "Interpretation" };
             case 7:
-              return {
-                q: withDisplayMath(`\\text{Find the eigenvalues of }A=\\begin{pmatrix}0&-1\\\\1&0\\end{pmatrix}\\text{ over }\\mathbb{R}`),
-                s: withDisplayMath(`\\text{No real eigenvalues}`),
-                tag: "Real field"
-              };
+              return { q: withDisplayMath(`\\text{What is the effect of increasing }\\alpha\\text{ on the Type I error probability?}`), s: withDisplayMath(`\\text{It increases the probability of Type I error.}`), tag: "Errors" };
             case 8:
-              return {
-                q: withDisplayMath(`\\text{Find }\\operatorname{tr}A\\text{ and }\\det A\\text{ if the eigenvalues are }2,2,-1`),
-                s: withDisplayMath(`\\operatorname{tr}A=3,\\quad \\det A=-4`),
-                tag: "Trace and determinant"
-              };
+              return { q: withDisplayMath(`\\text{Write the }\\chi^2\\text{-based confidence interval structure for }\\sigma^2\\text{ in a normal sample.}`), s: withDisplayMath(`\\left(\\frac{(n-1)S^2}{\\chi^2_{1-\\alpha/2,n-1}},\\frac{(n-1)S^2}{\\chi^2_{\\alpha/2,n-1}}\\right)`), tag: "Variance CI" };
             case 9:
-              return {
-                q: withDisplayMath(`\\text{Find an orthogonal diagonalization of }A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}`),
-                s: withDisplayMath(`Q=\\frac{1}{\\sqrt2}\\begin{pmatrix}1&1\\\\1&-1\\end{pmatrix},\\quad Q^TAQ=\\begin{pmatrix}3&0\\\\0&1\\end{pmatrix}`),
-                tag: "Spectral theorem"
-              };
+              return { q: withDisplayMath(`\\text{Distinguish between practical significance and statistical significance.}`), s: withDisplayMath(`\\text{Statistical significance concerns evidence against }H_0;\\text{ practical significance concerns magnitude and relevance of the effect.}`), tag: "Interpretation" };
             default:
-              return {
-                q: withDisplayMath(`\\text{Find the minimal polynomial candidate from }A=\\begin{pmatrix}2&0\\\\0&3\\end{pmatrix}`),
-                s: withDisplayMath(`m_A(x)=(x-2)(x-3)`),
-                tag: "Minimal polynomial"
-              };
+              return { q: withDisplayMath(`\\text{What quantity determines the power of a test, besides }\\alpha\\text{ and }n?`), s: withDisplayMath(`\\text{The effect size.}`), tag: "Power" };
           }
-        }, 140);
+        }, 110);
       }
 
       return buildPool(() => {
-        const type = randInt(1,10);
+        const n = randInt(20, 64);
+        const sigma = randInt(2, 5);
+        const xbar = randInt(12, 26);
+        const type = randInt(1, 10);
         switch (type) {
           case 1:
-            return {
-              q: withDisplayMath(`\\text{Find the eigenvalues of }A=\\begin{pmatrix}2&0\\\\0&3\\end{pmatrix}`),
-              s: withDisplayMath(`2,3`),
-              tag: "Diagonal matrix"
-            };
+            return { q: withDisplayMath(`\\text{For }\\sigma=${sigma},\\text{ }n=${n},\\text{ }\\bar x=${xbar},\\text{ write the 95\\% CI for }\\mu.`), s: withDisplayMath(`${xbar} \\pm 1.96\\frac{${sigma}}{\\sqrt{${n}}}`), tag: "CI for mean" };
           case 2:
-            return {
-              q: withDisplayMath(`\\text{Find the eigenvalues of }A=\\begin{pmatrix}1&1\\\\0&2\\end{pmatrix}`),
-              s: withDisplayMath(`1,2`),
-              tag: "Triangular matrix"
-            };
+            return { q: withDisplayMath(`\\text{State }H_0\\text{ and }H_1\\text{ for a right-tailed test of }\\mu\\text{ against }10.`), s: withDisplayMath(`H_0:\\mu=10,\\quad H_1:\\mu>10`), tag: "Hypotheses" };
           case 3:
-            return {
-              q: withDisplayMath(`\\text{Is }A=\\begin{pmatrix}2&1\\\\0&2\\end{pmatrix}\\text{ diagonalizable?}`),
-              s: withDisplayMath(`\\text{No}`),
-              tag: "Defective matrix"
-            };
+            return { q: withDisplayMath(`\\text{What is a p-value?}`), s: withDisplayMath(`\\text{A tail probability computed under }H_0\\text{ for data at least as extreme as observed.}`), tag: "P-value" };
           case 4:
-            return {
-              q: withDisplayMath(`\\text{Diagonalize }A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}`),
-              s: withDisplayMath(`\\lambda=3,1\\text{ with eigenvectors }(1,1),(1,-1)`),
-              tag: "Diagonalization"
-            };
+            return { q: withDisplayMath(`\\text{At level }0.01,\\text{ when do we reject }H_0?`), s: withDisplayMath(`\\text{When p-value }<0.01`), tag: "Decision rule" };
           case 5:
-            return {
-              q: withDisplayMath(`\\chi_A(\\lambda)\\text{ for }A=\\begin{pmatrix}0&1\\\\1&0\\end{pmatrix}`),
-              s: withDisplayMath(`\\lambda^2-1`),
-              tag: "Characteristic polynomial"
-            };
+            return { q: withDisplayMath(`\\text{Write the z-test statistic for }H_0:\\mu=\\mu_0\\text{ with known variance.}`), s: withDisplayMath(`Z=\\frac{\\bar X-\\mu_0}{\\sigma/\\sqrt n}`), tag: "Z-test" };
           case 6:
-            return {
-              q: withDisplayMath(`\\text{If the eigenvalues are }1,2,3,\\text{ compute }\\det A`),
-              s: withDisplayMath(`6`),
-              tag: "Determinant"
-            };
+            return { q: withDisplayMath(`\\text{Define Type I error.}`), s: withDisplayMath(`\\text{Rejecting }H_0\\text{ although it is true.}`), tag: "Errors" };
           case 7:
-            return {
-              q: withDisplayMath(`\\text{If the eigenvalues are }2,2,-1,\\text{ compute }\\operatorname{tr}A`),
-              s: withDisplayMath(`3`),
-              tag: "Trace"
-            };
+            return { q: withDisplayMath(`\\text{Define Type II error.}`), s: withDisplayMath(`\\text{Not rejecting }H_0\\text{ although }H_1\\text{ is true.}`), tag: "Errors" };
           case 8:
-            return {
-              q: withDisplayMath(`\\text{Find a basis of the eigenspace for }\\lambda=2\\text{ of }A=\\begin{pmatrix}2&1\\\\0&2\\end{pmatrix}`),
-              s: withDisplayMath(`\\operatorname{span}\\{(1,0)\\}`),
-              tag: "Eigenspace"
-            };
+            return { q: withDisplayMath(`\\text{Write a 95\\% CI for a proportion }p.`), s: withDisplayMath(`\\hat p \\pm 1.96\\sqrt{\\frac{\\hat p(1-\\hat p)}{n}}`), tag: "Proportion CI" };
           case 9:
-            return {
-              q: withDisplayMath(`\\text{Find real eigenvalues of }\\begin{pmatrix}0&-1\\\\1&0\\end{pmatrix}`),
-              s: withDisplayMath(`\\text{None}`),
-              tag: "Real field"
-            };
+            return { q: withDisplayMath(`\\text{How does increasing }n\\text{ affect the margin of error?}`), s: withDisplayMath(`\\text{It decreases it.}`), tag: "Interpretation" };
           default:
-            return {
-              q: withDisplayMath(`\\text{Find }A^n\\text{ for }A=\\begin{pmatrix}1&0\\\\0&2\\end{pmatrix}`),
-              s: withDisplayMath(`\\begin{pmatrix}1&0\\\\0&2^n\\end{pmatrix}`),
-              tag: "Powers"
-            };
-          }
-      }, 130);
+            return { q: withDisplayMath(`\\text{What is the confidence level of a 90\\% CI?}`), s: withDisplayMath(`0.90`), tag: "Confidence level" };
+        }
+      }, 100);
     }
 
-    function orthogonalityTemplates(level = "medium") {
+    function regressionTemplates(level = "medium") {
       if (level === "easy") {
         return buildPool(() => {
-          const type = randInt(1,8);
+          const b0 = randInt(0, 5);
+          const b1 = randInt(1, 4);
+          const x = randInt(1, 6);
+          const r = [0.4, 0.6, 0.8, -0.5][randInt(0, 3)];
+          const type = randInt(1, 10);
           switch (type) {
             case 1:
-              return {
-                q: withDisplayMath(`\\text{Compute }(1,2)\\cdot(3,-1)`),
-                s: withDisplayMath(`1`),
-                tag: "Dot product"
-              };
+              return { q: withDisplayMath(`\\text{Given }\\hat y = ${b0}+${b1}x,\\text{ predict }y\\text{ at }x=${x}.`), s: withDisplayMath(`\\hat y = ${b0}+${b1}\\cdot${x} = ${b0 + b1 * x}`), tag: "Prediction" };
             case 2:
-              return {
-                q: withDisplayMath(`\\text{Are }(1,1,0)\\text{ and }(1,-1,2)\\text{ orthogonal?}`),
-                s: withDisplayMath(`\\text{Yes}`),
-                tag: "Orthogonality test"
-              };
+              return { q: withDisplayMath(`\\text{Interpret the slope in }\\hat y = 2 + 3x.`), s: withDisplayMath(`\\text{For one additional unit of }x,\\text{ }\\hat y\\text{ increases by }3\\text{ on average.}`), tag: "Interpretation" };
             case 3:
-              return {
-                q: withDisplayMath(`\\| (1,2,2) \\|`),
-                s: withDisplayMath(`3`),
-                tag: "Norm"
-              };
+              return { q: withDisplayMath(`\\text{If }r=${r},\\text{ is the linear association positive or negative?}`), s: withDisplayMath(r > 0 ? `\\text{Positive}` : `\\text{Negative}`), tag: "Correlation" };
             case 4:
-              return {
-                q: withDisplayMath(`\\text{Find the orthogonal projection of }(1,2)\\text{ onto }\\operatorname{span}\\{(1,0)\\}`),
-                s: withDisplayMath(`(1,0)`),
-                tag: "Projection"
-              };
+              return { q: withDisplayMath(`\\text{If }r=0,\\text{ what does this say about linear correlation?}`), s: withDisplayMath(`\\text{There is no linear correlation.}`), tag: "Correlation" };
             case 5:
-              return {
-                q: withDisplayMath(`\\text{Find an orthonormal basis obtained from }(1,0),(0,1)`),
-                s: withDisplayMath(`\\{(1,0),(0,1)\\}`),
-                tag: "Orthonormal basis"
-              };
+              return { q: withDisplayMath(`\\text{In simple linear regression, what does }R^2\\text{ measure?}`), s: withDisplayMath(`\\text{The proportion of variance explained by the model.}`), tag: "Goodness of fit" };
             case 6:
-              return {
-                q: withDisplayMath(`q(x,y)=x^2+y^2.\\ \\text{Is }q\\text{ positive definite?}`),
-                s: withDisplayMath(`\\text{Yes}`),
-                tag: "Quadratic form"
-              };
+              return { q: withDisplayMath(`\\text{If }r=0.8,\\text{ compute }R^2.`), s: withDisplayMath(`R^2 = 0.64`), tag: "R-squared" };
             case 7:
-              return {
-                q: withDisplayMath(`\\text{Find the matrix of }q(x,y)=x^2+2xy+y^2`),
-                s: withDisplayMath(`\\begin{pmatrix}1&1\\\\1&1\\end{pmatrix}`),
-                tag: "Associated matrix"
-              };
+              return { q: withDisplayMath(`\\text{What does a positive slope indicate?}`), s: withDisplayMath(`\\text{As }x\\text{ increases, }y\\text{ tends to increase.}`), tag: "Interpretation" };
+            case 8:
+              return { q: withDisplayMath(`\\text{State the least-squares criterion.}`), s: withDisplayMath(`\\text{Minimize the sum of squared residuals.}`), tag: "Least squares" };
+            case 9:
+              return { q: withDisplayMath(`\\text{In the model }Y=\\beta_0+\\beta_1x+\\varepsilon,\\text{ what is a residual?}`), s: withDisplayMath(`e_i = y_i - \\hat y_i`), tag: "Residuals" };
             default:
-              return {
-                q: withDisplayMath(`\\text{Find the angle between }(1,0)\\text{ and }(0,1)`),
-                s: withDisplayMath(`\\frac{\\pi}{2}`),
-                tag: "Angle"
-              };
+              return { q: withDisplayMath(`\\text{If }\\hat y = 1 + 2x,\\text{ find the residual when }x=3\\text{ and }y=8.`), s: withDisplayMath(`\\hat y=7,\\quad e=1`), tag: "Residuals" };
           }
-        }, 120);
+        }, 90);
       }
 
       if (level === "hard") {
         return buildPool(() => {
-          const type = randInt(1,10);
+          const b0 = randInt(0, 6);
+          const b1 = randInt(1, 5);
+          const x = randInt(2, 8);
+          const r = [0.7, 0.8, -0.6, -0.9][randInt(0, 3)];
+          const type = randInt(1, 10);
           switch (type) {
             case 1:
-              return {
-                q: withDisplayMath(`\\text{Apply Gram-Schmidt to }(1,1,0),(1,0,1)`),
-                s: withDisplayMath(`u_1=(1,1,0),\\quad u_2=\\left(\\frac12,-\\frac12,1\\right),\\text{ then normalize.}`),
-                tag: "Gram-Schmidt"
-              };
+              return { q: withDisplayMath(`\\text{Given }\\hat y = ${b0}+${b1}x,\\text{ write the null hypothesis for testing no linear effect.}`), s: withDisplayMath(`H_0:\\beta_1=0`), tag: "Slope test" };
             case 2:
-              return {
-                q: withDisplayMath(`\\text{Project }(1,2,3)\\text{ onto }\\operatorname{span}\\{(1,1,1)\\}`),
-                s: withDisplayMath(`\\operatorname{proj}(1,2,3)=2(1,1,1)=(2,2,2)`),
-                tag: "Projection"
-              };
+              return { q: withDisplayMath(`\\text{If }r=${r},\\text{ compute }R^2\\text{ and interpret it.}`), s: withDisplayMath(`R^2=${dec(r * r)}\\text{, so about }${dec(100 * r * r)}\\%\\text{ of the variability is explained.}`), tag: "R-squared" };
             case 3:
-              return {
-                q: withDisplayMath(`q(x,y)=x^2+4xy+y^2.\\ \\text{Classify the quadratic form.}`),
-                s: withDisplayMath(`\\text{Indefinite, since the matrix }\\begin{pmatrix}1&2\\\\2&1\\end{pmatrix}\\text{ has eigenvalues }3,-1`),
-                tag: "Quadratic form classification"
-              };
+              return { q: withDisplayMath(`\\text{Given }\\hat y = ${b0}+${b1}x,\\text{ predict at }x=${x}\\text{ and interpret if }x\\text{ is outside the observed range.}`), s: withDisplayMath(`\\hat y=${b0 + b1 * x};\\quad \\text{outside the data range this is extrapolation.}`), tag: "Prediction" };
             case 4:
-              return {
-                q: withDisplayMath(`\\text{Find the orthogonal complement of }U=\\operatorname{span}\\{(1,1,0)\\}\\subset\\mathbb{R}^3`),
-                s: withDisplayMath(`U^\\perp=\\{(x,y,z):x+y=0\\}=\\operatorname{span}\\{(1,-1,0),(0,0,1)\\}`),
-                tag: "Orthogonal complement"
-              };
+              return { q: withDisplayMath(`\\text{What residual pattern would suggest nonlinearity?}`), s: withDisplayMath(`\\text{A systematic curved pattern in the residual plot.}`), tag: "Diagnostics" };
             case 5:
-              return {
-                q: withDisplayMath(`\\text{Find the least-squares solution of }x+y=1,\\ x-y=0,\\ x+y=2`),
-                s: withDisplayMath(`A=\\begin{pmatrix}1&1\\\\1&-1\\\\1&1\\end{pmatrix},\\ b=\\begin{pmatrix}1\\\\0\\\\2\\end{pmatrix},\\ \\hat x=\\left(\\frac34,\\frac34\\right)`),
-                tag: "Least squares"
-              };
+              return { q: withDisplayMath(`\\text{What is the effect of an influential outlier on a fitted regression line?}`), s: withDisplayMath(`\\text{It can substantially change slope, intercept and predictions.}`), tag: "Outliers" };
             case 6:
-              return {
-                q: withDisplayMath(`\\text{Determine whether }A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}\\text{ is positive definite}`),
-                s: withDisplayMath(`\\text{Yes, since eigenvalues are }3,1>0`),
-                tag: "Positive definite matrix"
-              };
+              return { q: withDisplayMath(`\\text{State a key assumption on regression errors for classical inference.}`), s: withDisplayMath(`\\text{Errors are independent with mean }0\\text{ and constant variance.}`), tag: "Assumptions" };
             case 7:
-              return {
-                q: withDisplayMath(`\\text{Diagonalize orthogonally }A=\\begin{pmatrix}2&1\\\\1&2\\end{pmatrix}`),
-                s: withDisplayMath(`Q=\\frac{1}{\\sqrt2}\\begin{pmatrix}1&1\\\\1&-1\\end{pmatrix},\\quad Q^TAQ=\\begin{pmatrix}3&0\\\\0&1\\end{pmatrix}`),
-                tag: "Spectral theorem"
-              };
+              return { q: withDisplayMath(`\\text{If SSE decreases when adding predictors, why is }R^2\\text{ nondecreasing?}`), s: withDisplayMath(`\\text{Because }R^2 = 1 - SSE/SST\\text{ and }SST\\text{ is fixed.}`), tag: "Theory" };
             case 8:
-              return {
-                q: withDisplayMath(`q(x,y,z)=x^2+y^2-z^2.\\ \\text{Classify }q`),
-                s: withDisplayMath(`\\text{Indefinite}`),
-                tag: "Signature"
-              };
+              return { q: withDisplayMath(`\\text{What does }\\beta_0\\text{ represent in a simple linear regression model?}`), s: withDisplayMath(`\\text{The expected response when }x=0.`), tag: "Intercept" };
             case 9:
-              return {
-                q: withDisplayMath(`\\text{Find }\\operatorname{dist}((1,2),\\operatorname{span}\\{(1,0)\\})`),
-                s: withDisplayMath(`2`),
-                tag: "Distance to subspace"
-              };
+              return { q: withDisplayMath(`\\text{For two variables with strong correlation, does this imply causation?}`), s: withDisplayMath(`\\text{No. Correlation does not imply causation.}`), tag: "Interpretation" };
             default:
-              return {
-                q: withDisplayMath(`\\text{Determine whether }(1,1),(1,-1)\\text{ is an orthogonal basis of }\\mathbb R^2`),
-                s: withDisplayMath(`\\text{Yes}`),
-                tag: "Orthogonal basis"
-              };
+              return { q: withDisplayMath(`\\text{What is ANOVA used for in the regression context?}`), s: withDisplayMath(`\\text{To decompose variability and test the overall significance of the model.}`), tag: "ANOVA" };
           }
-        }, 140);
+        }, 110);
       }
 
       return buildPool(() => {
-        const type = randInt(1,10);
+        const b0 = randInt(0, 5);
+        const b1 = randInt(1, 4);
+        const x = randInt(1, 6);
+        const r = [0.5, 0.8, -0.6, 0.3][randInt(0, 3)];
+        const type = randInt(1, 10);
         switch (type) {
           case 1:
-            return {
-              q: withDisplayMath(`(1,2)\\cdot(3,-1)`),
-              s: withDisplayMath(`1`),
-              tag: "Dot product"
-            };
+            return { q: withDisplayMath(`\\text{Given }\\hat y = ${b0}+${b1}x,\\text{ predict }y\\text{ at }x=${x}.`), s: withDisplayMath(`${b0 + b1 * x}`), tag: "Prediction" };
           case 2:
-            return {
-              q: withDisplayMath(`\\|(1,2,2)\\|`),
-              s: withDisplayMath(`3`),
-              tag: "Norm"
-            };
+            return { q: withDisplayMath(`\\text{Interpret the slope in a simple linear regression.}`), s: withDisplayMath(`\\text{Expected change in }y\\text{ for a one-unit increase in }x.`), tag: "Interpretation" };
           case 3:
-            return {
-              q: withDisplayMath(`\\text{Are }(1,1,0)\\text{ and }(1,-1,2)\\text{ orthogonal?}`),
-              s: withDisplayMath(`\\text{Yes}`),
-              tag: "Orthogonality"
-            };
+            return { q: withDisplayMath(`\\text{If }r=${r},\\text{ compute }R^2.`), s: withDisplayMath(`${dec(r * r)}`), tag: "R-squared" };
           case 4:
-            return {
-              q: withDisplayMath(`\\text{Project }(1,2)\\text{ onto }\\operatorname{span}\\{(1,0)\\}`),
-              s: withDisplayMath(`(1,0)`),
-              tag: "Projection"
-            };
+            return { q: withDisplayMath(`\\text{What is a residual?}`), s: withDisplayMath(`y_i-\\hat y_i`), tag: "Residuals" };
           case 5:
-            return {
-              q: withDisplayMath(`q(x,y)=x^2+y^2.\\ \\text{Is }q\\text{ positive definite?}`),
-              s: withDisplayMath(`\\text{Yes}`),
-              tag: "Quadratic form"
-            };
+            return { q: withDisplayMath(`\\text{What does }R^2\\text{ measure?}`), s: withDisplayMath(`\\text{Explained proportion of variability.}`), tag: "Goodness of fit" };
           case 6:
-            return {
-              q: withDisplayMath(`\\text{Find the matrix of }q(x,y)=x^2+2xy+y^2`),
-              s: withDisplayMath(`\\begin{pmatrix}1&1\\\\1&1\\end{pmatrix}`),
-              tag: "Associated matrix"
-            };
+            return { q: withDisplayMath(`\\text{If }r=0,\\text{ what is the linear association?}`), s: withDisplayMath(`\\text{Null linear association}`), tag: "Correlation" };
           case 7:
-            return {
-              q: withDisplayMath(`\\text{Find }U^\\perp\\text{ for }U=\\operatorname{span}\\{(1,1,0)\\}`),
-              s: withDisplayMath(`\\{(x,y,z):x+y=0\\}`),
-              tag: "Orthogonal complement"
-            };
+            return { q: withDisplayMath(`\\text{State the least-squares criterion.}`), s: withDisplayMath(`\\text{Minimize }\\sum e_i^2`), tag: "Least squares" };
           case 8:
-            return {
-              q: withDisplayMath(`\\text{Classify }q(x,y)=x^2+4xy+y^2`),
-              s: withDisplayMath(`\\text{Indefinite}`),
-              tag: "Classification"
-            };
+            return { q: withDisplayMath(`\\text{Write the null hypothesis for testing the slope.}`), s: withDisplayMath(`H_0:\\beta_1=0`), tag: "Slope test" };
           case 9:
-            return {
-              q: withDisplayMath(`\\text{Find the angle between }(1,0)\\text{ and }(0,1)`),
-              s: withDisplayMath(`\\frac{\\pi}{2}`),
-              tag: "Angle"
-            };
+            return { q: withDisplayMath(`\\text{Does correlation imply causation?}`), s: withDisplayMath(`\\text{No}`), tag: "Interpretation" };
           default:
-            return {
-              q: withDisplayMath(`\\text{Determine whether }(1,1),(1,-1)\\text{ is an orthogonal basis of }\\mathbb R^2`),
-              s: withDisplayMath(`\\text{Yes}`),
-              tag: "Orthogonal basis"
-            };
-          }
-      }, 130);
+            return { q: withDisplayMath(`\\text{If }\\hat y=1+2x,\\text{ compute the residual at }(x,y)=(2,6).`), s: withDisplayMath(`1`), tag: "Residuals" };
+        }
+      }, 100);
     }
 
     function generatorForTopic(topic, level) {
       switch (topic) {
-        case "systems": return systemsTemplates(level);
-        case "matrices": return matricesTemplates(level);
-        case "vector-spaces": return vectorSpacesTemplates(level);
-        case "eigen": return eigenTemplates(level);
-        case "orthogonality": return orthogonalityTemplates(level);
+        case "descriptive": return descriptiveTemplates(level);
+        case "distributions": return distributionsTemplates(level);
+        case "inference": return inferenceTemplates(level);
+        case "regression": return regressionTemplates(level);
         default: return [];
       }
     }
 
     function buildExercises(topic, count, level) {
-      const pool = generatorForTopic(topic, level);
-      return sampleExercises(pool, count);
+      return sampleExercises(generatorForTopic(topic, level), count);
     }
 
     function buildExamSheet(level) {
-      const topics = ["systems", "matrices", "vector-spaces", "eigen", "orthogonality"];
-      const chosen = topics.map((topic, i) => {
-        const pool = generatorForTopic(topic, level);
-        const ex = choice(pool);
+      const topics = ["descriptive", "distributions", "inference", "regression"];
+      return shuffle(topics.map((topic, i) => {
+        const ex = choice(generatorForTopic(topic, level));
         return { index: i + 1, ...ex, examTopic: topic };
-      });
-      return shuffle(chosen).map((ex, index) => ({ ...ex, index: index + 1 }));
+      })).map((ex, index) => ({ ...ex, index: index + 1 }));
     }
 
-    let currentTopic = "systems";
+    let currentTopic = "descriptive";
     let solutionsVisible = false;
     let currentExercises = [];
 
     function labelForTopic(topic) {
       switch (topic) {
-        case "systems": return "Linear Systems";
-        case "matrices": return "Matrices & Determinants";
-        case "vector-spaces": return "Vector Spaces & Linear Maps";
-        case "eigen": return "Eigenvalues & Diagonalization";
-        case "orthogonality": return "Orthogonality & Quadratic Forms";
+        case "descriptive": return "Descriptive Statistics";
+        case "distributions": return "Distributions & Probability";
+        case "inference": return "Confidence Intervals & Tests";
+        case "regression": return "Regression & Correlation";
         case "exam": return "Exam Mode";
         default: return "Worksheet";
       }
@@ -4534,13 +848,12 @@
 
     function defaultTitleForTopic(topic) {
       switch (topic) {
-        case "systems": return "Linear Systems Worksheet";
-        case "matrices": return "Matrices and Determinants Worksheet";
-        case "vector-spaces": return "Vector Spaces and Linear Maps Worksheet";
-        case "eigen": return "Eigenvalues and Diagonalization Worksheet";
-        case "orthogonality": return "Orthogonality and Quadratic Forms Worksheet";
-        case "exam": return "Geometry and Linear Algebra Exam Practice";
-        default: return "Geometry and Linear Algebra Worksheet";
+        case "descriptive": return "Descriptive Statistics Worksheet";
+        case "distributions": return "Distributions and Probability Worksheet";
+        case "inference": return "Confidence Intervals and Tests Worksheet";
+        case "regression": return "Regression and Correlation Worksheet";
+        case "exam": return "Statistics Exam Practice";
+        default: return "Statistics Worksheet";
       }
     }
 
@@ -4620,7 +933,6 @@
         : buildExercises(currentTopic, count, level);
 
       await renderLists();
-
       status.textContent = currentTopic === "exam"
         ? `Generated ${currentExercises.length} exam exercises.`
         : `Generated ${currentExercises.length} exercises.`;
@@ -4723,11 +1035,7 @@
           pdf.addImage(imgData, "PNG", 0, 0, imgWidth, Math.min(imgHeight, pageHeight));
         }
 
-        const safeName = title
-          .toLowerCase()
-          .replace(/[^a-z0-9]+/g, "-")
-          .replace(/^-+|-+$/g, "") || "worksheet";
-
+        const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "worksheet";
         pdf.save(`${safeName}.pdf`);
         status.textContent = "PDF downloaded successfully.";
       } catch (err) {
@@ -4742,7 +1050,6 @@
       document.getElementById("toggleSolutionsBtn").textContent = solutionsVisible ? "Hide solutions" : "Show solutions";
       await renderLists();
     });
-
     document.getElementById("downloadBtn").addEventListener("click", downloadPdf);
     document.getElementById("level").addEventListener("change", async () => {
       updatePills();
@@ -4753,38 +1060,7 @@
       btn.addEventListener("click", () => setTopic(btn.dataset.topic));
     });
 
-    setTopic("systems");
+    setTopic("descriptive");
   </script>
-</body>
-</html>
-  </textarea>
-
-  <script>
-    function loadIframeContent(frameId, sourceId) {
-      const frame = document.getElementById(frameId);
-      const source = document.getElementById(sourceId);
-      frame.srcdoc = source.value;
-    }
-
-    loadIframeContent('frame-calc1', 'src-calc1');
-    loadIframeContent('frame-calc2', 'src-calc2');
-    loadIframeContent('frame-linalg', 'src-linalg');
-
-    const buttons = document.querySelectorAll('.tab-btn');
-    const panels = document.querySelectorAll('.panel');
-
-    buttons.forEach((button) => {
-      button.addEventListener('click', () => {
-        const target = button.dataset.target;
-
-        buttons.forEach((btn) => btn.classList.remove('active'));
-        panels.forEach((panel) => panel.classList.remove('active'));
-
-        button.classList.add('active');
-        document.getElementById(target).classList.add('active');
-      });
-    });
-  </script>
-
 </body>
 </html>
