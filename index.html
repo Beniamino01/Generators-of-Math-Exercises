@@ -1,8 +1,9 @@
+<!DOCTYPE html>
 <html lang="it">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Math Generators</title>
+  <title>Math and Physics Generators</title>
   <style>
     * { box-sizing: border-box; }
 
@@ -67,6 +68,8 @@
     <button class="tab-btn" data-target="section2">Calculus II</button>
     <button class="tab-btn" data-target="section3">Linear Algebra and Geometry</button>
     <button class="tab-btn" data-target="section4">Statistics</button>
+    <button class="tab-btn" data-target="section5">Physics I</button>
+    <button class="tab-btn" data-target="section6">Physics II - Electromagnetism</button>
   </div>
 
   <section id="section1" class="panel active">
@@ -83,6 +86,14 @@
 
   <section id="section4" class="panel">
     <iframe id="frame-section4" title="Statistics"></iframe>
+  </section>
+
+  <section id="section5" class="panel">
+    <iframe id="frame-section5" title="Physics I"></iframe>
+  </section>
+
+  <section id="section6" class="panel">
+    <iframe id="frame-section6" title="Physics II - Electromagnetism"></iframe>
   </section>
 
   <!-- ===================================================== -->
@@ -5845,6 +5856,2096 @@
 </html>
   </textarea>
 
+  <!-- ===================================================== -->
+  <!-- INCOLLA QUI IL FILE HTML COMPLETO DI PHYSICS I        -->
+  <!-- da <!DOCTYPE html> fino a </html>                     -->
+  <!-- ===================================================== -->
+  <textarea id="src-section5" hidden>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physics I Worksheet Generator</title>
+  <meta name="description" content="Generatore di esercizi di Fisica Generale 1: cinematica, dinamica, lavoro ed energia, quantità di moto, termodinamica, modalità esame." />
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg-1: #09111f;
+      --bg-2: #162742;
+      --panel: rgba(255,255,255,0.07);
+      --panel-strong: rgba(255,255,255,0.11);
+      --text: #eef2ff;
+      --muted: #bac6e9;
+      --accent: #73a7ff;
+      --accent-2: #8f76ff;
+      --tag-bg: rgba(89,225,193,0.12);
+      --tag-border: rgba(89,225,193,0.30);
+      --tag-text: #dbfff8;
+      --border: rgba(255,255,255,0.14);
+      --shadow: 0 20px 60px rgba(0,0,0,0.28);
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(115,167,255,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(143,118,255,0.15), transparent 30%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      min-height: 100vh;
+    }
+
+    .wrap { max-width: 1260px; margin: 0 auto; padding: 28px; }
+    .hero {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .hero-badge {
+      width: 88px;
+      height: 88px;
+      border-radius: 26px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 18px 44px rgba(115,167,255,0.28);
+    }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 980px;
+      font-size: 1.03rem;
+    }
+
+    .topic-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 20px 0 28px;
+    }
+    .topic-nav button {
+      width: auto;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+    .topic-nav button:hover { transform: translateY(-1px); color: var(--text); }
+    .topic-nav button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      border: none;
+      box-shadow: 0 14px 30px rgba(115,167,255,0.22);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+    .settings-card { position: sticky; top: 18px; }
+    .stack > * + * { margin-top: 16px; }
+    .card h2 { margin: 0 0 6px; font-size: 1.2rem; }
+    .subtle, .status { color: var(--muted); line-height: 1.6; font-size: 0.95rem; }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #121933;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: rgba(115,167,255,0.65);
+      box-shadow: 0 0 0 4px rgba(115,167,255,0.12);
+    }
+    button { cursor: pointer; font-weight: 800; transition: 0.2s ease; }
+    button:hover { transform: translateY(-1px); }
+    .primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      box-shadow: 0 14px 28px rgba(115,167,255,0.25);
+    }
+    .secondary { background: rgba(255,255,255,0.06); }
+
+    .preview-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .level-pill {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--panel-strong);
+      color: #dce5ff;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    .exercise {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+    .exercise-head {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      color: var(--tag-text);
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .exercise-number {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .math {
+      font-size: 1.08rem;
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+    }
+    .solutions-card.hidden, .hidden { display: none !important; }
+    .footer-copy {
+      margin-top: 28px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    #pdfArea {
+      position: absolute;
+      left: -99999px;
+      top: 0;
+      width: 794px;
+      background: white;
+      color: black;
+      padding: 40px;
+    }
+    .pdf-page {
+      width: 100%;
+      min-height: 1040px;
+      padding: 10px 0 30px;
+      background: white;
+      color: black;
+      page-break-after: always;
+    }
+    .pdf-page:last-child { page-break-after: auto; }
+    .pdf-title { font-size: 28px; font-weight: 700; margin-bottom: 6px; color: black; }
+    .pdf-meta { font-size: 14px; color: #333; margin-bottom: 22px; }
+    .pdf-section-title { font-size: 20px; font-weight: 700; margin: 10px 0 18px; color: black; }
+    .pdf-exercise {
+      border: 1px solid #d6d6d6;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      background: #fff;
+      break-inside: avoid;
+    }
+    .pdf-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .pdf-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eef7f4;
+      border: 1px solid #cbe9df;
+      color: #165c4f;
+      font-weight: 700;
+    }
+    .pdf-num { color: #444; font-weight: 700; font-size: 13px; }
+    .pdf-math { color: black; font-size: 16px; line-height: 1.6; }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-badge { width: 72px; height: 72px; font-size: 28px; }
+      .grid { grid-template-columns: 1fr; }
+      .settings-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-badge">Φ</div>
+      <div>
+        <h1>Physics I Worksheet Generator</h1>
+        <p>
+          Genera schede di esercizi in stile universitario per cinematica, dinamica newtoniana,
+          lavoro ed energia, quantità di moto e urti, termodinamica e una modalità esame mista.
+          Solo formule, esercizi e soluzioni vengono renderizzati in LaTeX.
+        </p>
+      </div>
+    </section>
+
+    <div class="topic-nav" id="topicNav">
+      <button data-topic="kinematics" class="active">Kinematics</button>
+      <button data-topic="dynamics">Dynamics & Energy</button>
+      <button data-topic="momentum">Momentum & Collisions</button>
+      <button data-topic="thermo">Thermodynamics</button>
+      <button data-topic="exam">Exam Mode</button>
+    </div>
+
+    <div class="grid">
+      <div class="card settings-card stack">
+        <div>
+          <h2>Settings</h2>
+          <div class="subtle">Scegli argomento, difficoltà e genera una nuova scheda in stile esame.</div>
+        </div>
+
+        <div>
+          <label for="title">Worksheet title</label>
+          <input id="title" value="Physics I Worksheet" />
+        </div>
+
+        <div id="countWrap">
+          <label for="count">Number of exercises</label>
+          <input id="count" type="number" min="1" max="50" value="10" />
+        </div>
+
+        <div>
+          <label for="level">Difficulty</label>
+          <select id="level">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+
+        <button class="primary" id="generateBtn">Generate worksheet</button>
+        <button class="secondary" id="toggleSolutionsBtn">Show solutions</button>
+        <button class="secondary" id="downloadBtn">Download PDF</button>
+
+        <div class="status" id="status">Ready.</div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="preview-title-row">
+            <h2 id="previewTitle" style="margin: 0;">Physics I Worksheet</h2>
+            <div class="level-pill" id="levelPill">MEDIUM</div>
+          </div>
+          <div id="exerciseList"></div>
+        </div>
+
+        <div class="card solutions-card hidden" id="solutionsCard" style="margin-top: 24px;">
+          <div class="preview-title-row">
+            <h2 style="margin: 0;">Solutions</h2>
+            <div class="level-pill" id="solutionsPill">HIDDEN</div>
+          </div>
+          <div id="solutionList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-copy">
+      In Exam Mode, il generatore crea un esercizio per ciascuno dei quattro macro-argomenti.
+    </div>
+  </div>
+
+  <div id="pdfArea"></div>
+
+  <script>
+    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const choice = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    function withDisplayMath(latex) {
+      return `\\[${latex}\\]`;
+    }
+
+    function latexText(text) {
+      return String(text)
+        .replace(/\\/g, "\\\\")
+        .replace(/%/g, "\\%")
+        .replace(/_/g, "\\_")
+        .replace(/&/g, "\\&")
+        .replace(/#/g, "\\#");
+    }
+
+    function dec(num, digits = 2) {
+      return Number(num.toFixed(digits));
+    }
+
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function buildPool(factory, size = 100) {
+      const seen = new Set();
+      const out = [];
+      let attempts = 0;
+      while (out.length < size && attempts < size * 50) {
+        attempts += 1;
+        const ex = factory();
+        const key = `${ex.q}=>${ex.s}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(ex);
+      }
+      return shuffle(out);
+    }
+
+    function sampleExercises(pool, count) {
+      if (!Array.isArray(pool) || pool.length === 0) return [];
+      const out = [];
+      while (out.length < count) {
+        for (const ex of shuffle(pool)) {
+          out.push(ex);
+          if (out.length >= count) break;
+        }
+      }
+      return out.slice(0, count).map((ex, index) => ({
+        index: index + 1,
+        q: ex.q,
+        s: ex.s,
+        tag: ex.tag,
+        examTopic: ex.examTopic
+      }));
+    }
+
+    function kinematicsTemplates(level = "medium") {
+      if (level === "easy") {
+        return buildPool(() => {
+          const v = randInt(2, 12);
+          const t = randInt(2, 10);
+          const a = randInt(1, 5);
+          const type = randInt(1, 8);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{A particle moves with constant speed }v=${v}\\,\\mathrm{m/s}\\text{ for }t=${t}\\,\\mathrm{s}.\\ \\text{Find the distance traveled.}`), s: withDisplayMath(`s=vt=${v}\\cdot${t}=${v * t}\\,\\mathrm{m}`), tag: "Uniform motion" };
+            case 2:
+              return { q: withDisplayMath(`\\text{A body starts from rest with constant acceleration }a=${a}\\,\\mathrm{m/s^2}.\\ \\text{Find the speed after }t=${t}\\,\\mathrm{s}.`), s: withDisplayMath(`v=at=${a}\\cdot${t}=${a * t}\\,\\mathrm{m/s}`), tag: "Uniform acceleration" };
+            case 3:
+              return { q: withDisplayMath(`\\text{A body starts from rest with constant acceleration }a=${a}\\,\\mathrm{m/s^2}.\\ \\text{Find the distance after }t=${t}\\,\\mathrm{s}.`), s: withDisplayMath(`s=\\frac12 at^2=\\frac12\\cdot${a}\\cdot${t}^2=${0.5 * a * t * t}\\,\\mathrm{m}`), tag: "Uniform acceleration" };
+            case 4:
+              return { q: withDisplayMath(`\\text{A projectile is launched vertically upward with }v_0=${v}\\,\\mathrm{m/s}.\\ \\text{Using }g=9.8\\,\\mathrm{m/s^2},\\ \\text{find the maximum height.}`), s: withDisplayMath(`h_{\\max}=\\frac{v_0^2}{2g}=\\frac{${v}^2}{19.6}=${dec(v*v/19.6)}\\,\\mathrm{m}`), tag: "Vertical motion" };
+            case 5:
+              return { q: withDisplayMath(`\\text{A body moves with }x(t)=3t^2+2t.\\ \\text{Find }v(t).`), s: withDisplayMath(`v(t)=\\frac{dx}{dt}=6t+2`), tag: "Position law" };
+            case 6:
+              return { q: withDisplayMath(`\\text{A body moves with }v(t)=4t-1.\\ \\text{Find }a(t).`), s: withDisplayMath(`a(t)=\\frac{dv}{dt}=4`), tag: "Velocity law" };
+            case 7:
+              return { q: withDisplayMath(`\\text{A runner completes }400\\,\\mathrm{m}\\text{ in }50\\,\\mathrm{s}.\\ \\text{Find the average speed.}`), s: withDisplayMath(`v_{\\text{avg}}=\\frac{400}{50}=8\\,\\mathrm{m/s}`), tag: "Average speed" };
+            default:
+              return { q: withDisplayMath(`\\text{For rectilinear motion with constant acceleration, write the relation between }v,v_0,a,s.`), s: withDisplayMath(`v^2=v_0^2+2as`), tag: "Formula recall" };
+          }
+        }, 100);
+      }
+
+      if (level === "hard") {
+        return buildPool(() => {
+          const v0 = randInt(8, 20);
+          const a = randInt(2, 7);
+          const t = randInt(3, 10);
+          const theta = [30, 45, 60][randInt(0,2)];
+          const type = randInt(1, 10);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{A particle has }x(t)=t^3-6t^2+9t.\\ \\text{Find the times when the velocity is zero.}`), s: withDisplayMath(`v(t)=3t^2-12t+9=3(t-1)(t-3),\\quad t=1,3`), tag: "Polynomial motion" };
+            case 2:
+              return { q: withDisplayMath(`\\text{A projectile is launched with }v_0=${v0}\\,\\mathrm{m/s}\\text{ at angle }${theta}^\\circ.\\ \\text{Find the time of flight using }g=9.8\\,\\mathrm{m/s^2}.`), s: withDisplayMath(`T=\\frac{2v_0\\sin\\theta}{g}=\\frac{2\\cdot${v0}\\sin(${theta}^\\circ)}{9.8}=${dec(2*v0*Math.sin(theta*Math.PI/180)/9.8)}\\,\\mathrm{s}`), tag: "Projectile motion" };
+            case 3:
+              return { q: withDisplayMath(`\\text{A body moves with }v(t)=2t^2-4t+1.\\ \\text{Find the displacement from }t=0\\text{ to }t=${t}.`), s: withDisplayMath(`\\Delta x=\\left[\\frac{2}{3}t^3-2t^2+t\\right]_0^{${t}}=${dec((2/3)*t*t*t-2*t*t+t)}`), tag: "Integral kinematics" };
+            case 4:
+              return { q: withDisplayMath(`\\text{A body is thrown upward with }v_0=${v0}\\,\\mathrm{m/s}.\\ \\text{Find the time to reach the top.}`), s: withDisplayMath(`t_{\\max}=\\frac{v_0}{g}=\\frac{${v0}}{9.8}=${dec(v0/9.8)}\\,\\mathrm{s}`), tag: "Vertical motion" };
+            case 5:
+              return { q: withDisplayMath(`\\text{Two bodies start from the same point. The first moves with constant speed }${v0}\\,\\mathrm{m/s},\\text{ the second starts from rest with }a=${a}\\,\\mathrm{m/s^2}.\\ \\text{Find when they meet again.}`), s: withDisplayMath(`v_0t=\\frac12 at^2\\Rightarrow t=\\frac{2v_0}{a}=\\frac{2\\cdot${v0}}{${a}}=${dec(2*v0/a)}\\,\\mathrm{s}`), tag: "Comparing motions" };
+            case 6:
+              return { q: withDisplayMath(`\\text{A particle moves on a circle of radius }R=2\\,\\mathrm{m}\\text{ with angular speed }\\omega=3\\,\\mathrm{rad/s}.\\ \\text{Find the centripetal acceleration.}`), s: withDisplayMath(`a_c=\\omega^2R=9\\cdot2=18\\,\\mathrm{m/s^2}`), tag: "Circular motion" };
+            case 7:
+              return { q: withDisplayMath(`\\text{Write the vector decomposition of projectile motion in horizontal and vertical directions.}`), s: withDisplayMath(`x(t)=v_0\\cos\\theta\\,t,\\quad y(t)=v_0\\sin\\theta\\,t-\\frac12 gt^2`), tag: "Projectile formulas" };
+            case 8:
+              return { q: withDisplayMath(`\\text{For uniform circular motion, relate tangential speed }v\\text{ to angular speed }\\omega\\text{ and radius }R.`), s: withDisplayMath(`v=\\omega R`), tag: "Circular motion" };
+            case 9:
+              return { q: withDisplayMath(`\\text{A car brakes with constant deceleration }a=${a}\\,\\mathrm{m/s^2}\\text{ from }v_0=${v0}\\,\\mathrm{m/s}.\\ \\text{Find the stopping distance.}`), s: withDisplayMath(`s=\\frac{v_0^2}{2a}=\\frac{${v0}^2}{2\\cdot${a}}=${dec(v0*v0/(2*a))}\\,\\mathrm{m}`), tag: "Braking distance" };
+            default:
+              return { q: withDisplayMath(`\\text{A particle has }x(t)=4t-t^2.\\ \\text{Find the instant when it changes direction.}`), s: withDisplayMath(`v(t)=4-2t=0\\Rightarrow t=2\\,\\mathrm{s}`), tag: "Direction change" };
+          }
+        }, 110);
+      }
+
+      return buildPool(() => {
+        const v = randInt(4, 14);
+        const t = randInt(2, 8);
+        const a = randInt(1, 5);
+        const type = randInt(1, 10);
+        switch (type) {
+          case 1:
+            return { q: withDisplayMath(`\\text{A particle moves with constant speed }${v}\\,\\mathrm{m/s}\\text{ for }${t}\\,\\mathrm{s}.\\ \\text{Find the distance.}`), s: withDisplayMath(`${v*t}\\,\\mathrm{m}`), tag: "Uniform motion" };
+          case 2:
+            return { q: withDisplayMath(`\\text{A body starts from rest with }a=${a}\\,\\mathrm{m/s^2}.\\ \\text{Find the speed after }${t}\\,\\mathrm{s}.`), s: withDisplayMath(`${a*t}\\,\\mathrm{m/s}`), tag: "Acceleration" };
+          case 3:
+            return { q: withDisplayMath(`\\text{A body starts from rest with }a=${a}\\,\\mathrm{m/s^2}.\\ \\text{Find the distance after }${t}\\,\\mathrm{s}.`), s: withDisplayMath(`${0.5*a*t*t}\\,\\mathrm{m}`), tag: "Acceleration" };
+          case 4:
+            return { q: withDisplayMath(`\\text{A body moves with }x(t)=5t^2-t.\\ \\text{Find }v(t).`), s: withDisplayMath(`v(t)=10t-1`), tag: "Position law" };
+          case 5:
+            return { q: withDisplayMath(`\\text{A body moves with }v(t)=6t+2.\\ \\text{Find }a(t).`), s: withDisplayMath(`a(t)=6`), tag: "Velocity law" };
+          case 6:
+            return { q: withDisplayMath(`\\text{A runner covers }300\\,\\mathrm{m}\\text{ in }30\\,\\mathrm{s}.\\ \\text{Find the average speed.}`), s: withDisplayMath(`10\\,\\mathrm{m/s}`), tag: "Average speed" };
+          case 7:
+            return { q: withDisplayMath(`\\text{Write the law }v=v_0+at.`), s: withDisplayMath(`v=v_0+at`), tag: "Formula recall" };
+          case 8:
+            return { q: withDisplayMath(`\\text{Write the law }s=v_0t+\\frac12 at^2.`), s: withDisplayMath(`s=v_0t+\\frac12 at^2`), tag: "Formula recall" };
+          case 9:
+            return { q: withDisplayMath(`\\text{For circular motion of radius }R,\\text{ write the centripetal acceleration in terms of }v.`), s: withDisplayMath(`a_c=\\frac{v^2}{R}`), tag: "Circular motion" };
+          default:
+            return { q: withDisplayMath(`\\text{A body is thrown upward with }v_0=${v}\\,\\mathrm{m/s}.\\ \\text{Using }g=9.8,\\text{ find the time to the top.}`), s: withDisplayMath(`${dec(v/9.8)}\\,\\mathrm{s}`), tag: "Vertical motion" };
+        }
+      }, 100);
+    }
+
+    function dynamicsTemplates(level = "medium") {
+      if (level === "easy") {
+        return buildPool(() => {
+          const m = randInt(1, 8);
+          const a = randInt(1, 6);
+          const h = randInt(1, 10);
+          const k = randInt(20, 120);
+          const x = randInt(1, 5) / 10;
+          const type = randInt(1, 8);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{A mass }m=${m}\\,\\mathrm{kg}\\text{ has acceleration }a=${a}\\,\\mathrm{m/s^2}.\\ \\text{Find the net force.}`), s: withDisplayMath(`F=ma=${m}\\cdot${a}=${m*a}\\,\\mathrm{N}`), tag: "Newton's second law" };
+            case 2:
+              return { q: withDisplayMath(`\\text{A }${m}\\,\\mathrm{kg}\\text{ body is lifted by }h=${h}\\,\\mathrm{m}.\\ \\text{Using }g=9.8,\\text{ find the change in potential energy.}`), s: withDisplayMath(`\\Delta U = mgh = ${m}\\cdot9.8\\cdot${h}=${dec(m*9.8*h)}\\,\\mathrm{J}`), tag: "Potential energy" };
+            case 3:
+              return { q: withDisplayMath(`\\text{A spring with }k=${k}\\,\\mathrm{N/m}\\text{ is compressed by }x=${x}\\,\\mathrm{m}.\\ \\text{Find the elastic energy.}`), s: withDisplayMath(`E_e=\\frac12 kx^2=\\frac12\\cdot${k}\\cdot${x}^2=${dec(0.5*k*x*x)}\\,\\mathrm{J}`), tag: "Elastic energy" };
+            case 4:
+              return { q: withDisplayMath(`\\text{A force }F=10\\,\\mathrm{N}\\text{ acts along the motion over }s=4\\,\\mathrm{m}.\\ \\text{Find the work.}`), s: withDisplayMath(`W=Fs=10\\cdot4=40\\,\\mathrm{J}`), tag: "Work" };
+            case 5:
+              return { q: withDisplayMath(`\\text{State the work-energy theorem.}`), s: withDisplayMath(`W_{\\text{net}}=\\Delta K`), tag: "Theory" };
+            case 6:
+              return { q: withDisplayMath(`\\text{A }2\\,\\mathrm{kg}\\text{ body moves at }3\\,\\mathrm{m/s}.\\ \\text{Find the kinetic energy.}`), s: withDisplayMath(`K=\\frac12 mv^2=\\frac12\\cdot2\\cdot3^2=9\\,\\mathrm{J}`), tag: "Kinetic energy" };
+            case 7:
+              return { q: withDisplayMath(`\\text{On a frictionless surface, a force }F=12\\,\\mathrm{N}\\text{ acts on }m=3\\,\\mathrm{kg}.\\ \\text{Find the acceleration.}`), s: withDisplayMath(`a=\\frac{F}{m}=4\\,\\mathrm{m/s^2}`), tag: "Newton's second law" };
+            default:
+              return { q: withDisplayMath(`\\text{State Hooke's law for a spring.}`), s: withDisplayMath(`F=-kx`), tag: "Spring law" };
+          }
+        }, 100);
+      }
+
+      if (level === "hard") {
+        return buildPool(() => {
+          const m = randInt(2, 10);
+          const mu = [0.1,0.2,0.3,0.4][randInt(0,3)];
+          const theta = [30, 45, 60][randInt(0,2)];
+          const v = randInt(4, 14);
+          const h = randInt(2, 12);
+          const type = randInt(1, 10);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{A block of mass }${m}\\,\\mathrm{kg}\\text{ slides on a horizontal surface with coefficient }\\mu=${mu}.\\ \\text{Find the friction force using }g=9.8.`), s: withDisplayMath(`f=\\mu mg=${mu}\\cdot${m}\\cdot9.8=${dec(mu*m*9.8)}\\,\\mathrm{N}`), tag: "Friction" };
+            case 2:
+              return { q: withDisplayMath(`\\text{A }${m}\\,\\mathrm{kg}\\text{ block rests on an incline }\\theta=${theta}^\\circ.\\ \\text{Find the component of weight along the plane.}`), s: withDisplayMath(`mg\\sin\\theta=${m}\\cdot9.8\\sin(${theta}^\\circ)=${dec(m*9.8*Math.sin(theta*Math.PI/180))}\\,\\mathrm{N}`), tag: "Inclined plane" };
+            case 3:
+              return { q: withDisplayMath(`\\text{A }${m}\\,\\mathrm{kg}\\text{ body moves at }${v}\\,\\mathrm{m/s}.\\ \\text{What work is needed to stop it?}`), s: withDisplayMath(`W=\\Delta K=0-\\frac12 mv^2=-\\frac12\\cdot${m}\\cdot${v}^2=${-0.5*m*v*v}\\,\\mathrm{J}`), tag: "Work-energy" };
+            case 4:
+              return { q: withDisplayMath(`\\text{A body falls from height }${h}\\,\\mathrm{m}.\\ \\text{Neglecting air resistance, find the speed just before impact.}`), s: withDisplayMath(`v=\\sqrt{2gh}=\\sqrt{2\\cdot9.8\\cdot${h}}=${dec(Math.sqrt(19.6*h))}\\,\\mathrm{m/s}`), tag: "Energy conservation" };
+            case 5:
+              return { q: withDisplayMath(`\\text{A spring }k=80\\,\\mathrm{N/m}\\text{ stores }10\\,\\mathrm{J}.\\ \\text{Find the compression.}`), s: withDisplayMath(`10=\\frac12 kx^2\\Rightarrow x=\\sqrt{\\frac{20}{80}}=0.5\\,\\mathrm{m}`), tag: "Spring energy" };
+            case 6:
+              return { q: withDisplayMath(`\\text{State the condition for mechanical energy conservation.}`), s: withDisplayMath(`\\text{Only conservative forces do work.}`), tag: "Theory" };
+            case 7:
+              return { q: withDisplayMath(`\\text{A force }\\vec F=(3,4)\\,\\mathrm{N}\\text{ produces a displacement }\\vec s=(2,0)\\,\\mathrm{m}.\\ \\text{Find the work.}`), s: withDisplayMath(`W=\\vec F\\cdot\\vec s = 3\\cdot2+4\\cdot0=6\\,\\mathrm{J}`), tag: "Dot product work" };
+            case 8:
+              return { q: withDisplayMath(`\\text{A }5\\,\\mathrm{kg}\\text{ mass moves in a circle of radius }2\\,\\mathrm{m}\\text{ at }4\\,\\mathrm{m/s}.\\ \\text{Find the centripetal force.}`), s: withDisplayMath(`F_c=\\frac{mv^2}{R}=\\frac{5\\cdot16}{2}=40\\,\\mathrm{N}`), tag: "Circular dynamics" };
+            case 9:
+              return { q: withDisplayMath(`\\text{A body is pulled with a constant force parallel to motion, producing }W=120\\,\\mathrm{J}\\text{ over }s=6\\,\\mathrm{m}.\\ \\text{Find the force.}`), s: withDisplayMath(`F=\\frac{W}{s}=20\\,\\mathrm{N}`), tag: "Work" };
+            default:
+              return { q: withDisplayMath(`\\text{Write Newton's third law.}`), s: withDisplayMath(`\\vec F_{AB}=-\\vec F_{BA}`), tag: "Theory" };
+          }
+        }, 110);
+      }
+
+      return buildPool(() => {
+        const m = randInt(1, 8);
+        const a = randInt(1, 6);
+        const v = randInt(3, 12);
+        const h = randInt(2, 10);
+        const type = randInt(1, 10);
+        switch (type) {
+          case 1:
+            return { q: withDisplayMath(`\\text{A mass }${m}\\,\\mathrm{kg}\\text{ has acceleration }${a}\\,\\mathrm{m/s^2}.\\ \\text{Find the net force.}`), s: withDisplayMath(`${m*a}\\,\\mathrm{N}`), tag: "Newton's second law" };
+          case 2:
+            return { q: withDisplayMath(`\\text{A }${m}\\,\\mathrm{kg}\\text{ body moves at }${v}\\,\\mathrm{m/s}.\\ \\text{Find the kinetic energy.}`), s: withDisplayMath(`${0.5*m*v*v}\\,\\mathrm{J}`), tag: "Kinetic energy" };
+          case 3:
+            return { q: withDisplayMath(`\\text{A }${m}\\,\\mathrm{kg}\\text{ body is lifted by }${h}\\,\\mathrm{m}.\\ \\text{Using }g=9.8,\\text{ find }\\Delta U.`), s: withDisplayMath(`${dec(m*9.8*h)}\\,\\mathrm{J}`), tag: "Potential energy" };
+          case 4:
+            return { q: withDisplayMath(`\\text{A force }F=15\\,\\mathrm{N}\\text{ acts over }s=3\\,\\mathrm{m}.\\ \\text{Find the work.}`), s: withDisplayMath(`45\\,\\mathrm{J}`), tag: "Work" };
+          case 5:
+            return { q: withDisplayMath(`\\text{State the work-energy theorem.}`), s: withDisplayMath(`W_{\\text{net}}=\\Delta K`), tag: "Theory" };
+          case 6:
+            return { q: withDisplayMath(`\\text{Write Hooke's law.}`), s: withDisplayMath(`F=-kx`), tag: "Spring law" };
+          case 7:
+            return { q: withDisplayMath(`\\text{A spring with }k=50\\,\\mathrm{N/m}\\text{ is compressed by }0.2\\,\\mathrm{m}.\\ \\text{Find the elastic energy.}`), s: withDisplayMath(`1\\,\\mathrm{J}`), tag: "Elastic energy" };
+          case 8:
+            return { q: withDisplayMath(`\\text{A body falls from height }${h}\\,\\mathrm{m}.\\ \\text{Find the impact speed neglecting air resistance.}`), s: withDisplayMath(`${dec(Math.sqrt(19.6*h))}\\,\\mathrm{m/s}`), tag: "Energy conservation" };
+          case 9:
+            return { q: withDisplayMath(`\\text{For circular motion, write the centripetal force.}`), s: withDisplayMath(`F_c=\\frac{mv^2}{R}`), tag: "Circular dynamics" };
+          default:
+            return { q: withDisplayMath(`\\text{State Newton's first law.}`), s: withDisplayMath(`\\text{A body remains at rest or in uniform rectilinear motion unless acted upon by a net external force.}`), tag: "Theory" };
+        }
+      }, 100);
+    }
+
+    function momentumTemplates(level = "medium") {
+      if (level === "easy") {
+        return buildPool(() => {
+          const m = randInt(1, 6);
+          const v = randInt(2, 10);
+          const type = randInt(1, 8);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{A body of mass }${m}\\,\\mathrm{kg}\\text{ moves at }${v}\\,\\mathrm{m/s}.\\ \\text{Find its momentum.}`), s: withDisplayMath(`p=mv=${m}\\cdot${v}=${m*v}\\,\\mathrm{kg\\,m/s}`), tag: "Momentum" };
+            case 2:
+              return { q: withDisplayMath(`\\text{State the impulse-momentum theorem.}`), s: withDisplayMath(`\\vec J = \\Delta \\vec p`), tag: "Impulse" };
+            case 3:
+              return { q: withDisplayMath(`\\text{A force of }20\\,\\mathrm{N}\\text{ acts for }3\\,\\mathrm{s}.\\ \\text{Find the impulse.}`), s: withDisplayMath(`J=F\\Delta t=60\\,\\mathrm{N\\,s}`), tag: "Impulse" };
+            case 4:
+              return { q: withDisplayMath(`\\text{In an isolated system, what quantity is conserved during a collision?}`), s: withDisplayMath(`\\text{Total linear momentum}`), tag: "Conservation law" };
+            case 5:
+              return { q: withDisplayMath(`\\text{Two equal masses collide elastically head-on. One is initially at rest. What happens to their speeds?}`), s: withDisplayMath(`\\text{They exchange speeds.}`), tag: "Elastic collision" };
+            case 6:
+              return { q: withDisplayMath(`\\text{A }2\\,\\mathrm{kg}\\text{ cart at }3\\,\\mathrm{m/s}\\text{ sticks to a }1\\,\\mathrm{kg}\\text{ cart at rest. Find the final speed.}`), s: withDisplayMath(`v_f=\\frac{2\\cdot3}{2+1}=2\\,\\mathrm{m/s}`), tag: "Perfectly inelastic" };
+            case 7:
+              return { q: withDisplayMath(`\\text{Write the condition for a perfectly inelastic collision.}`), s: withDisplayMath(`\\text{The bodies stick together after impact.}`), tag: "Collision types" };
+            default:
+              return { q: withDisplayMath(`\\text{If }p=12\\,\\mathrm{kg\\,m/s}\\text{ and }m=3\\,\\mathrm{kg},\\text{ find }v.`), s: withDisplayMath(`v=\\frac{p}{m}=4\\,\\mathrm{m/s}`), tag: "Momentum" };
+          }
+        }, 100);
+      }
+
+      if (level === "hard") {
+        return buildPool(() => {
+          const m1 = randInt(1, 5);
+          const m2 = randInt(1, 5);
+          const v1 = randInt(3, 10);
+          const v2 = randInt(-4, 2);
+          const type = randInt(1, 10);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{Masses }m_1=${m1}\\,\\mathrm{kg},\\ m_2=${m2}\\,\\mathrm{kg}\\text{ move in one dimension with }v_1=${v1},\\ v_2=${v2}\\,\\mathrm{m/s}.\\ \\text{If they stick together, find }v_f.`), s: withDisplayMath(`v_f=\\frac{m_1v_1+m_2v_2}{m_1+m_2}=\\frac{${m1*v1 + m2*v2}}{${m1+m2}}=${dec((m1*v1+m2*v2)/(m1+m2))}\\,\\mathrm{m/s}`), tag: "Inelastic collision" };
+            case 2:
+              return { q: withDisplayMath(`\\text{Write the two equations used for a one-dimensional elastic collision.}`), s: withDisplayMath(`m_1v_1+m_2v_2=m_1v_1'+m_2v_2',\\quad \\frac12 m_1v_1^2+\\frac12 m_2v_2^2=\\frac12 m_1v_1'^2+\\frac12 m_2v_2'^2`), tag: "Elastic collision" };
+            case 3:
+              return { q: withDisplayMath(`\\text{A force }F(t)=4t\\,\\mathrm{N}\\text{ acts from }t=0\\text{ to }t=3\\,\\mathrm{s}.\\ \\text{Find the impulse.}`), s: withDisplayMath(`J=\\int_0^3 4t\\,dt=18\\,\\mathrm{N\\,s}`), tag: "Variable force impulse" };
+            case 4:
+              return { q: withDisplayMath(`\\text{Define the center of mass for two particles on a line.}`), s: withDisplayMath(`x_{cm}=\\frac{m_1x_1+m_2x_2}{m_1+m_2}`), tag: "Center of mass" };
+            case 5:
+              return { q: withDisplayMath(`\\text{A }0.02\\,\\mathrm{kg}\\text{ bullet at }300\\,\\mathrm{m/s}\\text{ embeds in a }2\\,\\mathrm{kg}\\text{ block at rest. Find the final speed.}`), s: withDisplayMath(`v_f=\\frac{0.02\\cdot300}{2.02}=${dec(6/2.02)}\\,\\mathrm{m/s}`), tag: "Ballistic impact" };
+            case 6:
+              return { q: withDisplayMath(`\\text{Show that kinetic energy is not conserved in a perfectly inelastic collision.}`), s: withDisplayMath(`\\text{Momentum is conserved, but part of the kinetic energy is transformed into internal energy.}`), tag: "Theory" };
+            case 7:
+              return { q: withDisplayMath(`\\text{A }1\\,\\mathrm{kg}\\text{ body changes velocity from }2\\text{ to }-3\\,\\mathrm{m/s}.\\ \\text{Find }\\Delta p.`), s: withDisplayMath(`\\Delta p = m(v_f-v_i)=1(-3-2)=-5\\,\\mathrm{kg\\,m/s}`), tag: "Momentum change" };
+            case 8:
+              return { q: withDisplayMath(`\\text{What is the coefficient of restitution for a perfectly elastic collision?}`), s: withDisplayMath(`e=1`), tag: "Restitution" };
+            case 9:
+              return { q: withDisplayMath(`\\text{What is the coefficient of restitution for a perfectly inelastic collision?}`), s: withDisplayMath(`e=0`), tag: "Restitution" };
+            default:
+              return { q: withDisplayMath(`\\text{State conservation of momentum in vector form for an isolated system.}`), s: withDisplayMath(`\\sum \\vec p_{\\,i}=\\sum \\vec p_{\\,f}`), tag: "Conservation law" };
+          }
+        }, 110);
+      }
+
+      return buildPool(() => {
+        const m = randInt(1, 6);
+        const v = randInt(2, 10);
+        const type = randInt(1, 10);
+        switch (type) {
+          case 1:
+            return { q: withDisplayMath(`\\text{A body of mass }${m}\\,\\mathrm{kg}\\text{ moves at }${v}\\,\\mathrm{m/s}.\\ \\text{Find its momentum.}`), s: withDisplayMath(`${m*v}\\,\\mathrm{kg\\,m/s}`), tag: "Momentum" };
+          case 2:
+            return { q: withDisplayMath(`\\text{State the impulse-momentum theorem.}`), s: withDisplayMath(`\\vec J = \\Delta \\vec p`), tag: "Impulse" };
+          case 3:
+            return { q: withDisplayMath(`\\text{A force of }10\\,\\mathrm{N}\\text{ acts for }4\\,\\mathrm{s}.\\ \\text{Find the impulse.}`), s: withDisplayMath(`40\\,\\mathrm{N\\,s}`), tag: "Impulse" };
+          case 4:
+            return { q: withDisplayMath(`\\text{In an isolated system, what is conserved in a collision?}`), s: withDisplayMath(`\\text{Total momentum}`), tag: "Conservation" };
+          case 5:
+            return { q: withDisplayMath(`\\text{A }2\\,\\mathrm{kg}\\text{ cart at }4\\,\\mathrm{m/s}\\text{ sticks to a }2\\,\\mathrm{kg}\\text{ cart at rest. Find }v_f.`), s: withDisplayMath(`2\\,\\mathrm{m/s}`), tag: "Inelastic collision" };
+          case 6:
+            return { q: withDisplayMath(`\\text{Write the momentum definition.}`), s: withDisplayMath(`\\vec p = m\\vec v`), tag: "Formula recall" };
+          case 7:
+            return { q: withDisplayMath(`\\text{If }p=20\\,\\mathrm{kg\\,m/s}\\text{ and }v=5\\,\\mathrm{m/s},\\text{ find }m.`), s: withDisplayMath(`4\\,\\mathrm{kg}`), tag: "Momentum" };
+          case 8:
+            return { q: withDisplayMath(`\\text{What is a perfectly inelastic collision?}`), s: withDisplayMath(`\\text{A collision in which the bodies stick together.}`), tag: "Collision types" };
+          case 9:
+            return { q: withDisplayMath(`\\text{State the center of mass formula for two particles on a line.}`), s: withDisplayMath(`x_{cm}=\\frac{m_1x_1+m_2x_2}{m_1+m_2}`), tag: "Center of mass" };
+          default:
+            return { q: withDisplayMath(`\\text{What is }e\\text{ for a perfectly elastic collision?}`), s: withDisplayMath(`1`), tag: "Restitution" };
+        }
+      }, 100);
+    }
+
+    function thermoTemplates(level = "medium") {
+      if (level === "easy") {
+        return buildPool(() => {
+          const n = randInt(1, 4);
+          const T = randInt(250, 400);
+          const type = randInt(1, 8);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{An ideal gas has }n=${n}\\,\\mathrm{mol},\\ T=${T}\\,\\mathrm{K}.\\ \\text{Using }R=8.31,\\text{ find }pV.`), s: withDisplayMath(`pV=nRT=${n}\\cdot8.31\\cdot${T}=${dec(n*8.31*T)}\\,\\mathrm{J}`), tag: "Ideal gas" };
+            case 2:
+              return { q: withDisplayMath(`\\text{Convert }27^\\circ\\mathrm{C}\\text{ to kelvin.}`), s: withDisplayMath(`300\\,\\mathrm{K}`), tag: "Temperature" };
+            case 3:
+              return { q: withDisplayMath(`\\text{State the first law of thermodynamics.}`), s: withDisplayMath(`\\Delta U = Q - W`), tag: "First law" };
+            case 4:
+              return { q: withDisplayMath(`\\text{For an isochoric process, what is the work done by the gas?}`), s: withDisplayMath(`W=0`), tag: "Isochoric process" };
+            case 5:
+              return { q: withDisplayMath(`\\text{For an isothermal ideal-gas transformation, how does the internal energy change?}`), s: withDisplayMath(`\\Delta U = 0`), tag: "Isothermal process" };
+            case 6:
+              return { q: withDisplayMath(`\\text{A heat engine absorbs }Q_H=500\\,\\mathrm{J}\\text{ and releases }Q_C=300\\,\\mathrm{J}.\\ \\text{Find the efficiency.}`), s: withDisplayMath(`\\eta=\\frac{Q_H-Q_C}{Q_H}=\\frac{200}{500}=0.4`), tag: "Heat engine" };
+            case 7:
+              return { q: withDisplayMath(`\\text{State the ideal gas law.}`), s: withDisplayMath(`pV=nRT`), tag: "Ideal gas" };
+            default:
+              return { q: withDisplayMath(`\\text{At constant pressure, if the absolute temperature doubles, what happens to the volume of an ideal gas?}`), s: withDisplayMath(`\\text{It doubles.}`), tag: "Charles' law" };
+          }
+        }, 100);
+      }
+
+      if (level === "hard") {
+        return buildPool(() => {
+          const n = randInt(1, 4);
+          const T1 = randInt(250, 350);
+          const T2 = T1 + randInt(30, 100);
+          const p = randInt(1, 3) * 1e5;
+          const V1 = randInt(2, 8) / 100;
+          const V2 = V1 + randInt(1, 5) / 100;
+          const type = randInt(1, 10);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{An ideal gas expands isobarically from }V_1=${V1}\\,\\mathrm{m^3}\\text{ to }V_2=${V2}\\,\\mathrm{m^3}\\text{ at }p=${p}\\,\\mathrm{Pa}.\\ \\text{Find the work.}`), s: withDisplayMath(`W=p(V_2-V_1)=${p}(${V2}-${V1})=${dec(p*(V2-V1))}\\,\\mathrm{J}`), tag: "Isobaric work" };
+            case 2:
+              return { q: withDisplayMath(`\\text{An ideal gas undergoes an isothermal reversible expansion from }V_1=${V1}\\text{ to }V_2=${V2}\\,\\mathrm{m^3}\\text{ at }T=${T1}\\,\\mathrm{K},\\ n=${n}.\\ \\text{Write the work.}`), s: withDisplayMath(`W=nRT\\ln\\frac{V_2}{V_1}=${n}\\cdot8.31\\cdot${T1}\\ln\\frac{${V2}}{${V1}}`), tag: "Isothermal work" };
+            case 3:
+              return { q: withDisplayMath(`\\text{A Carnot engine works between }T_H=${T2}\\,\\mathrm{K}\\text{ and }T_C=${T1}\\,\\mathrm{K}.\\ \\text{Find the efficiency.}`), s: withDisplayMath(`\\eta_C=1-\\frac{T_C}{T_H}=1-\\frac{${T1}}{${T2}}=${dec(1-T1/T2)}`), tag: "Carnot cycle" };
+            case 4:
+              return { q: withDisplayMath(`\\text{For a monoatomic ideal gas, write the internal energy as a function of }n\\text{ and }T.`), s: withDisplayMath(`U=\\frac{3}{2}nRT`), tag: "Internal energy" };
+            case 5:
+              return { q: withDisplayMath(`\\text{In an adiabatic process, what is the heat exchanged?}`), s: withDisplayMath(`Q=0`), tag: "Adiabatic process" };
+            case 6:
+              return { q: withDisplayMath(`\\text{State the second law of thermodynamics in Kelvin-Planck form.}`), s: withDisplayMath(`\\text{No cyclic engine can convert all the absorbed heat into work.}`), tag: "Second law" };
+            case 7:
+              return { q: withDisplayMath(`\\text{An ideal gas at constant volume is heated from }T_1=${T1}\\,\\mathrm{K}\\text{ to }T_2=${T2}\\,\\mathrm{K}.\\ \\text{How does the pressure change?}`), s: withDisplayMath(`\\frac{p_2}{p_1}=\\frac{T_2}{T_1}=\\frac{${T2}}{${T1}}`), tag: "Isochoric law" };
+            case 8:
+              return { q: withDisplayMath(`\\text{Write the coefficient of performance of a refrigerator in terms of }Q_C\\text{ and }W.`), s: withDisplayMath(`COP=\\frac{Q_C}{W}`), tag: "Refrigerator" };
+            case 9:
+              return { q: withDisplayMath(`\\text{For an ideal gas, what are the dimensions of }R?`), s: withDisplayMath(`\\mathrm{J\\,mol^{-1}\\,K^{-1}}`), tag: "Constants" };
+            default:
+              return { q: withDisplayMath(`\\text{A heat engine absorbs }800\\,\\mathrm{J}\\text{ and performs }200\\,\\mathrm{J}\\text{ of work. Find the rejected heat.}`), s: withDisplayMath(`Q_C=Q_H-W=600\\,\\mathrm{J}`), tag: "First law" };
+          }
+        }, 110);
+      }
+
+      return buildPool(() => {
+        const n = randInt(1, 4);
+        const T = randInt(280, 380);
+        const type = randInt(1, 10);
+        switch (type) {
+          case 1:
+            return { q: withDisplayMath(`\\text{An ideal gas has }n=${n}\\,\\mathrm{mol},\\ T=${T}\\,\\mathrm{K}.\\ \\text{Using }R=8.31,\\text{ find }pV.`), s: withDisplayMath(`${dec(n*8.31*T)}\\,\\mathrm{J}`), tag: "Ideal gas" };
+          case 2:
+            return { q: withDisplayMath(`\\text{Convert }20^\\circ\\mathrm{C}\\text{ to kelvin.}`), s: withDisplayMath(`293\\,\\mathrm{K}`), tag: "Temperature" };
+          case 3:
+            return { q: withDisplayMath(`\\text{State the first law of thermodynamics.}`), s: withDisplayMath(`\\Delta U=Q-W`), tag: "First law" };
+          case 4:
+            return { q: withDisplayMath(`\\text{For an isochoric process, what is }W?`), s: withDisplayMath(`0`), tag: "Isochoric process" };
+          case 5:
+            return { q: withDisplayMath(`\\text{For an isothermal ideal-gas process, what is }\\Delta U?`), s: withDisplayMath(`0`), tag: "Isothermal process" };
+          case 6:
+            return { q: withDisplayMath(`\\text{State the ideal gas law.}`), s: withDisplayMath(`pV=nRT`), tag: "Ideal gas" };
+          case 7:
+            return { q: withDisplayMath(`\\text{A heat engine absorbs }500\\,\\mathrm{J}\\text{ and releases }350\\,\\mathrm{J}.\\ \\text{Find the work.}`), s: withDisplayMath(`150\\,\\mathrm{J}`), tag: "Heat engine" };
+          case 8:
+            return { q: withDisplayMath(`\\text{Write the Carnot efficiency.}`), s: withDisplayMath(`\\eta_C=1-\\frac{T_C}{T_H}`), tag: "Carnot cycle" };
+          case 9:
+            return { q: withDisplayMath(`\\text{In an adiabatic process, what is the heat exchanged?}`), s: withDisplayMath(`0`), tag: "Adiabatic process" };
+          default:
+            return { q: withDisplayMath(`\\text{At constant pressure, if }T\\text{ doubles, what happens to }V\\text{ for an ideal gas?}`), s: withDisplayMath(`\\text{It doubles.}`), tag: "Gas laws" };
+        }
+      }, 100);
+    }
+
+    function generatorForTopic(topic, level) {
+      switch (topic) {
+        case "kinematics": return kinematicsTemplates(level);
+        case "dynamics": return dynamicsTemplates(level);
+        case "momentum": return momentumTemplates(level);
+        case "thermo": return thermoTemplates(level);
+        default: return [];
+      }
+    }
+
+    function buildExercises(topic, count, level) {
+      return sampleExercises(generatorForTopic(topic, level), count);
+    }
+
+    function buildExamSheet(level) {
+      const topics = ["kinematics", "dynamics", "momentum", "thermo"];
+      return shuffle(topics.map((topic, i) => {
+        const ex = choice(generatorForTopic(topic, level));
+        return { index: i + 1, ...ex, examTopic: topic };
+      })).map((ex, index) => ({ ...ex, index: index + 1 }));
+    }
+
+    let currentTopic = "kinematics";
+    let solutionsVisible = false;
+    let currentExercises = [];
+
+    function labelForTopic(topic) {
+      switch (topic) {
+        case "kinematics": return "Kinematics";
+        case "dynamics": return "Dynamics & Energy";
+        case "momentum": return "Momentum & Collisions";
+        case "thermo": return "Thermodynamics";
+        case "exam": return "Exam Mode";
+        default: return "Worksheet";
+      }
+    }
+
+    function defaultTitleForTopic(topic) {
+      switch (topic) {
+        case "kinematics": return "Kinematics Worksheet";
+        case "dynamics": return "Dynamics and Energy Worksheet";
+        case "momentum": return "Momentum and Collisions Worksheet";
+        case "thermo": return "Thermodynamics Worksheet";
+        case "exam": return "Physics I Exam Practice";
+        default: return "Physics I Worksheet";
+      }
+    }
+
+    function updateTopicButtons() {
+      document.querySelectorAll("#topicNav button").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.topic === currentTopic);
+      });
+    }
+
+    function updatePills() {
+      const level = document.getElementById("level").value;
+      document.getElementById("levelPill").textContent = level.toUpperCase();
+      document.getElementById("solutionsPill").textContent = solutionsVisible ? "VISIBLE" : "HIDDEN";
+    }
+
+    async function typesetMath(elements) {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        await window.MathJax.typesetPromise(elements);
+      }
+    }
+
+    async function renderLists() {
+      const exerciseList = document.getElementById("exerciseList");
+      const solutionList = document.getElementById("solutionList");
+      const solutionsCard = document.getElementById("solutionsCard");
+
+      exerciseList.innerHTML = "";
+      solutionList.innerHTML = "";
+
+      currentExercises.forEach((ex) => {
+        const tag = ex.examTopic ? labelForTopic(ex.examTopic).toUpperCase() : ex.tag;
+
+        const exEl = document.createElement("div");
+        exEl.className = "exercise";
+        exEl.innerHTML = `
+          <div class="exercise-head">
+            <div class="exercise-number">Exercise ${ex.index}</div>
+            <div class="tag">${tag}</div>
+          </div>
+          <div class="math">${ex.q}</div>
+        `;
+        exerciseList.appendChild(exEl);
+
+        const solEl = document.createElement("div");
+        solEl.className = "exercise";
+        solEl.innerHTML = `
+          <div class="exercise-head">
+            <div class="exercise-number">Solution ${ex.index}</div>
+            <div class="tag">${tag}</div>
+          </div>
+          <div class="math">${ex.s}</div>
+        `;
+        solutionList.appendChild(solEl);
+      });
+
+      solutionsCard.classList.toggle("hidden", !solutionsVisible);
+      updatePills();
+      await typesetMath([exerciseList, solutionList]);
+    }
+
+    async function generateWorksheet() {
+      const titleInput = document.getElementById("title");
+      const countInput = document.getElementById("count");
+      const levelSelect = document.getElementById("level");
+      const previewTitle = document.getElementById("previewTitle");
+      const status = document.getElementById("status");
+
+      const count = Math.max(1, Math.min(50, Number(countInput.value) || 10));
+      countInput.value = count;
+
+      const level = levelSelect.value;
+      const title = titleInput.value.trim() || defaultTitleForTopic(currentTopic);
+      previewTitle.textContent = title;
+
+      currentExercises = currentTopic === "exam"
+        ? buildExamSheet(level)
+        : buildExercises(currentTopic, count, level);
+
+      await renderLists();
+      status.textContent = currentTopic === "exam"
+        ? `Generated ${currentExercises.length} exam exercises.`
+        : `Generated ${currentExercises.length} exercises.`;
+    }
+
+    async function setTopic(topic) {
+      currentTopic = topic;
+      const titleInput = document.getElementById("title");
+      const countWrap = document.getElementById("countWrap");
+      const status = document.getElementById("status");
+
+      titleInput.value = defaultTitleForTopic(topic);
+      countWrap.classList.toggle("hidden", topic === "exam");
+      updateTopicButtons();
+      solutionsVisible = false;
+      document.getElementById("toggleSolutionsBtn").textContent = "Show solutions";
+      status.textContent = "Ready.";
+
+      await generateWorksheet();
+    }
+
+    function buildPdfMarkup() {
+      const title = document.getElementById("previewTitle").textContent || "Worksheet";
+      const level = document.getElementById("level").value.toUpperCase();
+      const pdfLevel = withDisplayMath(`\\text{Difficulty: } ${latexText(level)}`);
+      const pdfExercises = withDisplayMath(`\\text{Exercises}`);
+      const pdfSolutions = withDisplayMath(`\\text{Solutions}`);
+
+      const exerciseHtml = currentExercises.map((ex) => {
+        const tag = ex.examTopic ? labelForTopic(ex.examTopic).toUpperCase() : ex.tag;
+        return `
+          <div class="pdf-exercise">
+            <div class="pdf-head">
+              <div class="pdf-num">Exercise ${ex.index}</div>
+              <div class="pdf-tag">${tag}</div>
+            </div>
+            <div class="pdf-math">${ex.q}</div>
+          </div>
+        `;
+      }).join("");
+
+      const solutionHtml = currentExercises.map((ex) => {
+        const tag = ex.examTopic ? labelForTopic(ex.examTopic).toUpperCase() : ex.tag;
+        return `
+          <div class="pdf-exercise">
+            <div class="pdf-head">
+              <div class="pdf-num">Solution ${ex.index}</div>
+              <div class="pdf-tag">${tag}</div>
+            </div>
+            <div class="pdf-math">${ex.s}</div>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="pdf-page">
+          <div class="pdf-title">${title}</div>
+          <div class="pdf-meta">${pdfLevel}</div>
+          <div class="pdf-section-title">${pdfExercises}</div>
+          ${exerciseHtml}
+        </div>
+        ${solutionsVisible ? `
+        <div class="pdf-page">
+          <div class="pdf-title">${title}</div>
+          <div class="pdf-meta">${pdfSolutions}</div>
+          <div class="pdf-section-title">${pdfSolutions}</div>
+          ${solutionHtml}
+        </div>` : ""}
+      `;
+    }
+
+    async function downloadPdf() {
+      const status = document.getElementById("status");
+      const pdfArea = document.getElementById("pdfArea");
+      const title = document.getElementById("previewTitle").textContent || "worksheet";
+
+      try {
+        status.textContent = "Preparing PDF...";
+        pdfArea.innerHTML = buildPdfMarkup();
+        await typesetMath([pdfArea]);
+
+        const pages = Array.from(pdfArea.querySelectorAll(".pdf-page"));
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        for (let i = 0; i < pages.length; i++) {
+          const canvas = await html2canvas(pages[i], {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff"
+          });
+
+          const imgData = canvas.toDataURL("image/png");
+          const imgWidth = pageWidth;
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+          if (i > 0) pdf.addPage();
+          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, Math.min(imgHeight, pageHeight));
+        }
+
+        const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "worksheet";
+        pdf.save(`${safeName}.pdf`);
+        status.textContent = "PDF downloaded successfully.";
+      } catch (err) {
+        status.textContent = "PDF generation failed.";
+        console.error(err);
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+    document.getElementById("toggleSolutionsBtn").addEventListener("click", async () => {
+      solutionsVisible = !solutionsVisible;
+      document.getElementById("toggleSolutionsBtn").textContent = solutionsVisible ? "Hide solutions" : "Show solutions";
+      await renderLists();
+    });
+    document.getElementById("downloadBtn").addEventListener("click", downloadPdf);
+    document.getElementById("level").addEventListener("change", async () => {
+      updatePills();
+      await generateWorksheet();
+    });
+
+    document.querySelectorAll("#topicNav button").forEach((btn) => {
+      btn.addEventListener("click", () => setTopic(btn.dataset.topic));
+    });
+
+    setTopic("kinematics");
+  </script>
+</body>
+</html>
+  </textarea>
+
+  <!-- =============================================================== -->
+  <!-- INCOLLA QUI IL FILE HTML COMPLETO DI PHYSICS II - ELECTROMAGNETISM -->
+  <!-- da <!DOCTYPE html> fino a </html>                                 -->
+  <!-- =============================================================== -->
+  <textarea id="src-section6" hidden>
+<!DOCTYPE html>
+<html lang="it">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Physics II Worksheet Generator</title>
+  <meta name="description" content="Generatore di esercizi di Fisica 2 / Elettromagnetismo: elettrostatica, potenziale e condensatori, circuiti e magnetismo, induzione e onde, modalità esame." />
+
+  <script>
+    window.MathJax = {
+      tex: {
+        inlineMath: [['\\(', '\\)']],
+        displayMath: [['\\[', '\\]']]
+      },
+      svg: { fontCache: 'global' }
+    };
+  </script>
+  <script src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-svg.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/html2canvas@1.4.1/dist/html2canvas.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.1/dist/jspdf.umd.min.js"></script>
+
+  <style>
+    :root {
+      --bg-1: #08111f;
+      --bg-2: #17304d;
+      --panel: rgba(255,255,255,0.07);
+      --panel-strong: rgba(255,255,255,0.11);
+      --text: #eef2ff;
+      --muted: #bac6e9;
+      --accent: #73a7ff;
+      --accent-2: #8f76ff;
+      --border: rgba(255,255,255,0.14);
+      --shadow: 0 20px 60px rgba(0,0,0,0.28);
+      --tag-bg: rgba(89,225,193,0.12);
+      --tag-border: rgba(89,225,193,0.30);
+      --tag-text: #dbfff8;
+    }
+
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: Inter, Arial, sans-serif;
+      color: var(--text);
+      background:
+        radial-gradient(circle at top left, rgba(115,167,255,0.18), transparent 28%),
+        radial-gradient(circle at top right, rgba(143,118,255,0.15), transparent 30%),
+        linear-gradient(180deg, var(--bg-1) 0%, var(--bg-2) 100%);
+      min-height: 100vh;
+    }
+
+    .wrap { max-width: 1260px; margin: 0 auto; padding: 28px; }
+    .hero {
+      display: grid;
+      grid-template-columns: 88px 1fr;
+      gap: 18px;
+      align-items: center;
+      margin-bottom: 24px;
+    }
+    .hero-badge {
+      width: 88px;
+      height: 88px;
+      border-radius: 26px;
+      display: grid;
+      place-items: center;
+      font-size: 30px;
+      font-weight: 800;
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      box-shadow: 0 18px 44px rgba(115,167,255,0.28);
+    }
+    .hero h1 {
+      margin: 0 0 10px;
+      font-size: clamp(2rem, 4.5vw, 3.5rem);
+      line-height: 1.02;
+      letter-spacing: -0.03em;
+    }
+    .hero p {
+      margin: 0;
+      color: var(--muted);
+      line-height: 1.75;
+      max-width: 980px;
+      font-size: 1.03rem;
+    }
+
+    .topic-nav {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      margin: 20px 0 28px;
+    }
+    .topic-nav button {
+      width: auto;
+      padding: 11px 16px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: rgba(255,255,255,0.04);
+      color: var(--muted);
+      cursor: pointer;
+      font-weight: 700;
+      transition: 0.2s ease;
+    }
+    .topic-nav button:hover { transform: translateY(-1px); color: var(--text); }
+    .topic-nav button.active {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      color: white;
+      border: none;
+      box-shadow: 0 14px 30px rgba(115,167,255,0.22);
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: 360px 1fr;
+      gap: 24px;
+      align-items: start;
+    }
+    .card {
+      background: var(--panel);
+      border: 1px solid var(--border);
+      border-radius: 28px;
+      padding: 22px;
+      box-shadow: var(--shadow);
+      backdrop-filter: blur(14px);
+    }
+    .settings-card { position: sticky; top: 18px; }
+    .stack > * + * { margin-top: 16px; }
+    .card h2 { margin: 0 0 6px; font-size: 1.2rem; }
+    .subtle, .status { color: var(--muted); line-height: 1.6; font-size: 0.95rem; }
+
+    label {
+      display: block;
+      margin-bottom: 8px;
+      color: var(--muted);
+      font-size: 0.95rem;
+      font-weight: 600;
+    }
+    input, select, button {
+      width: 100%;
+      padding: 13px 14px;
+      border-radius: 16px;
+      border: 1px solid var(--border);
+      background: #121933;
+      color: var(--text);
+      font-size: 1rem;
+      outline: none;
+    }
+    input:focus, select:focus {
+      border-color: rgba(115,167,255,0.65);
+      box-shadow: 0 0 0 4px rgba(115,167,255,0.12);
+    }
+    button { cursor: pointer; font-weight: 800; transition: 0.2s ease; }
+    button:hover { transform: translateY(-1px); }
+    .primary {
+      background: linear-gradient(135deg, var(--accent), var(--accent-2));
+      border: none;
+      box-shadow: 0 14px 28px rgba(115,167,255,0.25);
+    }
+    .secondary { background: rgba(255,255,255,0.06); }
+
+    .preview-title-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 14px;
+    }
+    .level-pill {
+      display: inline-block;
+      padding: 7px 11px;
+      border-radius: 999px;
+      border: 1px solid var(--border);
+      background: var(--panel-strong);
+      color: #dce5ff;
+      font-size: 0.8rem;
+      letter-spacing: 0.04em;
+      font-weight: 700;
+    }
+
+    .exercise {
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 16px;
+      margin-top: 14px;
+      background: rgba(255,255,255,0.03);
+    }
+    .exercise-head {
+      display: flex;
+      gap: 10px;
+      justify-content: space-between;
+      align-items: center;
+      flex-wrap: wrap;
+      margin-bottom: 10px;
+    }
+    .tag {
+      display: inline-block;
+      font-size: 0.78rem;
+      color: var(--tag-text);
+      background: var(--tag-bg);
+      border: 1px solid var(--tag-border);
+      padding: 5px 9px;
+      border-radius: 999px;
+      font-weight: 700;
+    }
+    .exercise-number {
+      color: var(--muted);
+      font-weight: 700;
+      font-size: 0.95rem;
+    }
+    .math {
+      font-size: 1.08rem;
+      line-height: 1.75;
+      overflow-wrap: anywhere;
+    }
+    .solutions-card.hidden, .hidden { display: none !important; }
+    .footer-copy {
+      margin-top: 28px;
+      color: var(--muted);
+      line-height: 1.7;
+      font-size: 0.95rem;
+    }
+
+    #pdfArea {
+      position: absolute;
+      left: -99999px;
+      top: 0;
+      width: 794px;
+      background: white;
+      color: black;
+      padding: 40px;
+    }
+    .pdf-page {
+      width: 100%;
+      min-height: 1040px;
+      padding: 10px 0 30px;
+      background: white;
+      color: black;
+      page-break-after: always;
+    }
+    .pdf-page:last-child { page-break-after: auto; }
+    .pdf-title { font-size: 28px; font-weight: 700; margin-bottom: 6px; color: black; }
+    .pdf-meta { font-size: 14px; color: #333; margin-bottom: 22px; }
+    .pdf-section-title { font-size: 20px; font-weight: 700; margin: 10px 0 18px; color: black; }
+    .pdf-exercise {
+      border: 1px solid #d6d6d6;
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin-bottom: 12px;
+      background: #fff;
+      break-inside: avoid;
+    }
+    .pdf-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      gap: 10px;
+      margin-bottom: 8px;
+      flex-wrap: wrap;
+    }
+    .pdf-tag {
+      display: inline-block;
+      font-size: 11px;
+      padding: 4px 8px;
+      border-radius: 999px;
+      background: #eef7f4;
+      border: 1px solid #cbe9df;
+      color: #165c4f;
+      font-weight: 700;
+    }
+    .pdf-num { color: #444; font-weight: 700; font-size: 13px; }
+    .pdf-math { color: black; font-size: 16px; line-height: 1.6; }
+
+    @media (max-width: 980px) {
+      .hero { grid-template-columns: 1fr; }
+      .hero-badge { width: 72px; height: 72px; font-size: 28px; }
+      .grid { grid-template-columns: 1fr; }
+      .settings-card { position: static; }
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <section class="hero">
+      <div class="hero-badge">⚡</div>
+      <div>
+        <h1>Physics II Worksheet Generator</h1>
+        <p>
+          Genera schede di esercizi in stile universitario per elettrostatica, potenziale e condensatori,
+          circuiti e magnetismo, induzione e onde elettromagnetiche, oltre a una modalità esame mista.
+          Solo formule, esercizi e soluzioni vengono renderizzati in LaTeX.
+        </p>
+      </div>
+    </section>
+
+    <div class="topic-nav" id="topicNav">
+      <button data-topic="electrostatics" class="active">Electrostatics & Gauss</button>
+      <button data-topic="potential">Potential & Capacitors</button>
+      <button data-topic="circuits">Circuits & Magnetism</button>
+      <button data-topic="induction">Induction & EM Waves</button>
+      <button data-topic="exam">Exam Mode</button>
+    </div>
+
+    <div class="grid">
+      <div class="card settings-card stack">
+        <div>
+          <h2>Settings</h2>
+          <div class="subtle">Scegli argomento, difficoltà e genera una nuova scheda in stile esame.</div>
+        </div>
+
+        <div>
+          <label for="title">Worksheet title</label>
+          <input id="title" value="Physics II Worksheet" />
+        </div>
+
+        <div id="countWrap">
+          <label for="count">Number of exercises</label>
+          <input id="count" type="number" min="1" max="50" value="10" />
+        </div>
+
+        <div>
+          <label for="level">Difficulty</label>
+          <select id="level">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+
+        <button class="primary" id="generateBtn">Generate worksheet</button>
+        <button class="secondary" id="toggleSolutionsBtn">Show solutions</button>
+        <button class="secondary" id="downloadBtn">Download PDF</button>
+
+        <div class="status" id="status">Ready.</div>
+      </div>
+
+      <div>
+        <div class="card">
+          <div class="preview-title-row">
+            <h2 id="previewTitle" style="margin: 0;">Physics II Worksheet</h2>
+            <div class="level-pill" id="levelPill">MEDIUM</div>
+          </div>
+          <div id="exerciseList"></div>
+        </div>
+
+        <div class="card solutions-card hidden" id="solutionsCard" style="margin-top: 24px;">
+          <div class="preview-title-row">
+            <h2 style="margin: 0;">Solutions</h2>
+            <div class="level-pill" id="solutionsPill">HIDDEN</div>
+          </div>
+          <div id="solutionList"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="footer-copy">
+      In Exam Mode, il generatore crea un esercizio per ciascuno dei quattro macro-argomenti.
+    </div>
+  </div>
+
+  <div id="pdfArea"></div>
+
+  <script>
+    const randInt = (min, max) => Math.floor(Math.random() * (max - min + 1)) + min;
+    const choice = (arr) => arr[Math.floor(Math.random() * arr.length)];
+
+    function withDisplayMath(latex) {
+      return `\\[${latex}\\]`;
+    }
+
+    function latexText(text) {
+      return String(text)
+        .replace(/\\/g, "\\\\")
+        .replace(/%/g, "\\%")
+        .replace(/_/g, "\\_")
+        .replace(/&/g, "\\&")
+        .replace(/#/g, "\\#");
+    }
+
+    function dec(num, digits = 2) {
+      return Number(num.toFixed(digits));
+    }
+
+    function shuffle(array) {
+      const arr = [...array];
+      for (let i = arr.length - 1; i > 0; i--) {
+        const j = Math.floor(Math.random() * (i + 1));
+        [arr[i], arr[j]] = [arr[j], arr[i]];
+      }
+      return arr;
+    }
+
+    function buildPool(factory, size = 100) {
+      const seen = new Set();
+      const out = [];
+      let attempts = 0;
+      while (out.length < size && attempts < size * 50) {
+        attempts += 1;
+        const ex = factory();
+        const key = `${ex.q}=>${ex.s}`;
+        if (seen.has(key)) continue;
+        seen.add(key);
+        out.push(ex);
+      }
+      return shuffle(out);
+    }
+
+    function sampleExercises(pool, count) {
+      if (!Array.isArray(pool) || pool.length === 0) return [];
+      const out = [];
+      while (out.length < count) {
+        for (const ex of shuffle(pool)) {
+          out.push(ex);
+          if (out.length >= count) break;
+        }
+      }
+      return out.slice(0, count).map((ex, index) => ({
+        index: index + 1,
+        q: ex.q,
+        s: ex.s,
+        tag: ex.tag,
+        examTopic: ex.examTopic
+      }));
+    }
+
+    function electrostaticsTemplates(level = "medium") {
+      if (level === "easy") {
+        return buildPool(() => {
+          const q = randInt(1, 8);
+          const E = randInt(50, 400);
+          const type = randInt(1, 8);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{Using Coulomb's law, write the magnitude of the force between two point charges }q_1,q_2\\text{ at distance }r.`), s: withDisplayMath(`F = k\\frac{|q_1 q_2|}{r^2}`), tag: "Coulomb law" };
+            case 2:
+              return { q: withDisplayMath(`\\text{A charge }q=${q}\\,\\mu\\mathrm{C}\\text{ is placed in a uniform electric field }E=${E}\\,\\mathrm{N/C}.\\ \\text{Find the magnitude of the force.}`), s: withDisplayMath(`F=qE=${q}\\times10^{-6}\\cdot${E}=${dec(q*1e-6*E,6)}\\,\\mathrm{N}`), tag: "Electric force" };
+            case 3:
+              return { q: withDisplayMath(`\\text{State Gauss's law in integral form.}`), s: withDisplayMath(`\\oint \\vec E\\cdot d\\vec A = \\frac{Q_{\\text{int}}}{\\varepsilon_0}`), tag: "Gauss law" };
+            case 4:
+              return { q: withDisplayMath(`\\text{What is the electric field inside a conductor in electrostatic equilibrium?}`), s: withDisplayMath(`\\vec E = 0`), tag: "Conductors" };
+            case 5:
+              return { q: withDisplayMath(`\\text{Write the electric field magnitude of a point charge }q\\text{ at distance }r.`), s: withDisplayMath(`E = k\\frac{|q|}{r^2}`), tag: "Point charge field" };
+            case 6:
+              return { q: withDisplayMath(`\\text{What is the flux of a uniform field }\\vec E\\text{ through a flat surface }A\\text{ perpendicular to the field?}`), s: withDisplayMath(`\\Phi_E = EA`), tag: "Electric flux" };
+            case 7:
+              return { q: withDisplayMath(`\\text{State the superposition principle for electric fields.}`), s: withDisplayMath(`\\vec E_{\\text{tot}} = \\sum_i \\vec E_i`), tag: "Superposition" };
+            default:
+              return { q: withDisplayMath(`\\text{A point charge produces field }E=${E}\\,\\mathrm{N/C}\\text{ at a point. Find the force on a }2\\,\\mu\\mathrm{C}\\text{ charge placed there.}`), s: withDisplayMath(`F=qE=2\\times10^{-6}\\cdot${E}=${dec(2e-6*E,6)}\\,\\mathrm{N}`), tag: "Electric force" };
+          }
+        }, 100);
+      }
+
+      if (level === "hard") {
+        return buildPool(() => {
+          const Q = randInt(1, 8);
+          const type = randInt(1, 10);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{Using Gauss's law, write the electric field outside a uniformly charged sphere of total charge }Q\\text{ at distance }r>R.`), s: withDisplayMath(`E(r)=\\frac{1}{4\\pi\\varepsilon_0}\\frac{Q}{r^2}`), tag: "Gauss sphere" };
+            case 2:
+              return { q: withDisplayMath(`\\text{Write the electric field magnitude of an infinite plane sheet with surface charge density }\\sigma.`), s: withDisplayMath(`E=\\frac{\\sigma}{2\\varepsilon_0}`), tag: "Infinite plane" };
+            case 3:
+              return { q: withDisplayMath(`\\text{Write the electric field magnitude at distance }r\\text{ from an infinite line charge with density }\\lambda.`), s: withDisplayMath(`E=\\frac{\\lambda}{2\\pi\\varepsilon_0 r}`), tag: "Line charge" };
+            case 4:
+              return { q: withDisplayMath(`\\text{What is the field inside a spherical conductor in electrostatic equilibrium?}`), s: withDisplayMath(`E=0`), tag: "Conductors" };
+            case 5:
+              return { q: withDisplayMath(`\\text{Two identical point charges }q\\text{ are at distance }2a.\\ \\text{What is the electric field at the midpoint?}`), s: withDisplayMath(`E=0`), tag: "Symmetry" };
+            case 6:
+              return { q: withDisplayMath(`\\text{A point charge }Q=${Q}\\,\\mu\\mathrm{C}\\text{ is enclosed by a spherical Gaussian surface. Write the total electric flux.}`), s: withDisplayMath(`\\Phi_E=\\frac{Q}{\\varepsilon_0}=\\frac{${Q}\\times10^{-6}}{\\varepsilon_0}`), tag: "Gauss flux" };
+            case 7:
+              return { q: withDisplayMath(`\\text{State the boundary condition for the tangential component of }\\vec E\\text{ across the surface of a conductor in electrostatics.}`), s: withDisplayMath(`E_t=0`), tag: "Boundary conditions" };
+            case 8:
+              return { q: withDisplayMath(`\\text{If a closed surface encloses zero net charge, what can be said about the total electric flux?}`), s: withDisplayMath(`\\Phi_E=0`), tag: "Gauss law" };
+            case 9:
+              return { q: withDisplayMath(`\\text{Write the field of a uniformly charged infinite plane conductor just outside the surface.}`), s: withDisplayMath(`E=\\frac{\\sigma}{\\varepsilon_0}`), tag: "Conducting plane" };
+            default:
+              return { q: withDisplayMath(`\\text{A point charge }Q\\text{ is at the center of a cube. What is the electric flux through one face?}`), s: withDisplayMath(`\\Phi_{\\text{face}}=\\frac{Q}{6\\varepsilon_0}`), tag: "Symmetry flux" };
+          }
+        }, 110);
+      }
+
+      return buildPool(() => {
+        const E = randInt(80, 500);
+        const q = randInt(1, 6);
+        const type = randInt(1, 10);
+        switch (type) {
+          case 1:
+            return { q: withDisplayMath(`\\text{Write Coulomb's law for the magnitude of the force between two point charges.}`), s: withDisplayMath(`F = k\\frac{|q_1 q_2|}{r^2}`), tag: "Coulomb law" };
+          case 2:
+            return { q: withDisplayMath(`\\text{A charge }q=${q}\\,\\mu\\mathrm{C}\\text{ is placed in a uniform electric field }E=${E}\\,\\mathrm{N/C}.\\ \\text{Find the force.}`), s: withDisplayMath(`F=qE=${dec(q*1e-6*E,6)}\\,\\mathrm{N}`), tag: "Electric force" };
+          case 3:
+            return { q: withDisplayMath(`\\text{State Gauss's law.}`), s: withDisplayMath(`\\oint \\vec E\\cdot d\\vec A = \\frac{Q_{\\text{int}}}{\\varepsilon_0}`), tag: "Gauss law" };
+          case 4:
+            return { q: withDisplayMath(`\\text{What is the field inside a conductor in electrostatic equilibrium?}`), s: withDisplayMath(`0`), tag: "Conductors" };
+          case 5:
+            return { q: withDisplayMath(`\\text{Write the electric field of a point charge.}`), s: withDisplayMath(`E = k\\frac{|q|}{r^2}`), tag: "Point charge field" };
+          case 6:
+            return { q: withDisplayMath(`\\text{What is electric flux through a surface perpendicular to a uniform field?}`), s: withDisplayMath(`\\Phi_E=EA`), tag: "Flux" };
+          case 7:
+            return { q: withDisplayMath(`\\text{State the superposition principle.}`), s: withDisplayMath(`\\vec E_{\\text{tot}}=\\sum_i \\vec E_i`), tag: "Superposition" };
+          case 8:
+            return { q: withDisplayMath(`\\text{If a closed surface encloses no net charge, what is the flux?}`), s: withDisplayMath(`0`), tag: "Gauss law" };
+          case 9:
+            return { q: withDisplayMath(`\\text{What is the unit of electric field?}`), s: withDisplayMath(`\\mathrm{N/C}`), tag: "Units" };
+          default:
+            return { q: withDisplayMath(`\\text{What is the field at the midpoint of two equal charges placed symmetrically?}`), s: withDisplayMath(`0`), tag: "Symmetry" };
+        }
+      }, 100);
+    }
+
+    function potentialTemplates(level = "medium") {
+      if (level === "easy") {
+        return buildPool(() => {
+          const q = randInt(1, 8);
+          const C = randInt(1, 8);
+          const V = randInt(5, 60);
+          const type = randInt(1, 8);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{Write the electric potential of a point charge }q\\text{ at distance }r.`), s: withDisplayMath(`V = k\\frac{q}{r}`), tag: "Point-charge potential" };
+            case 2:
+              return { q: withDisplayMath(`\\text{A capacitor has capacitance }C=${C}\\,\\mu\\mathrm{F}\\text{ and potential difference }V=${V}\\,\\mathrm{V}.\\ \\text{Find the stored charge.}`), s: withDisplayMath(`Q=CV=${C}\\times10^{-6}\\cdot${V}=${dec(C*1e-6*V,6)}\\,\\mathrm{C}`), tag: "Capacitance" };
+            case 3:
+              return { q: withDisplayMath(`\\text{Write the energy stored in a capacitor in terms of }C\\text{ and }V.`), s: withDisplayMath(`U=\\frac12 CV^2`), tag: "Capacitor energy" };
+            case 4:
+              return { q: withDisplayMath(`\\text{State the relation between electric field and potential difference in a uniform field.}`), s: withDisplayMath(`\\Delta V = -E d`), tag: "Potential difference" };
+            case 5:
+              return { q: withDisplayMath(`\\text{What is the equivalent capacitance of two capacitors in parallel?}`), s: withDisplayMath(`C_{eq}=C_1+C_2`), tag: "Parallel capacitors" };
+            case 6:
+              return { q: withDisplayMath(`\\text{What is the equivalent capacitance of two capacitors in series?}`), s: withDisplayMath(`\\frac{1}{C_{eq}}=\\frac{1}{C_1}+\\frac{1}{C_2}`), tag: "Series capacitors" };
+            case 7:
+              return { q: withDisplayMath(`\\text{A }${q}\\,\\mu\\mathrm{C}\\text{ charge is at potential }${V}\\,\\mathrm{V}.\\ \\text{Find its electric potential energy.}`), s: withDisplayMath(`U=qV=${q}\\times10^{-6}\\cdot${V}=${dec(q*1e-6*V,6)}\\,\\mathrm{J}`), tag: "Potential energy" };
+            default:
+              return { q: withDisplayMath(`\\text{What is the unit of capacitance?}`), s: withDisplayMath(`\\mathrm{F}`), tag: "Units" };
+          }
+        }, 100);
+      }
+
+      if (level === "hard") {
+        return buildPool(() => {
+          const C1 = randInt(1, 8);
+          const C2 = randInt(1, 8);
+          const V = randInt(10, 100);
+          const d = randInt(1, 9) / 1000;
+          const type = randInt(1, 10);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{Write the capacitance of a parallel-plate capacitor with area }A\\text{ and plate separation }d,\\text{ neglecting edge effects.}`), s: withDisplayMath(`C=\\varepsilon_0\\frac{A}{d}`), tag: "Parallel-plate capacitor" };
+            case 2:
+              return { q: withDisplayMath(`\\text{Two capacitors }C_1=${C1}\\,\\mu\\mathrm{F}\\text{ and }C_2=${C2}\\,\\mu\\mathrm{F}\\text{ are connected in series. Find }C_{eq}.`), s: withDisplayMath(`C_{eq}=\\frac{C_1C_2}{C_1+C_2}=\\frac{${C1}\\cdot${C2}}{${C1+C2}}=${dec(C1*C2/(C1+C2))}\\,\\mu\\mathrm{F}`), tag: "Series capacitors" };
+            case 3:
+              return { q: withDisplayMath(`\\text{Two capacitors }C_1=${C1}\\,\\mu\\mathrm{F}\\text{ and }C_2=${C2}\\,\\mu\\mathrm{F}\\text{ are connected in parallel. Find }C_{eq}.`), s: withDisplayMath(`C_{eq}=${C1+C2}\\,\\mu\\mathrm{F}`), tag: "Parallel capacitors" };
+            case 4:
+              return { q: withDisplayMath(`\\text{A capacitor }C=${C1}\\,\\mu\\mathrm{F}\\text{ is charged at }V=${V}\\,\\mathrm{V}.\\ \\text{Find the stored energy.}`), s: withDisplayMath(`U=\\frac12 CV^2=\\frac12\\cdot${C1}\\times10^{-6}\\cdot${V}^2=${dec(0.5*C1*1e-6*V*V,6)}\\,\\mathrm{J}`), tag: "Capacitor energy" };
+            case 5:
+              return { q: withDisplayMath(`\\text{State the relation }\\vec E = -\\nabla V\\text{ in one-dimensional form.}`), s: withDisplayMath(`E_x=-\\frac{dV}{dx}`), tag: "Potential gradient" };
+            case 6:
+              return { q: withDisplayMath(`\\text{What happens to the capacitance of a parallel-plate capacitor if the plate distance doubles?}`), s: withDisplayMath(`\\text{It halves.}`), tag: "Scaling" };
+            case 7:
+              return { q: withDisplayMath(`\\text{Write the work required to bring a test charge }q\\text{ from infinity to a point of potential }V.`), s: withDisplayMath(`W=qV`), tag: "Potential energy" };
+            case 8:
+              return { q: withDisplayMath(`\\text{For a conductor in electrostatic equilibrium, how is the conductor surface related to the potential?}`), s: withDisplayMath(`\\text{It is an equipotential surface.}`), tag: "Equipotentials" };
+            case 9:
+              return { q: withDisplayMath(`\\text{A potential difference of }V=${V}\\,\\mathrm{V}\\text{ exists across plates separated by }d=${d}\\,\\mathrm{m}.\\ \\text{Find the field magnitude.}`), s: withDisplayMath(`E=\\frac{V}{d}=\\frac{${V}}{${d}}=${dec(V/d)}\\,\\mathrm{V/m}`), tag: "Uniform field" };
+            default:
+              return { q: withDisplayMath(`\\text{What is the total electrostatic energy density in vacuum in terms of }E?`), s: withDisplayMath(`u=\\frac12\\varepsilon_0 E^2`), tag: "Field energy" };
+          }
+        }, 110);
+      }
+
+      return buildPool(() => {
+        const C = randInt(1, 8);
+        const V = randInt(10, 80);
+        const q = randInt(1, 6);
+        const type = randInt(1, 10);
+        switch (type) {
+          case 1:
+            return { q: withDisplayMath(`\\text{Write the electric potential of a point charge.}`), s: withDisplayMath(`V=k\\frac{q}{r}`), tag: "Point-charge potential" };
+          case 2:
+            return { q: withDisplayMath(`\\text{A capacitor has }C=${C}\\,\\mu\\mathrm{F}\\text{ and }V=${V}\\,\\mathrm{V}.\\ \\text{Find }Q.`), s: withDisplayMath(`Q=CV=${dec(C*1e-6*V,6)}\\,\\mathrm{C}`), tag: "Capacitance" };
+          case 3:
+            return { q: withDisplayMath(`\\text{Write the energy stored in a capacitor.}`), s: withDisplayMath(`U=\\frac12 CV^2`), tag: "Capacitor energy" };
+          case 4:
+            return { q: withDisplayMath(`\\text{State the relation between field and potential difference in a uniform field.}`), s: withDisplayMath(`\\Delta V=-Ed`), tag: "Potential difference" };
+          case 5:
+            return { q: withDisplayMath(`\\text{What is }C_{eq}\\text{ for capacitors in parallel?}`), s: withDisplayMath(`C_{eq}=C_1+C_2`), tag: "Parallel capacitors" };
+          case 6:
+            return { q: withDisplayMath(`\\text{What is }C_{eq}\\text{ for capacitors in series?}`), s: withDisplayMath(`\\frac1{C_{eq}}=\\frac1{C_1}+\\frac1{C_2}`), tag: "Series capacitors" };
+          case 7:
+            return { q: withDisplayMath(`\\text{A }${q}\\,\\mu\\mathrm{C}\\text{ charge is at potential }${V}\\,\\mathrm{V}.\\ \\text{Find }U.`), s: withDisplayMath(`U=qV=${dec(q*1e-6*V,6)}\\,\\mathrm{J}`), tag: "Potential energy" };
+          case 8:
+            return { q: withDisplayMath(`\\text{What is the unit of capacitance?}`), s: withDisplayMath(`\\mathrm{F}`), tag: "Units" };
+          case 9:
+            return { q: withDisplayMath(`\\text{What is an equipotential surface?}`), s: withDisplayMath(`\\text{A surface on which the electric potential is constant.}`), tag: "Equipotentials" };
+          default:
+            return { q: withDisplayMath(`\\text{For a conductor in electrostatic equilibrium, what can be said about the potential inside it?}`), s: withDisplayMath(`\\text{It is constant.}`), tag: "Conductors" };
+        }
+      }, 100);
+    }
+
+    function circuitsTemplates(level = "medium") {
+      if (level === "easy") {
+        return buildPool(() => {
+          const R = randInt(1, 20);
+          const I = randInt(1, 10);
+          const V = randInt(5, 50);
+          const B = randInt(1, 8) / 10;
+          const l = randInt(1, 5) / 10;
+          const type = randInt(1, 8);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{A resistor has }R=${R}\\,\\Omega\\text{ and carries }I=${I}\\,\\mathrm{A}.\\ \\text{Find the voltage.}`), s: withDisplayMath(`V=RI=${R}\\cdot${I}=${R*I}\\,\\mathrm{V}`), tag: "Ohm law" };
+            case 2:
+              return { q: withDisplayMath(`\\text{A resistor has }R=${R}\\,\\Omega\\text{ and is connected to }V=${V}\\,\\mathrm{V}.\\ \\text{Find the current.}`), s: withDisplayMath(`I=\\frac{V}{R}=\\frac{${V}}{${R}}=${dec(V/R)}\\,\\mathrm{A}`), tag: "Ohm law" };
+            case 3:
+              return { q: withDisplayMath(`\\text{Write the electric power dissipated by a resistor in terms of }V\\text{ and }R.`), s: withDisplayMath(`P=\\frac{V^2}{R}`), tag: "Electric power" };
+            case 4:
+              return { q: withDisplayMath(`\\text{State Kirchhoff's current law.}`), s: withDisplayMath(`\\sum I_{\\text{in}} = \\sum I_{\\text{out}}`), tag: "Kirchhoff laws" };
+            case 5:
+              return { q: withDisplayMath(`\\text{Write the magnetic force magnitude on a charge }q\\text{ moving with speed }v\\text{ perpendicular to }B.`), s: withDisplayMath(`F=qvB`), tag: "Lorentz force" };
+            case 6:
+              return { q: withDisplayMath(`\\text{A wire of length }l=${l}\\,\\mathrm{m}\\text{ carries current }I=${I}\\,\\mathrm{A}\\text{ perpendicular to }B=${B}\\,\\mathrm{T}.\\ \\text{Find the magnetic force.}`), s: withDisplayMath(`F=IlB=${I}\\cdot${l}\\cdot${B}=${dec(I*l*B)}\\,\\mathrm{N}`), tag: "Magnetic force on wire" };
+            case 7:
+              return { q: withDisplayMath(`\\text{State the magnetic field at the center of a long straight wire depends on which variables.}`), s: withDisplayMath(`B\\propto \\frac{I}{r}`), tag: "Magnetic field" };
+            default:
+              return { q: withDisplayMath(`\\text{What is the equivalent resistance of two resistors in series?}`), s: withDisplayMath(`R_{eq}=R_1+R_2`), tag: "Series resistors" };
+          }
+        }, 100);
+      }
+
+      if (level === "hard") {
+        return buildPool(() => {
+          const R1 = randInt(1, 12);
+          const R2 = randInt(1, 12);
+          const V = randInt(6, 30);
+          const I = randInt(1, 8);
+          const r = randInt(1, 6) / 100;
+          const type = randInt(1, 10);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{Two resistors }R_1=${R1}\\,\\Omega\\text{ and }R_2=${R2}\\,\\Omega\\text{ are in parallel. Find }R_{eq}.`), s: withDisplayMath(`R_{eq}=\\frac{R_1R_2}{R_1+R_2}=\\frac{${R1}\\cdot${R2}}{${R1+R2}}=${dec(R1*R2/(R1+R2))}\\,\\Omega`), tag: "Parallel resistors" };
+            case 2:
+              return { q: withDisplayMath(`\\text{Two resistors }R_1=${R1}\\,\\Omega\\text{ and }R_2=${R2}\\,\\Omega\\text{ are in series on a }V=${V}\\,\\mathrm{V}\\text{ source. Find the current.}`), s: withDisplayMath(`I=\\frac{V}{R_1+R_2}=\\frac{${V}}{${R1+R2}}=${dec(V/(R1+R2))}\\,\\mathrm{A}`), tag: "Series circuit" };
+            case 3:
+              return { q: withDisplayMath(`\\text{Write Ampere's law result for the magnetic field around a long straight wire.}`), s: withDisplayMath(`B=\\frac{\\mu_0 I}{2\\pi r}`), tag: "Long straight wire" };
+            case 4:
+              return { q: withDisplayMath(`\\text{A current }I=${I}\\,\\mathrm{A}\\text{ flows in a long straight wire. Find the field at }r=${r}\\,\\mathrm{m}.`), s: withDisplayMath(`B=\\frac{\\mu_0 I}{2\\pi r}=\\frac{\\mu_0\\cdot${I}}{2\\pi\\cdot${r}}`), tag: "Magnetic field" };
+            case 5:
+              return { q: withDisplayMath(`\\text{Write the magnetic force on a moving charge in vector form.}`), s: withDisplayMath(`\\vec F = q\\vec v \\times \\vec B`), tag: "Lorentz force" };
+            case 6:
+              return { q: withDisplayMath(`\\text{Write the magnetic field at the center of a circular loop of radius }R\\text{ carrying current }I.`), s: withDisplayMath(`B=\\frac{\\mu_0 I}{2R}`), tag: "Circular loop" };
+            case 7:
+              return { q: withDisplayMath(`\\text{State Kirchhoff's voltage law.}`), s: withDisplayMath(`\\sum \\Delta V = 0`), tag: "Kirchhoff laws" };
+            case 8:
+              return { q: withDisplayMath(`\\text{A resistor }R=${R1}\\,\\Omega\\text{ carries current }I=${I}\\,\\mathrm{A}. Find the power.}`), s: withDisplayMath(`P=I^2R=${I}^2\\cdot${R1}=${I*I*R1}\\,\\mathrm{W}`), tag: "Electric power" };
+            case 9:
+              return { q: withDisplayMath(`\\text{A charged particle moves parallel to a uniform magnetic field. What magnetic force acts on it?}`), s: withDisplayMath(`F=0`), tag: "Lorentz force" };
+            default:
+              return { q: withDisplayMath(`\\text{What is the magnetic flux through a surface of area }A\\text{ in a uniform field }B\\text{ making angle }\\theta\\text{ with the normal?}`), s: withDisplayMath(`\\Phi_B=BA\\cos\\theta`), tag: "Magnetic flux" };
+          }
+        }, 110);
+      }
+
+      return buildPool(() => {
+        const R = randInt(1, 20);
+        const I = randInt(1, 10);
+        const V = randInt(5, 50);
+        const type = randInt(1, 10);
+        switch (type) {
+          case 1:
+            return { q: withDisplayMath(`\\text{A resistor has }R=${R}\\,\\Omega\\text{ and carries }I=${I}\\,\\mathrm{A}.\\ \\text{Find the voltage.}`), s: withDisplayMath(`${R*I}\\,\\mathrm{V}`), tag: "Ohm law" };
+          case 2:
+            return { q: withDisplayMath(`\\text{A resistor has }R=${R}\\,\\Omega\\text{ and is connected to }V=${V}\\,\\mathrm{V}.\\ \\text{Find the current.}`), s: withDisplayMath(`${dec(V/R)}\\,\\mathrm{A}`), tag: "Ohm law" };
+          case 3:
+            return { q: withDisplayMath(`\\text{Write the electric power in terms of }I\\text{ and }R.`), s: withDisplayMath(`P=I^2R`), tag: "Electric power" };
+          case 4:
+            return { q: withDisplayMath(`\\text{State Kirchhoff's current law.}`), s: withDisplayMath(`\\sum I_{\\text{in}}=\\sum I_{\\text{out}}`), tag: "Kirchhoff laws" };
+          case 5:
+            return { q: withDisplayMath(`\\text{Write the Lorentz force magnitude for }\\vec v \\perp \\vec B.`), s: withDisplayMath(`F=qvB`), tag: "Lorentz force" };
+          case 6:
+            return { q: withDisplayMath(`\\text{What is the equivalent resistance of two resistors in series?}`), s: withDisplayMath(`R_{eq}=R_1+R_2`), tag: "Series resistors" };
+          case 7:
+            return { q: withDisplayMath(`\\text{What is the equivalent resistance of two resistors in parallel?}`), s: withDisplayMath(`R_{eq}=\\frac{R_1R_2}{R_1+R_2}`), tag: "Parallel resistors" };
+          case 8:
+            return { q: withDisplayMath(`\\text{Write the magnetic field of a long straight wire.}`), s: withDisplayMath(`B=\\frac{\\mu_0 I}{2\\pi r}`), tag: "Magnetic field" };
+          case 9:
+            return { q: withDisplayMath(`\\text{What is the magnetic force on a charge moving parallel to }\\vec B?`), s: withDisplayMath(`0`), tag: "Lorentz force" };
+          default:
+            return { q: withDisplayMath(`\\text{Write the magnetic flux in a uniform field.}`), s: withDisplayMath(`\\Phi_B=BA\\cos\\theta`), tag: "Magnetic flux" };
+        }
+      }, 100);
+    }
+
+    function inductionTemplates(level = "medium") {
+      if (level === "easy") {
+        return buildPool(() => {
+          const N = randInt(10, 200);
+          const dphi = randInt(1, 9) / 100;
+          const dt = randInt(1, 5) / 10;
+          const f = randInt(50, 500);
+          const type = randInt(1, 8);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{State Faraday's law of induction.}`), s: withDisplayMath(`\\mathcal{E}=-\\frac{d\\Phi_B}{dt}`), tag: "Faraday law" };
+            case 2:
+              return { q: withDisplayMath(`\\text{A coil with }N=${N}\\text{ turns undergoes a magnetic flux change }\\Delta \\Phi=${dphi}\\,\\mathrm{Wb}\\text{ in }\\Delta t=${dt}\\,\\mathrm{s}.\\ \\text{Find the average induced emf magnitude.}`), s: withDisplayMath(`|\\mathcal{E}|=N\\frac{\\Delta \\Phi}{\\Delta t}=${N}\\frac{${dphi}}{${dt}}=${dec(N*dphi/dt)}\\,\\mathrm{V}`), tag: "Induced emf" };
+            case 3:
+              return { q: withDisplayMath(`\\text{State Lenz's law.}`), s: withDisplayMath(`\\text{The induced current opposes the change in magnetic flux that produced it.}`), tag: "Lenz law" };
+            case 4:
+              return { q: withDisplayMath(`\\text{Write the speed of an electromagnetic wave in vacuum.}`), s: withDisplayMath(`c=\\frac{1}{\\sqrt{\\mu_0\\varepsilon_0}}`), tag: "EM waves" };
+            case 5:
+              return { q: withDisplayMath(`\\text{An electromagnetic wave has frequency }f=${f}\\,\\mathrm{Hz}.\\ \\text{Write the wavelength in vacuum.}`), s: withDisplayMath(`\\lambda=\\frac{c}{f}`), tag: "Wave relation" };
+            case 6:
+              return { q: withDisplayMath(`\\text{Write the energy density of an electric field in vacuum.}`), s: withDisplayMath(`u_E=\\frac12\\varepsilon_0 E^2`), tag: "Field energy" };
+            case 7:
+              return { q: withDisplayMath(`\\text{Write the energy density of a magnetic field in vacuum.}`), s: withDisplayMath(`u_B=\\frac{B^2}{2\\mu_0}`), tag: "Field energy" };
+            default:
+              return { q: withDisplayMath(`\\text{In a plane electromagnetic wave, what is the relationship between }E\\text{ and }B\\text{ amplitudes in vacuum?}`), s: withDisplayMath(`E=cB`), tag: "EM waves" };
+          }
+        }, 100);
+      }
+
+      if (level === "hard") {
+        return buildPool(() => {
+          const N = randInt(20, 300);
+          const B = randInt(1, 8) / 10;
+          const A = randInt(1, 8) / 100;
+          const dt = randInt(1, 5) / 10;
+          const f = randInt(1, 9) * 1e6;
+          const type = randInt(1, 10);
+          switch (type) {
+            case 1:
+              return { q: withDisplayMath(`\\text{A coil with }N=${N}\\text{ turns and area }A=${A}\\,\\mathrm{m^2}\\text{ is in a field that changes from }0\\text{ to }B=${B}\\,\\mathrm{T}\\text{ in }${dt}\\,\\mathrm{s}.\\ \\text{Find the average induced emf magnitude.}`), s: withDisplayMath(`|\\mathcal{E}|=N\\frac{A\\Delta B}{\\Delta t}=${N}\\frac{${A}\\cdot${B}}{${dt}}=${dec(N*A*B/dt)}\\,\\mathrm{V}`), tag: "Faraday law" };
+            case 2:
+              return { q: withDisplayMath(`\\text{State the integral form of Ampere-Maxwell law.}`), s: withDisplayMath(`\\oint \\vec B\\cdot d\\vec l = \\mu_0 I_{\\text{enc}} + \\mu_0\\varepsilon_0 \\frac{d\\Phi_E}{dt}`), tag: "Maxwell equations" };
+            case 3:
+              return { q: withDisplayMath(`\\text{Write the vacuum wave equation speed implied by Maxwell equations.}`), s: withDisplayMath(`c=\\frac{1}{\\sqrt{\\mu_0\\varepsilon_0}}`), tag: "EM waves" };
+            case 4:
+              return { q: withDisplayMath(`\\text{An electromagnetic wave has frequency }f=${f}\\,\\mathrm{Hz}.\\ \\text{Find the wavelength in vacuum.}`), s: withDisplayMath(`\\lambda=\\frac{c}{f}=\\frac{3.0\\times10^8}{${f}}=${dec(3e8/f,6)}\\,\\mathrm{m}`), tag: "Wave relation" };
+            case 5:
+              return { q: withDisplayMath(`\\text{What is the Poynting vector in vacuum?}`), s: withDisplayMath(`\\vec S=\\frac{1}{\\mu_0}\\vec E\\times\\vec B`), tag: "Poynting vector" };
+            case 6:
+              return { q: withDisplayMath(`\\text{State the differential form of Faraday's law.}`), s: withDisplayMath(`\\nabla\\times\\vec E = -\\frac{\\partial \\vec B}{\\partial t}`), tag: "Maxwell equations" };
+            case 7:
+              return { q: withDisplayMath(`\\text{State Gauss's law for magnetism.}`), s: withDisplayMath(`\\oint \\vec B\\cdot d\\vec A = 0`), tag: "Maxwell equations" };
+            case 8:
+              return { q: withDisplayMath(`\\text{In a plane electromagnetic wave in vacuum, how are }\\vec E,\\vec B\\text{ and the propagation direction related?}`), s: withDisplayMath(`\\vec E \\perp \\vec B,\\quad \\vec E\\times\\vec B\\text{ gives the propagation direction}`), tag: "EM waves" };
+            case 9:
+              return { q: withDisplayMath(`\\text{Write the emf induced in a rod of length }l\\text{ moving with speed }v\\text{ perpendicular to }B.`), s: withDisplayMath(`\\mathcal{E}=Blv`), tag: "Motional emf" };
+            default:
+              return { q: withDisplayMath(`\\text{What is self-inductance defined by in terms of magnetic flux linkage and current?}`), s: withDisplayMath(`N\\Phi_B=LI`), tag: "Inductance" };
+          }
+        }, 110);
+      }
+
+      return buildPool(() => {
+        const N = randInt(10, 200);
+        const dphi = randInt(1, 9) / 100;
+        const dt = randInt(1, 5) / 10;
+        const type = randInt(1, 10);
+        switch (type) {
+          case 1:
+            return { q: withDisplayMath(`\\text{State Faraday's law.}`), s: withDisplayMath(`\\mathcal{E}=-\\frac{d\\Phi_B}{dt}`), tag: "Faraday law" };
+          case 2:
+            return { q: withDisplayMath(`\\text{A coil with }N=${N}\\text{ turns undergoes }\\Delta \\Phi=${dphi}\\,\\mathrm{Wb}\\text{ in }\\Delta t=${dt}\\,\\mathrm{s}.\\ \\text{Find the average emf magnitude.}`), s: withDisplayMath(`|\\mathcal{E}|=${dec(N*dphi/dt)}\\,\\mathrm{V}`), tag: "Induced emf" };
+          case 3:
+            return { q: withDisplayMath(`\\text{State Lenz's law.}`), s: withDisplayMath(`\\text{The induced current opposes the change in magnetic flux.}`), tag: "Lenz law" };
+          case 4:
+            return { q: withDisplayMath(`\\text{Write the speed of electromagnetic waves in vacuum.}`), s: withDisplayMath(`c=\\frac{1}{\\sqrt{\\mu_0\\varepsilon_0}}`), tag: "EM waves" };
+          case 5:
+            return { q: withDisplayMath(`\\text{Write the relation between }E\\text{ and }B\\text{ amplitudes in vacuum.}`), s: withDisplayMath(`E=cB`), tag: "EM waves" };
+          case 6:
+            return { q: withDisplayMath(`\\text{Write the electric field energy density in vacuum.}`), s: withDisplayMath(`u_E=\\frac12\\varepsilon_0 E^2`), tag: "Field energy" };
+          case 7:
+            return { q: withDisplayMath(`\\text{Write the magnetic field energy density in vacuum.}`), s: withDisplayMath(`u_B=\\frac{B^2}{2\\mu_0}`), tag: "Field energy" };
+          case 8:
+            return { q: withDisplayMath(`\\text{What is the Poynting vector?}`), s: withDisplayMath(`\\vec S=\\frac{1}{\\mu_0}\\vec E\\times\\vec B`), tag: "Poynting vector" };
+          case 9:
+            return { q: withDisplayMath(`\\text{State Gauss's law for magnetism.}`), s: withDisplayMath(`\\oint \\vec B\\cdot d\\vec A=0`), tag: "Maxwell equations" };
+          default:
+            return { q: withDisplayMath(`\\text{Write the motional emf of a rod moving in a magnetic field.}`), s: withDisplayMath(`\\mathcal{E}=Blv`), tag: "Motional emf" };
+        }
+      }, 100);
+    }
+
+    function generatorForTopic(topic, level) {
+      switch (topic) {
+        case "electrostatics": return electrostaticsTemplates(level);
+        case "potential": return potentialTemplates(level);
+        case "circuits": return circuitsTemplates(level);
+        case "induction": return inductionTemplates(level);
+        default: return [];
+      }
+    }
+
+    function buildExercises(topic, count, level) {
+      return sampleExercises(generatorForTopic(topic, level), count);
+    }
+
+    function buildExamSheet(level) {
+      const topics = ["electrostatics", "potential", "circuits", "induction"];
+      return shuffle(topics.map((topic, i) => {
+        const ex = choice(generatorForTopic(topic, level));
+        return { index: i + 1, ...ex, examTopic: topic };
+      })).map((ex, index) => ({ ...ex, index: index + 1 }));
+    }
+
+    let currentTopic = "electrostatics";
+    let solutionsVisible = false;
+    let currentExercises = [];
+
+    function labelForTopic(topic) {
+      switch (topic) {
+        case "electrostatics": return "Electrostatics & Gauss";
+        case "potential": return "Potential & Capacitors";
+        case "circuits": return "Circuits & Magnetism";
+        case "induction": return "Induction & EM Waves";
+        case "exam": return "Exam Mode";
+        default: return "Worksheet";
+      }
+    }
+
+    function defaultTitleForTopic(topic) {
+      switch (topic) {
+        case "electrostatics": return "Electrostatics Worksheet";
+        case "potential": return "Potential and Capacitors Worksheet";
+        case "circuits": return "Circuits and Magnetism Worksheet";
+        case "induction": return "Induction and EM Waves Worksheet";
+        case "exam": return "Physics II Exam Practice";
+        default: return "Physics II Worksheet";
+      }
+    }
+
+    function updateTopicButtons() {
+      document.querySelectorAll("#topicNav button").forEach((btn) => {
+        btn.classList.toggle("active", btn.dataset.topic === currentTopic);
+      });
+    }
+
+    function updatePills() {
+      const level = document.getElementById("level").value;
+      document.getElementById("levelPill").textContent = level.toUpperCase();
+      document.getElementById("solutionsPill").textContent = solutionsVisible ? "VISIBLE" : "HIDDEN";
+    }
+
+    async function typesetMath(elements) {
+      if (window.MathJax && window.MathJax.typesetPromise) {
+        await window.MathJax.typesetPromise(elements);
+      }
+    }
+
+    async function renderLists() {
+      const exerciseList = document.getElementById("exerciseList");
+      const solutionList = document.getElementById("solutionList");
+      const solutionsCard = document.getElementById("solutionsCard");
+
+      exerciseList.innerHTML = "";
+      solutionList.innerHTML = "";
+
+      currentExercises.forEach((ex) => {
+        const tag = ex.examTopic ? labelForTopic(ex.examTopic).toUpperCase() : ex.tag;
+
+        const exEl = document.createElement("div");
+        exEl.className = "exercise";
+        exEl.innerHTML = `
+          <div class="exercise-head">
+            <div class="exercise-number">Exercise ${ex.index}</div>
+            <div class="tag">${tag}</div>
+          </div>
+          <div class="math">${ex.q}</div>
+        `;
+        exerciseList.appendChild(exEl);
+
+        const solEl = document.createElement("div");
+        solEl.className = "exercise";
+        solEl.innerHTML = `
+          <div class="exercise-head">
+            <div class="exercise-number">Solution ${ex.index}</div>
+            <div class="tag">${tag}</div>
+          </div>
+          <div class="math">${ex.s}</div>
+        `;
+        solutionList.appendChild(solEl);
+      });
+
+      solutionsCard.classList.toggle("hidden", !solutionsVisible);
+      updatePills();
+      await typesetMath([exerciseList, solutionList]);
+    }
+
+    async function generateWorksheet() {
+      const titleInput = document.getElementById("title");
+      const countInput = document.getElementById("count");
+      const levelSelect = document.getElementById("level");
+      const previewTitle = document.getElementById("previewTitle");
+      const status = document.getElementById("status");
+
+      const count = Math.max(1, Math.min(50, Number(countInput.value) || 10));
+      countInput.value = count;
+
+      const level = levelSelect.value;
+      const title = titleInput.value.trim() || defaultTitleForTopic(currentTopic);
+      previewTitle.textContent = title;
+
+      currentExercises = currentTopic === "exam"
+        ? buildExamSheet(level)
+        : buildExercises(currentTopic, count, level);
+
+      await renderLists();
+      status.textContent = currentTopic === "exam"
+        ? `Generated ${currentExercises.length} exam exercises.`
+        : `Generated ${currentExercises.length} exercises.`;
+    }
+
+    async function setTopic(topic) {
+      currentTopic = topic;
+      const titleInput = document.getElementById("title");
+      const countWrap = document.getElementById("countWrap");
+      const status = document.getElementById("status");
+
+      titleInput.value = defaultTitleForTopic(topic);
+      countWrap.classList.toggle("hidden", topic === "exam");
+      updateTopicButtons();
+      solutionsVisible = false;
+      document.getElementById("toggleSolutionsBtn").textContent = "Show solutions";
+      status.textContent = "Ready.";
+
+      await generateWorksheet();
+    }
+
+    function buildPdfMarkup() {
+      const title = document.getElementById("previewTitle").textContent || "Worksheet";
+      const level = document.getElementById("level").value.toUpperCase();
+      const pdfLevel = withDisplayMath(`\\text{Difficulty: } ${latexText(level)}`);
+      const pdfExercises = withDisplayMath(`\\text{Exercises}`);
+      const pdfSolutions = withDisplayMath(`\\text{Solutions}`);
+
+      const exerciseHtml = currentExercises.map((ex) => {
+        const tag = ex.examTopic ? labelForTopic(ex.examTopic).toUpperCase() : ex.tag;
+        return `
+          <div class="pdf-exercise">
+            <div class="pdf-head">
+              <div class="pdf-num">Exercise ${ex.index}</div>
+              <div class="pdf-tag">${tag}</div>
+            </div>
+            <div class="pdf-math">${ex.q}</div>
+          </div>
+        `;
+      }).join("");
+
+      const solutionHtml = currentExercises.map((ex) => {
+        const tag = ex.examTopic ? labelForTopic(ex.examTopic).toUpperCase() : ex.tag;
+        return `
+          <div class="pdf-exercise">
+            <div class="pdf-head">
+              <div class="pdf-num">Solution ${ex.index}</div>
+              <div class="pdf-tag">${tag}</div>
+            </div>
+            <div class="pdf-math">${ex.s}</div>
+          </div>
+        `;
+      }).join("");
+
+      return `
+        <div class="pdf-page">
+          <div class="pdf-title">${title}</div>
+          <div class="pdf-meta">${pdfLevel}</div>
+          <div class="pdf-section-title">${pdfExercises}</div>
+          ${exerciseHtml}
+        </div>
+        ${solutionsVisible ? `
+        <div class="pdf-page">
+          <div class="pdf-title">${title}</div>
+          <div class="pdf-meta">${pdfSolutions}</div>
+          <div class="pdf-section-title">${pdfSolutions}</div>
+          ${solutionHtml}
+        </div>` : ""}
+      `;
+    }
+
+    async function downloadPdf() {
+      const status = document.getElementById("status");
+      const pdfArea = document.getElementById("pdfArea");
+      const title = document.getElementById("previewTitle").textContent || "worksheet";
+
+      try {
+        status.textContent = "Preparing PDF...";
+        pdfArea.innerHTML = buildPdfMarkup();
+        await typesetMath([pdfArea]);
+
+        const pages = Array.from(pdfArea.querySelectorAll(".pdf-page"));
+        const { jsPDF } = window.jspdf;
+        const pdf = new jsPDF({ orientation: "p", unit: "mm", format: "a4" });
+        const pageWidth = pdf.internal.pageSize.getWidth();
+        const pageHeight = pdf.internal.pageSize.getHeight();
+
+        for (let i = 0; i < pages.length; i++) {
+          const canvas = await html2canvas(pages[i], {
+            scale: 2,
+            useCORS: true,
+            backgroundColor: "#ffffff"
+          });
+
+          const imgData = canvas.toDataURL("image/png");
+          const imgWidth = pageWidth;
+          const imgHeight = (canvas.height * imgWidth) / canvas.width;
+
+          if (i > 0) pdf.addPage();
+          pdf.addImage(imgData, "PNG", 0, 0, imgWidth, Math.min(imgHeight, pageHeight));
+        }
+
+        const safeName = title.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-+|-+$/g, "") || "worksheet";
+        pdf.save(`${safeName}.pdf`);
+        status.textContent = "PDF downloaded successfully.";
+      } catch (err) {
+        status.textContent = "PDF generation failed.";
+        console.error(err);
+      }
+    }
+
+    document.getElementById("generateBtn").addEventListener("click", generateWorksheet);
+    document.getElementById("toggleSolutionsBtn").addEventListener("click", async () => {
+      solutionsVisible = !solutionsVisible;
+      document.getElementById("toggleSolutionsBtn").textContent = solutionsVisible ? "Hide solutions" : "Show solutions";
+      await renderLists();
+    });
+    document.getElementById("downloadBtn").addEventListener("click", downloadPdf);
+    document.getElementById("level").addEventListener("change", async () => {
+      updatePills();
+      await generateWorksheet();
+    });
+
+    document.querySelectorAll("#topicNav button").forEach((btn) => {
+      btn.addEventListener("click", () => setTopic(btn.dataset.topic));
+    });
+
+    setTopic("electrostatics");
+  </script>
+</body>
+</html>
+  </textarea>
+
   <script>
     function loadIframeContent(frameId, sourceId) {
       const frame = document.getElementById(frameId);
@@ -5856,6 +7957,8 @@
     loadIframeContent('frame-section2', 'src-section2');
     loadIframeContent('frame-section3', 'src-section3');
     loadIframeContent('frame-section4', 'src-section4');
+    loadIframeContent('frame-section5', 'src-section5');
+    loadIframeContent('frame-section6', 'src-section6');
 
     const buttons = document.querySelectorAll('.tab-btn');
     const panels = document.querySelectorAll('.panel');
