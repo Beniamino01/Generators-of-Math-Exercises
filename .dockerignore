@@ -1,0 +1,9 @@
+node_modules
+npm-debug.log
+.git
+.gitignore
+.DS_Store
+Thumbs.db
+public/index_old.html
+CODICE_COMPLETO_PRONTO_DA_COPIARE.txt
+public/Sitocompleto_modificato.txt

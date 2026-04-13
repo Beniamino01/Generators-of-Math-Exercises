@@ -1,0 +1,6 @@
+services:
+  - type: web
+    name: math-physics-generator
+    runtime: docker
+    plan: free
+    autoDeploy: true
