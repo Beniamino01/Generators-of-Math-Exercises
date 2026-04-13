@@ -33,7 +33,7 @@ const latexEngines = [
   }
 ];
 
-app.use(express.static(publicDir));
+app.use(express.static(publicDir, { index: false }));
 app.use(express.json({ limit: "5mb" }));
 
 function escapeLatexText(value) {
@@ -256,7 +256,7 @@ app.get("/exam-mode", (_, res) => {
 });
 
 app.get("/complete-site", (_, res) => {
-  res.sendFile(path.join(publicDir, "Sitocompleto_modificato.html"));
+  res.sendFile(path.join(publicDir, "index.html"));
 });
 
 app.post("/api/export-latex-pdf", async (req, res) => {
@@ -283,6 +283,6 @@ app.post("/api/export-latex-pdf", async (req, res) => {
   }
 });
 
-app.listen(PORT, () => {
+app.listen(PORT, "0.0.0.0", () => {
   console.log(`Server running on http://localhost:${PORT}`);
 });
